@@ -1,6 +1,7 @@
 ---
 import type { Post } from '../utils/posts';
-import PostList from './PostList.astro';
+import { postUrl } from '../utils/posts';
+import Icon from './Icon.astro';
 
 interface Props {
   posts: Post[];
@@ -16,6 +17,16 @@ const { posts, heading = 'Related articles', id = 'related-heading' } = Astro.pr
     <h2 id={id} class="mb-6 text-2xl">
       {heading}
     </h2>
-    <PostList posts={posts} as="h3" />
+    <ul class="divide-y divide-border border-y border-border">
+      {posts.map((post) => (
+        <li>
+          <a href={postUrl(post)} class="row-link group flex items-baseline gap-5 py-3.5">
+            <span class="meta w-32 shrink-0 whitespace-nowrap">{post.data.category}</span>
+            <span class="grow text-heading">{post.data.title}</span>
+            <Icon name="arrow-right" class="row-arrow size-4 text-accent" />
+          </a>
+        </li>
+      ))}
+    </ul>
   </section>
 )}
