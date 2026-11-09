@@ -50,7 +50,9 @@ function companySpan(entry: ExperienceEntry): { startDate: string; endDate: stri
               <li>
                 <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <h4 class="font-serif text-lg text-text">{role.title}</h4>
-                  <span class="meta shrink-0 tabular-nums">{roleRange(role.startDate, role.endDate)}</span>
+                  {entry.roles.length > 1 && (
+                    <span class="meta shrink-0 tabular-nums">{roleRange(role.startDate, role.endDate)}</span>
+                  )}
                 </div>
                 {role.employmentType && <p class="meta mt-0.5">{role.employmentType}</p>}
                 <p class="mt-2 text-pretty text-muted">{role.description}</p>
