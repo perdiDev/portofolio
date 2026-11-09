@@ -601,6 +601,78 @@
   transform: translateX(0);
 }
 
+/* ------------------------------------------------------------------ */
+/* Custom cursor: minimal dot + lagging ring, fine pointers only.      */
+/* Enabled via JS (adds .has-custom-cursor to <html>); degrades to the */
+/* native cursor with no JS or on touch/coarse-pointer devices.        */
+/* ------------------------------------------------------------------ */
+.custom-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.custom-cursor-dot,
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.custom-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent);
+  transition:
+    width 150ms var(--ease),
+    height 150ms var(--ease);
+}
+
+.custom-cursor-ring {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-accent);
+  opacity: 0.5;
+  transition:
+    width 250ms var(--ease-out-expo),
+    height 250ms var(--ease-out-expo),
+    opacity 250ms var(--ease),
+    background-color 250ms var(--ease);
+}
+
+[data-cursor-hover] .custom-cursor-ring {
+  width: 52px;
+  height: 52px;
+  opacity: 0.9;
+  background: color-mix(in oklab, var(--color-accent) 14%, transparent);
+}
+
+[data-cursor-active] .custom-cursor-dot {
+  width: 4px;
+  height: 4px;
+}
+
+[data-cursor-active] .custom-cursor-ring {
+  opacity: 1;
+}
+
+/* Specificity beats the UA default (and the `button`/`summary` pointer
+   rule above) without `!important`, since both target elements directly. */
+html.has-custom-cursor * {
+  cursor: none;
+}
+
+/* Keep the native text cursor for form controls. */
+html.has-custom-cursor input,
+html.has-custom-cursor textarea,
+html.has-custom-cursor select {
+  cursor: auto;
+}
+
 /* View transitions: short fade, header persisted. */
 @keyframes vt-fade-in {
   from {

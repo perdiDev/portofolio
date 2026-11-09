@@ -4,6 +4,7 @@ import { ClientRouter, fade } from 'astro:transitions';
 import { Font } from 'astro:assets';
 import { SITE } from '../config';
 import Analytics from '../components/Analytics.astro';
+import Cursor from '../components/Cursor.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import SEO, { type Props as SeoProps } from '../components/SEO.astro';
@@ -58,5 +59,6 @@ const { mainClass, ...seo } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <Cursor />
   </body>
 </html>

@@ -1,0 +1,100 @@
+---
+/**
+ * Minimal custom cursor: a small dot that tracks the pointer exactly, plus a
+ * thin ring that eases behind it and grows over interactive elements.
+ * Only activates on fine-pointer (mouse/trackpad) devices; touch devices and
+ * users with JS disabled keep the native cursor untouched.
+ */
+---
+
+<div class="custom-cursor" data-custom-cursor aria-hidden="true" transition:persist="custom-cursor">
+  <span class="custom-cursor-ring" data-cursor-ring></span>
+  <span class="custom-cursor-dot" data-cursor-dot></span>
+</div>
+
+<script>
+  let cleanup: (() => void) | undefined;
+
+  function setup() {
+    cleanup?.();
+
+    const root = document.querySelector<HTMLElement>('[data-custom-cursor]');
+    const dot = document.querySelector<HTMLElement>('[data-cursor-dot]');
+    const ring = document.querySelector<HTMLElement>('[data-cursor-ring]');
+    if (!root || !dot || !ring) return;
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    document.documentElement.classList.add('has-custom-cursor');
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const interactiveSelector = 'a, button, [role="button"], summary, label[for]';
+
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    let ringX = x;
+    let ringY = y;
+    let rafId = 0;
+
+    const place = (el: HTMLElement, px: number, py: number) => {
+      el.style.transform = `translate3d(${px}px, ${py}px, 0) translate(-50%, -50%)`;
+    };
+    place(dot, x, y);
+    place(ring, x, y);
+
+    const onMove = (event: MouseEvent) => {
+      x = event.clientX;
+      y = event.clientY;
+      place(dot, x, y);
+      root.style.opacity = '1';
+      if (reduceMotion) place(ring, x, y);
+    };
+    const onLeave = () => {
+      root.style.opacity = '0';
+    };
+    const onOver = (event: MouseEvent) => {
+      if (event.target instanceof Element && event.target.closest(interactiveSelector)) {
+        root.setAttribute('data-cursor-hover', '');
+      }
+    };
+    const onOut = (event: MouseEvent) => {
+      const related = event.relatedTarget;
+      if (related instanceof Element && related.closest(interactiveSelector)) return;
+      root.removeAttribute('data-cursor-hover');
+    };
+    const onDown = () => root.setAttribute('data-cursor-active', '');
+    const onUp = () => root.removeAttribute('data-cursor-active');
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseleave', onLeave);
+    document.addEventListener('mouseover', onOver);
+    document.addEventListener('mouseout', onOut);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('mouseup', onUp);
+
+    if (!reduceMotion) {
+      const tick = () => {
+        ringX += (x - ringX) * 0.18;
+        ringY += (y - ringY) * 0.18;
+        place(ring, ringX, ringY);
+        rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+    }
+
+    cleanup = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseleave', onLeave);
+      document.removeEventListener('mouseover', onOver);
+      document.removeEventListener('mouseout', onOut);
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('mouseup', onUp);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+</script>
