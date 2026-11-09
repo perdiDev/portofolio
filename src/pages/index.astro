@@ -36,7 +36,28 @@ const site = Astro.site!;
       <Experience />
     </section>
 
-    <section class="mt-24" aria-labelledby="latest-heading">
+    <section class="reveal mt-24" aria-labelledby="projects-heading">
+        <div class="mb-4 flex items-baseline justify-between gap-4">
+        <h2 id="projects-heading" class="text-3xl">
+            Projects
+        </h2>
+        <a
+            href="/projects/"
+            class="link-grow inline-flex items-center gap-1.5 text-sm text-muted hover:text-text"
+        >
+            All projects <Icon name="arrow-right" class="size-4" />
+        </a>
+        </div>
+        <ul class="divide-y divide-border border-y border-border">
+        {projects.slice(0, 3).map((project, index) => (
+            <li>
+            <ProjectRow project={project} as="h3" index={index} />
+            </li>
+        ))}
+        </ul>
+    </section>
+
+    <section class="mt-24 mb-8" aria-labelledby="latest-heading">
       <div class="mb-8 flex items-baseline justify-between gap-4">
         <h2 id="latest-heading" class="text-3xl">
           Latest writing
@@ -49,27 +70,6 @@ const site = Astro.site!;
         </a>
       </div>
       <PostList posts={posts.slice(0, BLOG.homePostCount)} as="h3" />
-    </section>
-
-    <section class="reveal mt-24" aria-labelledby="projects-heading">
-      <div class="mb-4 flex items-baseline justify-between gap-4">
-        <h2 id="projects-heading" class="text-3xl">
-          Projects
-        </h2>
-        <a
-          href="/projects/"
-          class="link-grow inline-flex items-center gap-1.5 text-sm text-muted hover:text-text"
-        >
-          All projects <Icon name="arrow-right" class="size-4" />
-        </a>
-      </div>
-      <ul class="divide-y divide-border border-y border-border">
-        {projects.slice(0, 3).map((project, index) => (
-          <li>
-            <ProjectRow project={project} as="h3" index={index} />
-          </li>
-        ))}
-      </ul>
     </section>
 
     <Newsletter id="home-newsletter" class="reveal mt-24" />
