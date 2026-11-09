@@ -1,0 +1,37 @@
+---
+import type { BreadcrumbItem } from '../utils/jsonld';
+
+interface Props {
+  /** Full trail including "Home"; the last item is the current page. */
+  items: BreadcrumbItem[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class={className}>
+  <ol class="meta flex flex-wrap items-center gap-x-2 gap-y-1">
+    {items.map((item, index) => {
+      const last = index === items.length - 1;
+      return (
+        <li class="flex items-center gap-2">
+          {last ? (
+            <span aria-current="page" class="text-text">
+              {item.name}
+            </span>
+          ) : (
+            <>
+              <a href={item.href} class="link-grow hover:text-text">
+                {item.name}
+              </a>
+              <span aria-hidden="true" class="text-subtle">
+                /
+              </span>
+            </>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>

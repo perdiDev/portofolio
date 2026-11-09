@@ -1,0 +1,47 @@
+---
+import { AUTHOR, SITE, SOCIALS } from '../config';
+import Icon from './Icon.astro';
+
+const year = new Date().getUTCFullYear();
+const years = year > SITE.copyrightStartYear ? `${SITE.copyrightStartYear}–${year}` : `${year}`;
+
+const linkClass = 'link-grow inline-flex items-center gap-2 text-sm text-muted hover:text-text';
+---
+
+<footer class="mt-24 border-t border-border/70">
+  <div class="mx-auto flex w-full max-w-3xl flex-col gap-8 px-5 py-10 sm:flex-row sm:items-start sm:justify-between">
+    <p class="meta">
+      © {years} {AUTHOR.name}. All rights reserved.
+    </p>
+
+    <nav aria-label="Footer">
+      <ul class="flex flex-wrap items-center gap-x-6 gap-y-3">
+        {SOCIALS.map((social) => (
+          <li>
+            <a
+              href={social.url}
+              class={linkClass}
+              rel="me noopener noreferrer"
+              target="_blank"
+              aria-label={`${social.label} (opens in a new tab)`}
+            >
+              <Icon name={social.icon} class="size-4" />
+              {social.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/rss.xml" class={linkClass}>
+            <Icon name="rss" class="size-4" />
+            RSS
+          </a>
+        </li>
+        <li>
+          <a href="/archive/" class={linkClass}>
+            Archive
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</footer>

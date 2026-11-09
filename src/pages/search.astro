@@ -1,0 +1,50 @@
+---
+import PagefindConfig from 'astro-pagefind/components/PagefindConfig.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Search"
+  description="Search every article and project on the site by keyword, category, or type."
+  noindex
+>
+  <div class="page page-top">
+    <PageHeader
+      title="Search"
+      intro="Find articles and projects by keyword. Everything runs in your browser: nothing you type is sent anywhere."
+    />
+
+    <PagefindConfig />
+    <pagefind-input autofocus></pagefind-input>
+    <pagefind-summary class="mt-4 block"></pagefind-summary>
+    <div class="mt-6 grid gap-8 md:grid-cols-[13rem_1fr]">
+      <pagefind-filter-pane></pagefind-filter-pane>
+      <pagefind-results></pagefind-results>
+    </div>
+
+    <noscript>
+      <p class="mt-6 rounded-lg border border-border p-4 text-muted">
+        Search needs JavaScript. Without it you can still browse the{' '}
+        <a href="/archive/" class="text-accent underline">
+          archive
+        </a>
+        , the{' '}
+        <a href="/categories/" class="text-accent underline">
+          categories
+        </a>{' '}
+        or the{' '}
+        <a href="/tags/" class="text-accent underline">
+          tags
+        </a>
+        .
+      </p>
+    </noscript>
+    {import.meta.env.DEV && (
+      <p class="meta mt-10">
+        Dev notice: the search index is created by <code class="font-mono">pnpm build</code>. In{' '}
+        <code class="font-mono">pnpm dev</code> search only works after a build has been made.
+      </p>
+    )}
+  </div>
+</BaseLayout>

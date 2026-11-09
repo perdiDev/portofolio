@@ -1,0 +1,21 @@
+---
+import type { Post } from '../utils/posts';
+import PostList from './PostList.astro';
+
+interface Props {
+  posts: Post[];
+  heading?: string;
+  id?: string;
+}
+
+const { posts, heading = 'Related articles', id = 'related-heading' } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section aria-labelledby={id} class="reveal" data-pagefind-ignore>
+    <h2 id={id} class="mb-6 text-2xl">
+      {heading}
+    </h2>
+    <PostList posts={posts} as="h3" />
+  </section>
+)}

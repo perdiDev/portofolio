@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import { getPosts, getProjects, postsForProject } from '../../utils/posts';
+
+export const getStaticPaths = (async () => {
+  const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
+
+  return projects.map((project, index) => {
+    // Posts listed in `relatedPosts` plus posts that point at this project via `project`.
+    const listedIds = new Set((project.data.relatedPosts ?? []).map((ref) => ref.id));
+    const related = posts.filter(
+      (post) => listedIds.has(post.id) || postsForProject(posts, project).includes(post),
+    );
+    return {
+      params: { slug: project.id },
+      props: { project, related, prev: projects[index - 1], next: projects[index + 1] },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { project, related, prev, next } = Astro.props;
+const { Content } = await render(project);
+---
+
+<ProjectLayout project={project} related={related} prev={prev} next={next}>
+  <Content />
+</ProjectLayout>

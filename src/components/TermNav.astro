@@ -1,0 +1,35 @@
+---
+/** Row of links to the taxonomy pages, shown under the blog heading. */
+import { categoryUrl } from '../utils/taxonomy';
+import type { Term } from '../utils/taxonomy';
+
+interface Props {
+  categories: Term[];
+  current?: string;
+}
+
+const { categories, current } = Astro.props;
+---
+
+<nav aria-label="Browse the blog" class="mt-8 flex flex-wrap items-center gap-2">
+  {categories.map((category) => (
+    <a
+      href={categoryUrl(category.name)}
+      class="chip"
+      aria-current={current === category.name ? 'page' : undefined}
+    >
+      {category.name}
+      <span class="text-subtle" aria-hidden="true">
+        {category.count}
+      </span>
+      <span class="sr-only">({category.count} posts)</span>
+    </a>
+  ))}
+  <span aria-hidden="true" class="mx-1 h-4 w-px bg-border"></span>
+  <a href="/tags/" class="chip">
+    All tags
+  </a>
+  <a href="/archive/" class="chip">
+    Archive
+  </a>
+</nav>

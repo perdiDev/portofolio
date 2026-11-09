@@ -1,0 +1,43 @@
+---
+import { SOCIALS } from '../config';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** "inline" = icon + label row; "list" = stacked, larger rows (contact page). */
+  variant?: 'inline' | 'list';
+  class?: string;
+}
+
+const { variant = 'inline', class: className } = Astro.props;
+---
+
+<ul
+  class:list={[
+    variant === 'inline'
+      ? 'flex flex-wrap gap-x-6 gap-y-3'
+      : 'divide-y divide-border border-y border-border',
+    className,
+  ]}
+>
+  {SOCIALS.map((social) => (
+    <li>
+      <a
+        href={social.url}
+        target="_blank"
+        rel="me noopener noreferrer"
+        class:list={[
+          variant === 'inline'
+            ? 'link-grow inline-flex items-center gap-2 text-muted hover:text-text'
+            : 'row-link flex items-center justify-between gap-4 py-4 text-heading hover:text-accent',
+        ]}
+        aria-label={`${social.label} (opens in a new tab)`}
+      >
+        <span class="inline-flex items-center gap-3">
+          <Icon name={social.icon} />
+          {social.label}
+        </span>
+        {variant === 'list' && <Icon name="arrow-up-right" class="row-arrow size-4 text-accent" />}
+      </a>
+    </li>
+  ))}
+</ul>

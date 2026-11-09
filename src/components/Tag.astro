@@ -1,0 +1,19 @@
+---
+import { categoryUrl, tagUrl } from '../utils/taxonomy';
+
+interface Props {
+  name: string;
+  kind: 'tag' | 'category';
+  /** Show a leading "#" for tags. */
+  hash?: boolean;
+  class?: string;
+}
+
+const { name, kind, hash = kind === 'tag', class: className } = Astro.props;
+const href = kind === 'tag' ? tagUrl(name) : categoryUrl(name);
+---
+
+<a href={href} class:list={['chip', className]}>
+  {hash && <span aria-hidden="true">#</span>}
+  {name}
+</a>

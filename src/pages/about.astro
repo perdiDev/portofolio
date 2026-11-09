@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import avatar from '../assets/avatar.png';
+import { ABOUT, AUTHOR, SITE } from '../config';
+import { breadcrumbJsonLd, profilePageJsonLd } from '../utils/jsonld';
+
+const site = Astro.site!;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about/' },
+];
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${AUTHOR.name}, a software engineer who writes about programming, Linux, and software engineering for developers.`}
+  jsonLd={[profilePageJsonLd(site, '/about/'), breadcrumbJsonLd(site, crumbs)]}
+>
+  <div class="page page-top">
+    <PageHeader title={`About ${AUTHOR.name}`} breadcrumbs={crumbs} />
+
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-start">
+      <Image
+        src={avatar}
+        alt={`Portrait placeholder for ${AUTHOR.name}: the letter P in a circle`}
+        width={160}
+        height={160}
+        densities={[1, 2]}
+        priority
+        class="size-32 shrink-0 rounded-full border border-border sm:size-40"
+      />
+      <div>
+        <p class="font-serif text-xl leading-relaxed">{AUTHOR.bio}</p>
+        <p class="mt-4 text-muted">
+          I'm a {AUTHOR.jobTitle.toLowerCase()}. I write because explaining something is the fastest
+          way to find out whether I really understand it, and because the articles I wished existed
+          are usually the ones worth writing.
+        </p>
+        {SITE.cvUrl && (
+          <p class="mt-6">
+            <a href={SITE.cvUrl} class="btn" download>
+              <Icon name="download" class="size-4" /> Download CV
+            </a>
+          </p>
+        )}
+      </div>
+    </div>
+
+    <section class="mt-16" aria-labelledby="writes-heading">
+      <h2 id="writes-heading" class="text-3xl">
+        What I write about
+      </h2>
+      <dl class="mt-6 space-y-6">
+        {ABOUT.writesAbout.map((topic) => (
+          <div>
+            <dt class="font-serif text-xl text-heading">{topic.title}</dt>
+            <dd class="mt-1 text-muted">{topic.text}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-6">
+        <a href="/blog/" class="link-grow text-accent">
+          Read the blog
+        </a>
+      </p>
+    </section>
+
+    <section class="reveal mt-16" aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-3xl">
+        Skills &amp; tools
+      </h2>
+      <ul class="mt-6 flex flex-wrap gap-2">
+        {ABOUT.skills.map((skill) => (
+          <li>
+            <span class="chip px-4 py-1.5 text-sm">{skill}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="reveal mt-16" aria-labelledby="elsewhere-heading">
+      <h2 id="elsewhere-heading" class="text-3xl">
+        Elsewhere
+      </h2>
+      <SocialLinks class="mt-6" />
+      <p class="mt-6 text-muted">
+        Prefer email?{' '}
+        <a href="/contact/" class="link-grow text-accent">
+          Get in touch
+        </a>
+        .
+      </p>
+    </section>
+  </div>
+</BaseLayout>

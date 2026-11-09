@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { formatShortDate, isoDate, pluralize } from '../utils/format';
+import { breadcrumbJsonLd } from '../utils/jsonld';
+import { getPosts, groupByYear, postUrl } from '../utils/posts';
+
+const posts = await getPosts();
+const years = groupByYear(posts);
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Archive', href: '/archive/' },
+];
+---
+
+<BaseLayout
+  title="Archive"
+  description={`Every article on the blog in one list, grouped by year and sorted newest first. ${pluralize(posts.length, 'post')} so far.`}
+  jsonLd={[breadcrumbJsonLd(Astro.site!, crumbs)]}
+>
+  <div class="page page-top">
+    <PageHeader
+      title="Archive"
+      intro={`${pluralize(posts.length, 'post')}, newest first.`}
+      breadcrumbs={crumbs}
+    />
+
+    <div class="space-y-12">
+      {years.map(({ year, posts: yearPosts }) => (
+        <section aria-labelledby={`year-${year}`} class="reveal">
+          <h2 id={`year-${year}`} class="mb-4 text-2xl text-heading">
+            {year}
+            <span class="meta ml-2 font-sans text-base font-normal">({yearPosts.length})</span>
+          </h2>
+          <ul class="divide-y divide-border border-y border-border">
+            {yearPosts.map((post) => (
+              <li>
+                <a href={postUrl(post)} class="row-link group flex items-baseline gap-5 py-3.5">
+                  <time
+                    datetime={isoDate(post.data.pubDate)}
+                    class="meta w-14 shrink-0 tabular-nums"
+                  >
+                    {formatShortDate(post.data.pubDate)}
+                  </time>
+                  <span class="grow text-heading">{post.data.title}</span>
+                  <Icon name="arrow-right" class="row-arrow size-4 text-accent" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

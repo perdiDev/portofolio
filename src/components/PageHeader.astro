@@ -1,0 +1,21 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+import type { BreadcrumbItem } from '../utils/jsonld';
+
+interface Props {
+  title: string;
+  intro?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  eyebrow?: string;
+}
+
+const { title, intro, breadcrumbs, eyebrow } = Astro.props;
+---
+
+<header class="mb-12">
+  {breadcrumbs && <Breadcrumbs items={breadcrumbs} class="mb-6" />}
+  {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+  <h1 class="text-4xl leading-tight sm:text-5xl">{title}</h1>
+  {intro && <p class="mt-4 max-w-[60ch] text-lg text-muted">{intro}</p>}
+  <slot />
+</header>

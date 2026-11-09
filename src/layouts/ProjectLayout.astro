@@ -1,0 +1,193 @@
+---
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Gallery from '../components/Gallery.astro';
+import Icon from '../components/Icon.astro';
+import PostNav from '../components/PostNav.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
+import YouTubeFacade from '../components/YouTubeFacade.astro';
+import { OG } from '../config';
+import { breadcrumbJsonLd, softwareSourceCodeJsonLd, type BreadcrumbItem } from '../utils/jsonld';
+import { projectUrl, type Post, type Project } from '../utils/posts';
+import { absoluteUrl, ogImagePath } from '../utils/seo';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  project: Project;
+  related: Post[];
+  prev?: Project;
+  next?: Project;
+}
+
+const { project, related, prev, next } = Astro.props;
+const site = Astro.site!;
+const d = project.data;
+const url = absoluteUrl(projectUrl(project), site);
+const ogImage = absoluteUrl(ogImagePath('projects', project.id), site);
+
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Home', href: '/' },
+  { name: 'Projects', href: '/projects/' },
+  { name: d.title, href: projectUrl(project) },
+];
+
+const jsonLd = [
+  softwareSourceCodeJsonLd({
+    site,
+    url,
+    name: d.title,
+    description: d.summary,
+    codeRepository: d.repoUrl,
+    programmingLanguage: d.techStack,
+    dateCreated: d.date,
+    image: ogImage,
+  }),
+  breadcrumbJsonLd(site, crumbs),
+];
+
+const meta = [
+  { label: 'Role', value: d.role },
+  { label: 'Duration', value: d.duration },
+];
+const sectionHeading = 'text-2xl sm:text-3xl';
+---
+
+<BaseLayout
+  title={d.title}
+  description={d.summary}
+  image={{ url: ogImage, alt: `${d.title} — project by Perdi`, width: OG.width, height: OG.height }}
+  jsonLd={jsonLd}
+>
+  <div class="page page-top">
+    <article
+      data-pagefind-body
+      data-pagefind-filter="category[data-category], type[data-type]"
+      data-category="Project"
+      data-type="Project"
+    >
+      <header>
+        <Breadcrumbs items={crumbs} class="mb-8" />
+        <h1 class="text-4xl leading-tight sm:text-5xl" data-pagefind-meta="title">
+          {d.title}
+        </h1>
+        <p class="mt-4 max-w-[60ch] text-lg text-muted">{d.summary}</p>
+
+        <dl
+          class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-border py-5 sm:grid-cols-4"
+          data-pagefind-ignore
+        >
+          <div>
+            <dt class="eyebrow">Status</dt>
+            <dd class="mt-1.5">
+              <span class="status-badge text-sm text-text" data-status={d.status}>
+                {d.status}
+              </span>
+            </dd>
+          </div>
+          {meta.map((item) => (
+            <div>
+              <dt class="eyebrow">{item.label}</dt>
+              <dd class="mt-1.5 text-sm">{item.value}</dd>
+            </div>
+          ))}
+          <div class="col-span-2 sm:col-span-1">
+            <dt class="eyebrow">Stack</dt>
+            <dd class="mt-1.5">
+              <ul class="flex flex-wrap gap-1.5">
+                {d.techStack.map((tech) => (
+                  <li>
+                    <span class="chip">{tech}</span>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+
+        {(d.liveUrl || d.repoUrl) && (
+          <p class="mt-6 flex flex-wrap gap-3" data-pagefind-ignore>
+            {d.liveUrl && (
+              <a href={d.liveUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                Live demo <Icon name="arrow-up-right" class="size-4" />
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            )}
+            {d.repoUrl && (
+              <a href={d.repoUrl} class="btn" target="_blank" rel="noopener noreferrer">
+                <Icon name="github" class="size-4" /> GitHub
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            )}
+          </p>
+        )}
+      </header>
+
+      <section class="mt-12" aria-labelledby="media-heading" data-pagefind-ignore>
+        <h2 id="media-heading" class="sr-only">
+          Screenshots and video
+        </h2>
+        <Gallery screenshots={d.screenshots} />
+        {d.youtubeId && (
+          <div class="mt-6">
+            <YouTubeFacade id={d.youtubeId} title={`${d.title} — video walkthrough`} />
+          </div>
+        )}
+      </section>
+
+      <section class="mt-14" aria-labelledby="overview-heading">
+        <h2 id="overview-heading" class={sectionHeading}>
+          Overview
+        </h2>
+        <div class="prose mt-5">
+          <slot />
+        </div>
+      </section>
+
+      <section class="reveal mt-14" aria-labelledby="challenges-heading">
+        <h2 id="challenges-heading" class={sectionHeading}>
+          Challenges &amp; solutions
+        </h2>
+        <ol class="mt-6 space-y-5">
+          {d.challenges.map((item, i) => (
+            <li class="rounded-lg border border-border bg-surface p-5">
+              <p class="eyebrow">Challenge {i + 1}</p>
+              <p class="mt-1.5 font-serif text-lg text-heading">{item.challenge}</p>
+              <p class="eyebrow mt-4">Solution</p>
+              <p class="mt-1.5 text-muted">{item.solution}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="reveal mt-14" aria-labelledby="learned-heading">
+        <h2 id="learned-heading" class={sectionHeading}>
+          What I learned
+        </h2>
+        <ul class="mt-5 list-disc space-y-2 pl-5 marker:text-accent">
+          {d.learned.map((item) => (
+            <li class="pl-1">{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      {d.outcome && (
+        <section class="reveal mt-14" aria-labelledby="outcome-heading">
+          <h2 id="outcome-heading" class={sectionHeading}>
+            Outcome
+          </h2>
+          <p class="mt-5 max-w-[68ch] font-serif text-lg leading-relaxed">{d.outcome}</p>
+        </section>
+      )}
+    </article>
+
+    <div class="mt-16 space-y-14 border-t border-border pt-10">
+      <RelatedPosts posts={related} heading="Related articles" id="project-related-heading" />
+      <PostNav
+        label="More projects"
+        prev={prev ? { title: prev.data.title, href: projectUrl(prev) } : undefined}
+        next={next ? { title: next.data.title, href: projectUrl(next) } : undefined}
+        prevLabel="Previous project"
+        nextLabel="Next project"
+      />
+    </div>
+  </div>
+</BaseLayout>

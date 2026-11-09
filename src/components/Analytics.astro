@@ -1,0 +1,20 @@
+---
+/**
+ * Umami (cookieless) analytics. Production only, and only when
+ * PUBLIC_UMAMI_WEBSITE_ID is set. Respects Do Not Track.
+ */
+import { PUBLIC_UMAMI_SRC, PUBLIC_UMAMI_WEBSITE_ID } from 'astro:env/client';
+
+const enabled = import.meta.env.PROD && Boolean(PUBLIC_UMAMI_WEBSITE_ID);
+const src = PUBLIC_UMAMI_SRC || 'https://cloud.umami.is/script.js';
+---
+
+{enabled && (
+  <script
+    is:inline
+    defer
+    src={src}
+    data-website-id={PUBLIC_UMAMI_WEBSITE_ID}
+    data-do-not-track="true"
+  />
+)}

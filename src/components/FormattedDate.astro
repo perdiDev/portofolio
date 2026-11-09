@@ -1,0 +1,17 @@
+---
+import { formatDate, isoDate } from '../utils/format';
+
+interface Props {
+  date: Date;
+  /** Text shown before the date, e.g. "Updated". */
+  prefix?: string;
+  class?: string;
+}
+
+const { date, prefix, class: className } = Astro.props;
+---
+
+<time datetime={isoDate(date)} class={className}>
+  {prefix ? `${prefix} ` : ''}
+  {formatDate(date)}
+</time>

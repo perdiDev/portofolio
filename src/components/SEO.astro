@@ -1,0 +1,128 @@
+---
+import { AUTHOR, OG, SITE } from '../config';
+import { PUBLIC_BING_VERIFICATION, PUBLIC_GSC_VERIFICATION } from 'astro:env/client';
+import { serializeJsonLd, type JsonLd } from '../utils/jsonld';
+import { absoluteUrl, buildDescription, buildTitle } from '../utils/seo';
+
+export interface SeoImage {
+  /** Absolute or site-relative URL. */
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+export interface ArticleMeta {
+  publishedTime: Date;
+  modifiedTime?: Date;
+  section?: string;
+  tags?: string[];
+}
+
+export interface Props {
+  /** Page title without the site suffix. Ignored when `fullTitle` is set. */
+  title: string;
+  /** Use as-is (home page). */
+  fullTitle?: string;
+  description: string;
+  /** Overrides the self-referencing canonical (cross-posted articles). */
+  canonical?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+  image?: SeoImage;
+  article?: ArticleMeta;
+  /** Absolute or site-relative URLs for paginated listings. */
+  prev?: string;
+  next?: string;
+  jsonLd?: JsonLd[];
+}
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const {
+  title,
+  fullTitle,
+  description,
+  canonical,
+  noindex = false,
+  type = 'website',
+  image,
+  article,
+  prev,
+  next,
+  jsonLd = [],
+} = Astro.props;
+
+const pageTitle = fullTitle ?? buildTitle(title);
+const pageDescription = buildDescription(description);
+const canonicalUrl = canonical ?? absoluteUrl(Astro.url.pathname, site);
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+const ogImage = {
+  url: absoluteUrl(image?.url ?? '/og/default.png', site),
+  alt: image?.alt ?? `${SITE.name} — ${SITE.description}`,
+  width: image?.width ?? OG.width,
+  height: image?.height ?? OG.height,
+};
+// Open Graph / Twitter titles carry the page title without the "| Site" suffix.
+const socialTitle = fullTitle ?? title;
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={pageDescription} />
+<meta name="robots" content={robots} />
+<link rel="canonical" href={canonicalUrl} />
+{prev && <link rel="prev" href={absoluteUrl(prev, site)} />}
+{next && <link rel="next" href={absoluteUrl(next, site)} />}
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.name} — RSS`}
+  href={absoluteUrl('/rss.xml', site)}
+/>
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<meta property="og:type" content={type} />
+<meta property="og:title" content={socialTitle} />
+<meta property="og:description" content={pageDescription} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:image" content={ogImage.url} />
+<meta property="og:image:width" content={String(ogImage.width)} />
+<meta property="og:image:height" content={String(ogImage.height)} />
+<meta property="og:image:alt" content={ogImage.alt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={socialTitle} />
+<meta name="twitter:description" content={pageDescription} />
+<meta name="twitter:image" content={ogImage.url} />
+<meta name="twitter:image:alt" content={ogImage.alt} />
+{SITE.twitterHandle && <meta name="twitter:site" content={`@${SITE.twitterHandle}`} />}
+{SITE.twitterHandle && <meta name="twitter:creator" content={`@${SITE.twitterHandle}`} />}
+
+{type === 'article' && article && (
+  <>
+    <meta property="article:published_time" content={article.publishedTime.toISOString()} />
+    <meta
+      property="article:modified_time"
+      content={(article.modifiedTime ?? article.publishedTime).toISOString()}
+    />
+    <meta property="article:author" content={absoluteUrl('/about/', site)} />
+    {article.section && <meta property="article:section" content={article.section} />}
+    {article.tags?.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+  </>
+)}
+<meta name="author" content={AUTHOR.name} />
+
+{PUBLIC_GSC_VERIFICATION && (
+  <meta name="google-site-verification" content={PUBLIC_GSC_VERIFICATION} />
+)}
+{PUBLIC_BING_VERIFICATION && <meta name="msvalidate.01" content={PUBLIC_BING_VERIFICATION} />}
+
+{jsonLd.map((entity) => (
+  <script type="application/ld+json" is:inline set:html={serializeJsonLd(entity)} />
+))}

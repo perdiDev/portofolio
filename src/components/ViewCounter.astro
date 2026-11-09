@@ -1,0 +1,85 @@
+---
+/**
+ * Placeholder for the view count. The page stays fully static: a tiny script fills
+ * the number in (and registers the visit once). Not rendered in dev, and the script
+ * hides it again if the API is unavailable (e.g. Redis variables missing).
+ * The count is never part of JSON-LD.
+ */
+import {
+  KV_REST_API_TOKEN,
+  KV_REST_API_URL,
+  UPSTASH_REDIS_REST_TOKEN,
+  UPSTASH_REDIS_REST_URL,
+} from 'astro:env/server';
+import Icon from './Icon.astro';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+// Only rendered in production builds that have Redis credentials: no placeholder, no
+// request, and no layout change when the feature is off.
+const configured = Boolean(
+  (UPSTASH_REDIS_REST_URL || KV_REST_API_URL) && (UPSTASH_REDIS_REST_TOKEN || KV_REST_API_TOKEN),
+);
+const enabled = import.meta.env.PROD && configured;
+---
+
+{enabled && (
+  <span
+    class="inline-flex items-center gap-2 whitespace-nowrap"
+    data-view-counter
+    data-slug={slug}
+    data-pagefind-ignore
+  >
+    <span aria-hidden="true">·</span>
+    <Icon name="eye" class="size-4" />
+    <span class="tabular-nums" data-view-count aria-live="polite">
+      — views
+    </span>
+  </span>
+)}
+
+<script>
+  const registered = new Set<string>();
+  let controller: AbortController | undefined;
+
+  const format = (n: number) =>
+    `${new Intl.NumberFormat('en-US').format(n)} ${n === 1 ? 'view' : 'views'}`;
+
+  async function setup() {
+    controller?.abort();
+    const root = document.querySelector<HTMLElement>('[data-view-counter]');
+    const slug = root?.dataset.slug;
+    if (!root || !slug) return;
+    const output = root.querySelector<HTMLElement>('[data-view-count]');
+    controller = new AbortController();
+    const { signal } = controller;
+    const url = `/api/views/${encodeURIComponent(slug)}/`;
+
+    try {
+      // Count the visit once per page view; the server also dedupes per visitor for 24h.
+      const method = registered.has(slug) ? 'GET' : 'POST';
+      const response = await fetch(url, {
+        method,
+        signal,
+        headers: { accept: 'application/json' },
+      });
+      // Always consume the body so the connection is released, even on errors.
+      const data: { views?: number } = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(String(response.status));
+      if (typeof data.views !== 'number') throw new Error('bad payload');
+      registered.add(slug);
+      if (output) output.textContent = format(data.views);
+    } catch {
+      if (signal.aborted) return;
+      // Keep the space reserved (visibility, not display) so nothing below shifts.
+      root.style.visibility = 'hidden';
+      root.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => controller?.abort());
+</script>

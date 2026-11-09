@@ -1,0 +1,43 @@
+---
+import Icon from '../components/Icon.astro';
+import PostList from '../components/PostList.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts } from '../utils/posts';
+
+const latest = (await getPosts()).slice(0, 3);
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page does not exist or has moved. Search the site or read one of the latest articles instead."
+  noindex
+>
+  <div class="page page-top">
+    <header class="mb-12">
+      <p class="eyebrow mb-3">Error 404</p>
+      <h1 class="text-4xl sm:text-5xl">This page could not be found</h1>
+      <p class="mt-4 max-w-[56ch] text-lg text-muted">
+        The link may be broken, or the page may have moved. Try searching, or pick up with one of
+        the latest articles below.
+      </p>
+      <p class="mt-6 flex flex-wrap gap-3">
+        <a href="/search/" class="btn btn-primary">
+          <Icon name="search" class="size-4" /> Search the site
+        </a>
+        <a href="/" class="btn">
+          Back to home
+        </a>
+        <a href="/blog/" class="btn">
+          Browse the blog
+        </a>
+      </p>
+    </header>
+
+    <section aria-labelledby="latest-heading">
+      <h2 id="latest-heading" class="mb-6 text-2xl">
+        Latest writing
+      </h2>
+      <PostList posts={latest} as="h3" />
+    </section>
+  </div>
+</BaseLayout>

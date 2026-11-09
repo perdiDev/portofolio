@@ -1,0 +1,256 @@
+---
+import { NAV, SITE } from '../config';
+import Icon from './Icon.astro';
+
+const pathname = Astro.url.pathname;
+
+/** Sections whose sub-pages keep the parent nav item highlighted (visual only). */
+const sectionPrefixes: Record<string, string[]> = {
+  '/blog/': ['/blog/', '/categories/', '/tags/', '/archive/'],
+  '/projects/': ['/projects/'],
+  '/about/': ['/about/'],
+  '/contact/': ['/contact/'],
+};
+
+const state = (href: string) => {
+  const exact = pathname === href;
+  const section = !exact && (sectionPrefixes[href] ?? [href]).some((p) => pathname.startsWith(p));
+  return {
+    'aria-current': exact ? ('page' as const) : undefined,
+    'data-section': section || undefined,
+  };
+};
+
+const iconLinks = [
+  { href: '/search/', label: 'Search', icon: 'search' },
+  { href: '/rss.xml', label: 'RSS feed', icon: 'rss' },
+] as const;
+
+const iconLinkClass =
+  'flex size-10 items-center justify-center rounded-md text-muted transition-colors hover:text-accent aria-[current=page]:text-accent';
+const navLinkClass =
+  'link-grow px-1 py-2 text-sm text-muted transition-colors hover:text-text aria-[current=page]:text-text data-[section]:text-text';
+---
+
+<header
+  class="relative border-b border-border/70"
+  transition:persist="site-header"
+  data-site-header
+>
+  <div class="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-5">
+    <a
+      href="/"
+      class="font-serif text-xl font-semibold tracking-tight text-heading"
+      aria-label={`${SITE.name} — home`}
+      data-home-link
+    >
+      {SITE.name}
+    </a>
+
+    <nav aria-label="Main">
+      <!-- Wide screens: everything inline. -->
+      <ul class="hidden items-center gap-5 sm:flex">
+        {NAV.map((item) => (
+          <li>
+            <a href={item.href} class={navLinkClass} data-nav-link {...state(item.href)}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li class="ml-1 flex items-center">
+          {iconLinks.map((link) => (
+            <a
+              href={link.href}
+              class={iconLinkClass}
+              aria-label={link.label}
+              data-nav-link
+              {...(link.href === '/search/' ? state(link.href) : {})}
+            >
+              <Icon name={link.icon} />
+            </a>
+          ))}
+          <button
+            type="button"
+            class={iconLinkClass}
+            data-theme-toggle
+            aria-label="Switch to dark theme"
+            aria-pressed="false"
+            hidden
+          >
+            <Icon name="sun" class="theme-icon-sun" />
+            <Icon name="moon" class="theme-icon-moon" />
+          </button>
+        </li>
+      </ul>
+
+      <!-- Small screens: icons stay visible, links live in a <details> menu (works without JS). -->
+      <div class="flex items-center sm:hidden">
+        {iconLinks.map((link) => (
+          <a
+            href={link.href}
+            class={iconLinkClass}
+            aria-label={link.label}
+            data-nav-link
+            {...(link.href === '/search/' ? state(link.href) : {})}
+          >
+            <Icon name={link.icon} />
+          </a>
+        ))}
+        <button
+          type="button"
+          class={iconLinkClass}
+          data-theme-toggle
+          aria-label="Switch to dark theme"
+          aria-pressed="false"
+          hidden
+        >
+          <Icon name="sun" class="theme-icon-sun" />
+          <Icon name="moon" class="theme-icon-moon" />
+        </button>
+        <details class="group" data-mobile-nav>
+          <summary
+            class="flex size-10 list-none items-center justify-center rounded-md text-muted transition-colors hover:text-accent [&::-webkit-details-marker]:hidden"
+            aria-label="Menu"
+          >
+            <Icon name="menu" class="group-open:hidden" />
+            <Icon name="close" class="hidden group-open:block" />
+          </summary>
+          <ul class="absolute inset-x-0 top-full z-50 border-b border-border bg-surface px-5 py-3 shadow-none">
+            {NAV.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="block py-3 text-base text-muted hover:text-text aria-[current=page]:text-accent data-[section]:text-text"
+                  data-nav-link
+                  {...state(item.href)}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // The header is persisted across client-side navigations, so its "current page"
+  // state and the mobile menu must be refreshed on every page load.
+  const sections: Record<string, string[]> = {
+    '/blog/': ['/blog/', '/categories/', '/tags/', '/archive/'],
+    '/projects/': ['/projects/'],
+    '/about/': ['/about/'],
+    '/contact/': ['/contact/'],
+  };
+
+  let cleanup: (() => void) | undefined;
+
+  function setup() {
+    cleanup?.();
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    if (!header) return;
+    const pathname = location.pathname;
+
+    header.querySelectorAll<HTMLAnchorElement>('a[data-nav-link]').forEach((link) => {
+      const href = new URL(link.href).pathname;
+      const exact = pathname === href;
+      const section = !exact && (sections[href] ?? [href]).some((p) => pathname.startsWith(p));
+      if (exact) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+      if (section && href !== '/search/' && href !== '/rss.xml') link.dataset.section = '';
+      else delete link.dataset.section;
+    });
+
+    const details = header.querySelector<HTMLDetailsElement>('details[data-mobile-nav]');
+    if (!details) return;
+    details.open = false;
+
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && details.open) {
+        details.open = false;
+        details.querySelector('summary')?.focus();
+      }
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (details.open && event.target instanceof Node && !header.contains(event.target)) {
+        details.open = false;
+      }
+    };
+    document.addEventListener('keydown', onKeydown);
+    document.addEventListener('pointerdown', onPointerDown);
+    cleanup = () => {
+      document.removeEventListener('keydown', onKeydown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+
+  // --- Light/dark theme toggle --------------------------------------
+  type Theme = 'light' | 'dark';
+
+  function getStoredTheme(): Theme {
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'light' || stored === 'dark') return stored;
+    } catch {
+      // localStorage unavailable (private mode, blocked, etc.): fall back silently.
+    }
+    return 'light';
+  }
+
+  function currentTheme(): Theme {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  function syncToggles(theme: Theme) {
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
+      button.hidden = false;
+      button.setAttribute('aria-pressed', String(theme === 'dark'));
+      button.setAttribute(
+        'aria-label',
+        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+      );
+    });
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (meta) meta.content = theme === 'dark' ? '#0c0c0d' : '#fafaf9';
+  }
+
+  function applyTheme(theme: Theme, persist = false) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (persist) {
+      try {
+        localStorage.setItem('theme', theme);
+      } catch {
+        // Ignore: the theme just won't persist across visits.
+      }
+    }
+    syncToggles(theme);
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    const button =
+      target instanceof Element ? target.closest<HTMLElement>('[data-theme-toggle]') : null;
+    if (!button) return;
+    applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
+  });
+
+  document.addEventListener('astro:before-swap', (event) => {
+    const swap = event as unknown as { newDocument: Document };
+    swap.newDocument.documentElement.setAttribute('data-theme', currentTheme());
+  });
+  document.addEventListener('astro:page-load', () => syncToggles(currentTheme()));
+  window.addEventListener('pageshow', () => applyTheme(getStoredTheme()));
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'theme') applyTheme(getStoredTheme());
+  });
+
+  syncToggles(currentTheme());
+</script>

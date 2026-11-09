@@ -1,0 +1,26 @@
+---
+import ListingLayout from '../../layouts/ListingLayout.astro';
+import TermNav from '../../components/TermNav.astro';
+import { paginate } from '../../utils/paginate';
+import { getPosts } from '../../utils/posts';
+import { getCategories } from '../../utils/taxonomy';
+
+const posts = await getPosts();
+const page = paginate(posts, 1, '/blog/');
+const categories = getCategories(posts);
+---
+
+<ListingLayout
+  heading="Blog"
+  label="Blog"
+  intro="Practical articles on programming, Linux, and software engineering, written for developers."
+  description="Articles on programming, Linux, and software engineering by Perdi: practical, example-driven writing for developers."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Blog', href: '/blog/' },
+  ]}
+  base="/blog/"
+  page={page}
+>
+  <TermNav slot="header" categories={categories} />
+</ListingLayout>

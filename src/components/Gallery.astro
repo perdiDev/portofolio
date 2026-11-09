@@ -1,0 +1,214 @@
+---
+/**
+ * Hero screenshot + thumbnail gallery. Every image is a real optimized <img>
+ * wrapped in <a href="full-size image">, so everything works without JavaScript.
+ * A script upgrades the links to a native <dialog> lightbox.
+ */
+import type { ImageMetadata } from 'astro';
+import { getImage, Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+
+interface Shot {
+  image: ImageMetadata;
+  alt: string;
+  caption?: string;
+}
+
+interface Props {
+  screenshots: Shot[];
+}
+
+const { screenshots } = Astro.props;
+const [hero, ...rest] = screenshots;
+
+const full = await Promise.all(
+  screenshots.map((shot) =>
+    getImage({ src: shot.image, width: 1600, format: 'webp', quality: 82 }),
+  ),
+);
+const heroFull = full[0]!;
+---
+
+<div data-gallery>
+  <figure class="m-0">
+    <a
+      href={heroFull.src}
+      data-lightbox
+      data-alt={hero!.alt}
+      data-caption={hero!.caption ?? ''}
+      class="block overflow-hidden rounded-lg border border-border transition-colors hover:border-accent"
+      aria-label={`Open larger view: ${hero!.alt}`}
+    >
+      <Picture
+        src={hero!.image}
+        alt={hero!.alt}
+        formats={['avif', 'webp']}
+        widths={[480, 728, 1100, 1456]}
+        sizes="(min-width: 768px) 728px, 100vw"
+        priority
+        class="h-auto w-full"
+      />
+    </a>
+    {hero!.caption && <figcaption class="meta mt-2">{hero!.caption}</figcaption>}
+  </figure>
+
+  {rest.length > 0 && (
+    <ul class="mt-4 grid grid-cols-2 gap-4" aria-label="More screenshots">
+      {rest.map((shot, i) => (
+        <li>
+          <figure class="m-0">
+            <a
+              href={full[i + 1]!.src}
+              data-lightbox
+              data-alt={shot.alt}
+              data-caption={shot.caption ?? ''}
+              class="reveal block overflow-hidden rounded-lg border border-border transition-colors hover:border-accent"
+              aria-label={`Open larger view: ${shot.alt}`}
+            >
+              <Picture
+                src={shot.image}
+                alt={shot.alt}
+                formats={['avif', 'webp']}
+                widths={[320, 480, 728]}
+                sizes="(min-width: 768px) 360px, 50vw"
+                class="h-auto w-full"
+              />
+            </a>
+            {shot.caption && <figcaption class="meta mt-2">{shot.caption}</figcaption>}
+          </figure>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <dialog
+    data-lightbox-dialog
+    aria-label="Screenshot viewer"
+    class="m-auto max-h-dvh max-w-[100vw] bg-transparent p-4 text-text backdrop:bg-black/90 open:flex open:flex-col open:items-center open:gap-3"
+  >
+    <div class="flex w-full items-center justify-between gap-3">
+      <p class="meta" data-lightbox-counter aria-live="polite"></p>
+      <button type="button" class="btn" data-lightbox-close aria-label="Close viewer">
+        <Icon name="close" class="size-4" /> Close
+      </button>
+    </div>
+    <div class="flex w-full items-center justify-center gap-2 sm:gap-4">
+      <button type="button" class="btn px-2.5" data-lightbox-prev aria-label="Previous screenshot">
+        <Icon name="arrow-left" class="size-5" />
+      </button>
+      <figure class="m-0 flex min-w-0 flex-col items-center gap-3" data-lightbox-figure></figure>
+      <button type="button" class="btn px-2.5" data-lightbox-next aria-label="Next screenshot">
+        <Icon name="arrow-right" class="size-5" />
+      </button>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  let controller: AbortController | undefined;
+
+  function setup() {
+    controller?.abort();
+    const root = document.querySelector<HTMLElement>('[data-gallery]');
+    const dialog = root?.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+    if (!root || !dialog || typeof dialog.showModal !== 'function') return;
+
+    controller = new AbortController();
+    const { signal } = controller;
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]')];
+    const figure = dialog.querySelector<HTMLElement>('[data-lightbox-figure]')!;
+    const counter = dialog.querySelector<HTMLElement>('[data-lightbox-counter]')!;
+    const prevButton = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+    const nextButton = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+    let index = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (next: number) => {
+      index = (next + links.length) % links.length;
+      const link = links[index]!;
+      const image = new Image();
+      image.src = link.href;
+      image.alt = link.dataset.alt ?? '';
+      image.className =
+        'max-h-[72dvh] w-auto max-w-[88vw] rounded-lg border border-border bg-surface';
+      figure.replaceChildren(image);
+      if (link.dataset.caption) {
+        const caption = document.createElement('figcaption');
+        caption.className = 'meta max-w-[68ch] text-center';
+        caption.textContent = link.dataset.caption;
+        figure.append(caption);
+      }
+      counter.textContent = `${index + 1} / ${links.length}`;
+      // Warm the neighbours so arrow keys feel instant.
+      for (const offset of [-1, 1])
+        new Image().src = links[(index + offset + links.length) % links.length]!.href;
+    };
+
+    const open = (at: number, from: HTMLElement) => {
+      opener = from;
+      show(at);
+      dialog.showModal();
+      const single = links.length < 2;
+      prevButton.hidden = single;
+      nextButton.hidden = single;
+    };
+
+    links.forEach((link, i) => {
+      link.addEventListener(
+        'click',
+        (event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+          event.preventDefault();
+          open(i, link);
+        },
+        { signal },
+      );
+    });
+
+    prevButton.addEventListener('click', () => show(index - 1), { signal });
+    nextButton.addEventListener('click', () => show(index + 1), { signal });
+    dialog
+      .querySelector('[data-lightbox-close]')
+      ?.addEventListener('click', () => dialog.close(), { signal });
+
+    dialog.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          show(index - 1);
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          show(index + 1);
+        }
+      },
+      { signal },
+    );
+
+    // Clicking the backdrop (the dialog element itself) closes the viewer.
+    dialog.addEventListener(
+      'click',
+      (event) => {
+        if (event.target === dialog) dialog.close();
+      },
+      { signal },
+    );
+
+    dialog.addEventListener(
+      'close',
+      () => {
+        figure.replaceChildren();
+        opener?.focus();
+        opener = null;
+      },
+      { signal },
+    );
+
+    signal.addEventListener('abort', () => {
+      if (dialog.open) dialog.close();
+    });
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => controller?.abort());
+</script>

@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+import { ClientRouter, fade } from 'astro:transitions';
+import { Font } from 'astro:assets';
+import { SITE } from '../config';
+import Analytics from '../components/Analytics.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import SEO, { type Props as SeoProps } from '../components/SEO.astro';
+
+export interface Props extends SeoProps {
+  /** Extra classes for <main>, e.g. to change the width on special pages. */
+  mainClass?: string;
+}
+
+const { mainClass, ...seo } = Astro.props;
+---
+
+<html lang={SITE.language} data-theme="light" transition:animate={fade({ duration: '0.2s' })}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored === 'light' || stored === 'dark') theme = stored;
+        } catch (e) {
+          theme = 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content={SITE.themeColor} />
+
+    <SEO {...seo} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <Font cssVariable="--font-lora" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-inter" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-jetbrains-mono" />
+
+    <ClientRouter />
+    <Analytics />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <Header />
+    <main id="main" tabindex="-1" class:list={['w-full flex-1 outline-none', mainClass]}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ListingLayout from '../../../layouts/ListingLayout.astro';
+import { pluralize } from '../../../utils/format';
+import { paginate } from '../../../utils/paginate';
+import { getPosts } from '../../../utils/posts';
+import { categoryUrl, getCategories } from '../../../utils/taxonomy';
+
+export const getStaticPaths = (async () => {
+  const categories = getCategories(await getPosts());
+  return categories.map((category) => ({
+    params: { category: category.slug },
+    props: { name: category.name, posts: category.posts },
+  }));
+}) satisfies GetStaticPaths;
+
+const { name, posts } = Astro.props;
+const base = categoryUrl(name);
+const page = paginate(posts, 1, base);
+---
+
+<ListingLayout
+  heading={name}
+  label={name}
+  intro={`${pluralize(posts.length, 'article')} filed under ${name}.`}
+  description={`Articles in the ${name} category by Perdi: ${pluralize(posts.length, 'post')} on ${name.toLowerCase()} for developers.`}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Categories', href: '/categories/' },
+    { name, href: base },
+  ]}
+  base={base}
+  page={page}
+/>

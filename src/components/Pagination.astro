@@ -1,0 +1,78 @@
+---
+import { pageUrl } from '../utils/paginate';
+import Icon from './Icon.astro';
+
+interface Props {
+  page: number;
+  totalPages: number;
+  /** Base path of page 1, ending with "/". */
+  base: string;
+  label?: string;
+}
+
+const { page, totalPages, base, label = 'Pagination' } = Astro.props;
+const numbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+const showNumbers = totalPages <= 7;
+const itemClass =
+  'inline-flex h-10 min-w-10 items-center justify-center rounded-md border px-3 text-sm transition-colors';
+---
+
+{totalPages > 1 && (
+  <nav aria-label={label} class="mt-14 flex items-center justify-between gap-4">
+    {page > 1 ? (
+      <a
+        href={pageUrl(base, page - 1)}
+        rel="prev"
+        class={`${itemClass} gap-2 border-border-strong text-text hover:border-accent hover:text-accent`}
+      >
+        <Icon name="arrow-left" class="size-4" />
+        Newer
+      </a>
+    ) : (
+      <span class="min-w-10" />
+    )}
+
+    {showNumbers ? (
+      <ol class="flex items-center gap-2">
+        {numbers.map((n) => (
+          <li>
+            {n === page ? (
+              <span
+                aria-current="page"
+                class={`${itemClass} border-accent bg-accent text-accent-fg font-semibold`}
+              >
+                <span class="sr-only">Page </span>
+                {n}
+              </span>
+            ) : (
+              <a
+                href={pageUrl(base, n)}
+                class={`${itemClass} border-border text-muted hover:border-accent hover:text-accent`}
+                aria-label={`Page ${n}`}
+              >
+                {n}
+              </a>
+            )}
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p class="meta">
+        Page {page} of {totalPages}
+      </p>
+    )}
+
+    {page < totalPages ? (
+      <a
+        href={pageUrl(base, page + 1)}
+        rel="next"
+        class={`${itemClass} gap-2 border-border-strong text-text hover:border-accent hover:text-accent`}
+      >
+        Older
+        <Icon name="arrow-right" class="size-4" />
+      </a>
+    ) : (
+      <span class="min-w-10" />
+    )}
+  </nav>
+)}

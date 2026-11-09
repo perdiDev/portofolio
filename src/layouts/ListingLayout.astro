@@ -1,0 +1,78 @@
+---
+/**
+ * Shared shell for every paginated list of posts: /blog/, category pages, tag pages.
+ * Produces unique titles/descriptions ("Blog — Page 2"), self-canonicals,
+ * rel prev/next, a visible breadcrumb trail and the matching JSON-LD.
+ */
+import Pagination from '../components/Pagination.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PostList from '../components/PostList.astro';
+import { breadcrumbJsonLd, type BreadcrumbItem } from '../utils/jsonld';
+import { clamp } from '../utils/format';
+import { pageUrl, type Page } from '../utils/paginate';
+import { pageLabel } from '../utils/seo';
+import type { Post } from '../utils/posts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  /** <h1> text. */
+  heading: string;
+  /** Short name used in <title>: "Blog", "Linux", "Tag: typescript". */
+  label: string;
+  intro?: string;
+  /** Meta description of the first page. */
+  description: string;
+  /** Trail up to and including this listing's first page. */
+  breadcrumbs: BreadcrumbItem[];
+  /** Path of page 1, ending with "/". */
+  base: string;
+  page: Page<Post>;
+  noindex?: boolean;
+}
+
+const { heading, label, intro, description, breadcrumbs, base, page, noindex } = Astro.props;
+const site = Astro.site!;
+
+const trail: BreadcrumbItem[] =
+  page.page > 1
+    ? [...breadcrumbs, { name: `Page ${page.page}`, href: pageUrl(base, page.page) }]
+    : breadcrumbs;
+
+const pageDescription =
+  page.page > 1
+    ? clamp(`${label}, page ${page.page} of ${page.totalPages}. ${description}`, 160)
+    : description;
+---
+
+<BaseLayout
+  title={pageLabel(label, page.page)}
+  description={pageDescription}
+  noindex={noindex}
+  prev={page.prevUrl}
+  next={page.nextUrl}
+  jsonLd={[breadcrumbJsonLd(site, trail)]}
+>
+  <div class="page page-top">
+    <PageHeader
+      title={page.page > 1 ? `${heading} — Page ${page.page}` : heading}
+      intro={intro}
+      breadcrumbs={trail}
+    >
+      <slot name="header" />
+    </PageHeader>
+
+    {page.items.length > 0 ? (
+      <PostList posts={page.items} showTags={false} />
+    ) : (
+      <p class="text-muted">Nothing here yet.</p>
+    )}
+
+    <Pagination
+      page={page.page}
+      totalPages={page.totalPages}
+      base={base}
+      label={`${label} pages`}
+    />
+    <slot />
+  </div>
+</BaseLayout>

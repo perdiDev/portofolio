@@ -1,0 +1,41 @@
+---
+import { projectUrl, type Project } from '../utils/posts';
+import Icon from './Icon.astro';
+
+interface Props {
+  project: Project;
+  as?: 'h2' | 'h3';
+  index?: number;
+}
+
+const { project, as: Heading = 'h2', index = 0 } = Astro.props;
+const { title, summary, date, techStack, status } = project.data;
+---
+
+<a
+  href={projectUrl(project)}
+  class="row-link group fade-up grid grid-cols-[3rem_1fr] gap-x-4 gap-y-2 py-6 sm:grid-cols-[3.5rem_1fr_auto]"
+  style={`--i:${index}`}
+>
+  <time datetime={String(date.getUTCFullYear())} class="meta pt-1.5 tabular-nums">
+    {date.getUTCFullYear()}
+  </time>
+  <div class="min-w-0">
+    <Heading class="flex items-center gap-2 text-2xl leading-snug">
+      {title}
+      <Icon name="arrow-right" class="row-arrow size-5 text-accent" />
+    </Heading>
+    <p class="mt-1 text-pretty text-muted">{summary}</p>
+    <ul class="mt-3 flex flex-wrap gap-2" aria-label="Tech stack">
+      {techStack.map((tech) => (
+        <li>
+          <span class="chip">{tech}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <p class="status-badge col-start-2 pt-1.5 sm:col-start-auto" data-status={status}>
+    <span class="sr-only">Status:</span>
+    {status}
+  </p>
+</a>

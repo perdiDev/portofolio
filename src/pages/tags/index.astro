@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { breadcrumbJsonLd } from '../../utils/jsonld';
+import { getPosts } from '../../utils/posts';
+import { getTags, tagUrl } from '../../utils/taxonomy';
+
+const tags = getTags(await getPosts());
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Tags', href: '/tags/' },
+];
+---
+
+<BaseLayout
+  title="Tags"
+  description="Every topic covered on the blog, with the number of articles for each tag."
+  jsonLd={[breadcrumbJsonLd(Astro.site!, crumbs)]}
+>
+  <div class="page page-top">
+    <PageHeader
+      title="Tags"
+      intro="Finer-grained topics than categories. The number is how many articles carry the tag."
+      breadcrumbs={crumbs}
+    />
+    <ul class="flex flex-wrap gap-3">
+      {tags.map((tag, i) => (
+        <li class="fade-up" style={`--i:${i}`}>
+          <a href={tagUrl(tag.name)} class="chip px-4 py-1.5 text-sm">
+            <span aria-hidden="true">#</span>
+            {tag.name}
+            <span class="text-subtle" aria-hidden="true">
+              {tag.count}
+            </span>
+            <span class="sr-only">
+              ({tag.count} {tag.count === 1 ? 'post' : 'posts'})
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

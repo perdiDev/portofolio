@@ -1,0 +1,51 @@
+---
+import Icon from './Icon.astro';
+
+interface Item {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  prev?: Item;
+  next?: Item;
+  prevLabel?: string;
+  nextLabel?: string;
+  label: string;
+}
+
+const { prev, next, prevLabel = 'Previous', nextLabel = 'Next', label } = Astro.props;
+---
+
+{(prev || next) && (
+  <nav aria-label={label} class="grid gap-4 sm:grid-cols-2" data-pagefind-ignore>
+    {prev ? (
+      <a
+        href={prev.href}
+        rel="prev"
+        class="row-link group rounded-lg border border-border p-4 hover:border-accent"
+      >
+        <span class="meta flex items-center gap-2">
+          <Icon name="arrow-left" class="size-4" /> {prevLabel}
+        </span>
+        <span class="mt-1 block font-serif text-lg leading-snug text-heading">{prev.title}</span>
+      </a>
+    ) : (
+      <span />
+    )}
+    {next ? (
+      <a
+        href={next.href}
+        rel="next"
+        class="row-link group rounded-lg border border-border p-4 text-right hover:border-accent"
+      >
+        <span class="meta flex items-center justify-end gap-2">
+          {nextLabel} <Icon name="arrow-right" class="size-4" />
+        </span>
+        <span class="mt-1 block font-serif text-lg leading-snug text-heading">{next.title}</span>
+      </a>
+    ) : (
+      <span />
+    )}
+  </nav>
+)}

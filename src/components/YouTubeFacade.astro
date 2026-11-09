@@ -1,0 +1,81 @@
+---
+/**
+ * Privacy-friendly YouTube embed. Initially just a link with the poster image
+ * (no YouTube JavaScript, no cookies). On click a script swaps in an iframe from
+ * youtube-nocookie.com. Without JavaScript the link opens the video on YouTube.
+ */
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+const watchUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
+const poster = `https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg`;
+---
+
+<div
+  class="relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-surface"
+  data-youtube-facade-root
+>
+  <a
+    href={watchUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group absolute inset-0 block"
+    data-youtube-facade
+    data-video-id={id}
+    data-video-title={title}
+    aria-label={`Play video: ${title}`}
+  >
+    <img
+      src={poster}
+      alt=""
+      width="480"
+      height="360"
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 size-full object-cover opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+    />
+    <span
+      class="absolute top-1/2 left-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-accent-fg transition-transform duration-300 group-hover:scale-110"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" class="size-7 translate-x-0.5 fill-current">
+        <path d="M8 5v14l11-7z"></path>
+      </svg>
+    </span>
+  </a>
+</div>
+
+<script>
+  let controller: AbortController | undefined;
+
+  function setup() {
+    controller?.abort();
+    controller = new AbortController();
+    document.querySelectorAll<HTMLAnchorElement>('[data-youtube-facade]').forEach((link) => {
+      link.addEventListener(
+        'click',
+        (event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+          const id = link.dataset.videoId;
+          if (!id) return;
+          event.preventDefault();
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0`;
+          iframe.title = link.dataset.videoTitle ?? 'YouTube video';
+          iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+          iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+          iframe.className = 'absolute inset-0 size-full border-0';
+          link.replaceWith(iframe);
+          iframe.focus();
+        },
+        { signal: controller!.signal },
+      );
+    });
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => controller?.abort());
+</script>

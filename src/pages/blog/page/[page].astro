@@ -1,0 +1,32 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ListingLayout from '../../../layouts/ListingLayout.astro';
+import TermNav from '../../../components/TermNav.astro';
+import { extraPageNumbers, paginate } from '../../../utils/paginate';
+import { getPosts } from '../../../utils/posts';
+import { getCategories } from '../../../utils/taxonomy';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  return extraPageNumbers(posts.length).map((n) => ({ params: { page: String(n) } }));
+}) satisfies GetStaticPaths;
+
+const posts = await getPosts();
+const page = paginate(posts, Number(Astro.params.page), '/blog/');
+const categories = getCategories(posts);
+---
+
+<ListingLayout
+  heading="Blog"
+  label="Blog"
+  intro="Practical articles on programming, Linux, and software engineering, written for developers."
+  description="Articles on programming, Linux, and software engineering by Perdi: practical, example-driven writing for developers."
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Blog', href: '/blog/' },
+  ]}
+  base="/blog/"
+  page={page}
+>
+  <TermNav slot="header" categories={categories} />
+</ListingLayout>

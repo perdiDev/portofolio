@@ -1,0 +1,119 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Absolute canonical URL of the page being shared. */
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+
+const targets = [
+  { label: 'X', href: `https://twitter.com/intent/tweet?url=${u}&text=${t}` },
+  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { label: 'Reddit', href: `https://www.reddit.com/submit?url=${u}&title=${t}` },
+  { label: 'Hacker News', href: `https://news.ycombinator.com/submitlink?u=${u}&t=${t}` },
+  { label: 'WhatsApp', href: `https://wa.me/?text=${t}%20${u}` },
+];
+---
+
+<section
+  aria-labelledby="share-heading"
+  data-share
+  data-share-url={url}
+  data-share-title={title}
+  data-pagefind-ignore
+>
+  <h2 id="share-heading" class="eyebrow mb-3">
+    Share this article
+  </h2>
+  <ul class="flex flex-wrap items-center gap-2">
+    {targets.map((target) => (
+      <li>
+        <a
+          href={target.href}
+          class="btn"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Share on ${target.label} (opens in a new tab)`}
+        >
+          {target.label}
+        </a>
+      </li>
+    ))}
+    <li>
+      <button type="button" class="btn" data-copy-link>
+        <Icon name="link" class="size-4" />
+        <span data-copy-label>Copy link</span>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="btn" data-native-share hidden>
+        <Icon name="share" class="size-4" />
+        Share…
+      </button>
+    </li>
+  </ul>
+  <p class="sr-only" role="status" aria-live="polite" data-share-status></p>
+</section>
+
+<script>
+  let controller: AbortController | undefined;
+
+  function setup() {
+    controller?.abort();
+    const root = document.querySelector<HTMLElement>('[data-share]');
+    if (!root) return;
+    controller = new AbortController();
+    const { signal } = controller;
+    const url = root.dataset.shareUrl ?? location.href;
+    const title = root.dataset.shareTitle ?? document.title;
+    const status = root.querySelector<HTMLElement>('[data-share-status]');
+    const label = root.querySelector<HTMLElement>('[data-copy-label]');
+    const copyButton = root.querySelector<HTMLButtonElement>('[data-copy-link]');
+    const shareButton = root.querySelector<HTMLButtonElement>('[data-native-share]');
+
+    let resetTimer: number | undefined;
+    copyButton?.addEventListener(
+      'click',
+      async () => {
+        let ok = false;
+        try {
+          await navigator.clipboard.writeText(url);
+          ok = true;
+        } catch {
+          // Clipboard API unavailable (insecure context) or denied: report it instead of failing silently.
+        }
+        if (label) label.textContent = ok ? 'Link copied' : 'Copy failed';
+        if (status)
+          status.textContent = ok ? 'Link copied to clipboard.' : 'Could not copy the link.';
+        clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+          if (label) label.textContent = 'Copy link';
+          if (status) status.textContent = '';
+        }, 2200);
+      },
+      { signal },
+    );
+
+    if (shareButton && typeof navigator.share === 'function') {
+      shareButton.hidden = false;
+      shareButton.addEventListener(
+        'click',
+        () => {
+          navigator.share({ title, url }).catch(() => {
+            // The user dismissed the share sheet: nothing to do.
+          });
+        },
+        { signal },
+      );
+    }
+    signal.addEventListener('abort', () => clearTimeout(resetTimer));
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', () => controller?.abort());
+</script>

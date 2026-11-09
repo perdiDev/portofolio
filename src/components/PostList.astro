@@ -1,0 +1,22 @@
+---
+import type { Post } from '../utils/posts';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  posts: Post[];
+  /** Heading level for card titles. */
+  as?: 'h2' | 'h3';
+  /** Whether each card shows its tag list. */
+  showTags?: boolean;
+}
+
+const { posts, as = 'h2', showTags = false } = Astro.props;
+---
+
+<ol class="divide-y divide-border">
+  {posts.map((post, index) => (
+    <li class="py-9 first:pt-0 last:pb-0">
+      <PostCard post={post} as={as} index={index} showTags={showTags} />
+    </li>
+  ))}
+</ol>

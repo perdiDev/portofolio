@@ -1,0 +1,81 @@
+/*
+ * Metric-adjusted fallback fonts (zero layout shift while the web fonts load).
+ *
+ * Each fallback maps a font that exists on the visitor's OS (Windows/macOS, Linux
+ * metric-compatible clones, ChromeOS) onto the web font's proportions with
+ * size-adjust / ascent-override / descent-override. Values were computed from the
+ * font files by Astro's Fonts API (capsize metrics) and are copied here because
+ * Astro's own fallback only lists a single local() name, which does not match on Linux.
+ * If you change a font family in astro.config.mjs, recompute these values.
+ */
+
+/* Lora (serif) ~ Times New Roman / Liberation Serif / Tinos */
+@font-face {
+  font-family: 'Lora Fallback';
+  src:
+    local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif'), local('Tinos');
+  font-weight: 400 500;
+  font-style: normal;
+  size-adjust: 115.2%;
+  ascent-override: 87.3264%;
+  descent-override: 23.7847%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Lora Fallback';
+  src:
+    local('Times New Roman Bold'), local('TimesNewRomanPS-BoldMT'), local('Liberation Serif Bold'),
+    local('Tinos Bold');
+  font-weight: 600 700;
+  font-style: normal;
+  size-adjust: 115.2%;
+  ascent-override: 87.3264%;
+  descent-override: 23.7847%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Lora Fallback';
+  src:
+    local('Times New Roman Italic'), local('TimesNewRomanPS-ItalicMT'),
+    local('Liberation Serif Italic'), local('Tinos Italic');
+  font-weight: 400 700;
+  font-style: italic;
+  size-adjust: 115.2%;
+  ascent-override: 87.3264%;
+  descent-override: 23.7847%;
+  line-gap-override: 0%;
+}
+
+/* Inter (sans) ~ Arial / Liberation Sans / Arimo */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('Arimo');
+  font-weight: 100 500;
+  font-style: normal;
+  size-adjust: 107.1194%;
+  ascent-override: 90.4365%;
+  descent-override: 22.518%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src:
+    local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Arimo Bold');
+  font-weight: 600 900;
+  font-style: normal;
+  size-adjust: 107.1194%;
+  ascent-override: 90.4365%;
+  descent-override: 22.518%;
+  line-gap-override: 0%;
+}
+
+/* JetBrains Mono ~ Courier New / Liberation Mono / Cousine */
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New'), local('CourierNewPSMT'), local('Liberation Mono'), local('Cousine');
+  font-weight: 100 800;
+  font-style: normal;
+  size-adjust: 99.9837%;
+  ascent-override: 102.0166%;
+  descent-override: 30.0049%;
+}

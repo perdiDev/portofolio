@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { breadcrumbJsonLd } from '../../utils/jsonld';
+import { getProjects } from '../../utils/posts';
+
+const projects = await getProjects();
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Projects', href: '/projects/' },
+];
+---
+
+<BaseLayout
+  title="Projects"
+  description="Selected projects by Perdi: what each one does, the stack behind it, the problems along the way, and what I learned."
+  jsonLd={[breadcrumbJsonLd(Astro.site!, crumbs)]}
+>
+  <div class="page page-top">
+    <PageHeader
+      title="Projects"
+      intro="A few things I built, with the stack, the hard parts, and what I took away from each."
+      breadcrumbs={crumbs}
+    />
+    <ul class="divide-y divide-border border-y border-border">
+      {projects.map((project, index) => (
+        <li>
+          <ProjectRow project={project} index={index} />
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

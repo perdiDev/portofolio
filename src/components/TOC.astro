@@ -1,0 +1,126 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { BLOG } from '../config';
+
+interface Props {
+  headings: MarkdownHeading[];
+  /** "aside" = sticky list for wide screens, "details" = collapsible block for the rest. */
+  variant: 'aside' | 'details';
+}
+
+const { headings, variant } = Astro.props;
+const items = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const visible = items.length >= BLOG.tocMinHeadings;
+const linkClass =
+  'block rounded-sm py-1 text-sm leading-snug text-muted transition-colors hover:text-text aria-[current=location]:text-accent';
+---
+
+{visible && variant === 'details' && (
+  <details class="toc-details mb-10 rounded-lg border border-border bg-surface xl:hidden" data-toc>
+    <summary class="flex items-center justify-between px-4 py-3 font-sans text-sm font-semibold text-heading">
+      On this page
+      <span class="meta font-normal">{items.length} sections</span>
+    </summary>
+    <nav aria-label="Table of contents" class="border-t border-border px-4 py-3">
+      <ol>
+        {items.map((item) => (
+          <li class={item.depth === 3 ? 'pl-4' : undefined}>
+            <a href={`#${item.slug}`} class={linkClass} data-toc-link>
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </details>
+)}
+
+{visible && variant === 'aside' && (
+  <aside class="absolute top-0 bottom-0 left-full ml-8 hidden w-52 xl:block" data-pagefind-ignore>
+    <nav
+      aria-label="Table of contents"
+      class="sticky top-24 max-h-[calc(100dvh-8rem)] overflow-y-auto"
+      data-toc
+    >
+      <p class="eyebrow mb-3">On this page</p>
+      <ol class="border-l border-border">
+        {items.map((item) => (
+          <li>
+            <a
+              href={`#${item.slug}`}
+              class:list={[
+                linkClass,
+                '-ml-px border-l border-transparent pl-3 aria-[current=location]:border-accent',
+                item.depth === 3 && 'pl-6',
+              ]}
+              data-toc-link
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </aside>
+)}
+
+<script>
+  // Highlight the heading currently being read. Progressive enhancement: the
+  // TOC is fully functional (plain anchor links) without this script.
+  let observer: IntersectionObserver | undefined;
+  let controller: AbortController | undefined;
+
+  function teardown() {
+    observer?.disconnect();
+    observer = undefined;
+    controller?.abort();
+    controller = undefined;
+  }
+
+  function setup() {
+    teardown();
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+    if (links.length === 0) return;
+
+    const ids = new Set(links.map((link) => decodeURIComponent(link.hash.slice(1))));
+    const headings = [...ids]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (headings.length === 0) return;
+
+    // Active heading = the last one that has reached the reading line near the top.
+    const READING_LINE = 120;
+    const update = () => {
+      let activeId: string | undefined;
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top <= READING_LINE) activeId = heading.id;
+        else break;
+      }
+      for (const link of links) {
+        if (activeId && decodeURIComponent(link.hash.slice(1)) === activeId) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      }
+    };
+
+    controller = new AbortController();
+    const { signal } = controller;
+    if ('IntersectionObserver' in window) {
+      // Fires whenever a heading crosses the reading zone while scrolling.
+      observer = new IntersectionObserver(update, {
+        rootMargin: '-120px 0px -70% 0px',
+        threshold: 0,
+      });
+      headings.forEach((heading) => observer?.observe(heading));
+    }
+    // Instant jumps (anchor clicks, scroll restoration) do not cross thresholds one by one.
+    window.addEventListener('scrollend', update, { signal });
+    window.addEventListener('hashchange', update, { signal });
+    update();
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', teardown);
+</script>

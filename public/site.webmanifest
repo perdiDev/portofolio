@@ -1,0 +1,21 @@
+{
+  "name": "Perdi — Software engineer writing about code and Linux",
+  "short_name": "Perdi",
+  "description": "A developer blog by Perdi: practical articles on programming, Linux, and software engineering.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#0c0c0d",
+  "theme_color": "#0c0c0d",
+  "lang": "en",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ListingLayout from '../../../layouts/ListingLayout.astro';
+import { pluralize } from '../../../utils/format';
+import { paginate } from '../../../utils/paginate';
+import { getPosts } from '../../../utils/posts';
+import { getTags, isThinTerm, tagUrl } from '../../../utils/taxonomy';
+
+export const getStaticPaths = (async () => {
+  const tags = getTags(await getPosts());
+  return tags.map((tag) => ({
+    params: { tag: tag.slug },
+    props: { name: tag.name, posts: tag.posts },
+  }));
+}) satisfies GetStaticPaths;
+
+const { name, posts } = Astro.props;
+const base = tagUrl(name);
+const page = paginate(posts, 1, base);
+---
+
+<ListingLayout
+  heading={`#${name}`}
+  label={`Tag: ${name}`}
+  intro={`${pluralize(posts.length, 'article')} tagged “${name}”.`}
+  description={`Articles tagged ${name} on Perdi's blog: ${pluralize(posts.length, 'post')} about ${name} for developers.`}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Tags', href: '/tags/' },
+    { name: `#${name}`, href: base },
+  ]}
+  base={base}
+  page={page}
+  noindex={isThinTerm({ count: posts.length })}
+/>

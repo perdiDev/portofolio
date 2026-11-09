@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { breadcrumbJsonLd } from '../../utils/jsonld';
+import { pluralize } from '../../utils/format';
+import { getPosts } from '../../utils/posts';
+import { categoryUrl, getCategories } from '../../utils/taxonomy';
+
+const posts = await getPosts();
+const categories = getCategories(posts);
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Categories', href: '/categories/' },
+];
+---
+
+<BaseLayout
+  title="Categories"
+  description="Browse every article by category: programming, Linux, software engineering, and tips and tricks."
+  jsonLd={[breadcrumbJsonLd(Astro.site!, crumbs)]}
+>
+  <div class="page page-top">
+    <PageHeader
+      title="Categories"
+      intro="Every article lives in exactly one category. Start with the one you care about."
+      breadcrumbs={crumbs}
+    />
+    <ul class="divide-y divide-border">
+      {categories.map((category, i) => (
+        <li class="fade-up" style={`--i:${i}`}>
+          <a
+            href={categoryUrl(category.name)}
+            class="row-link group flex items-baseline justify-between gap-4 py-5"
+          >
+            <span class="font-serif text-2xl text-heading">{category.name}</span>
+            <span class="meta flex items-center gap-3">
+              {pluralize(category.count, 'post')}
+              <Icon name="arrow-right" class="row-arrow size-4 text-accent" />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

@@ -1,0 +1,65 @@
+---
+import { PUBLIC_BUTTONDOWN_USERNAME } from 'astro:env/client';
+import { NEWSLETTER } from '../config';
+
+interface Props {
+  /** Unique per page, used to link label and input. */
+  id?: string;
+  class?: string;
+}
+
+const { id = 'newsletter', class: className } = Astro.props;
+const username = PUBLIC_BUTTONDOWN_USERNAME?.trim();
+const dev = import.meta.env.DEV;
+---
+
+{username ? (
+  <section
+    aria-labelledby={`${id}-heading`}
+    class:list={['rounded-lg border border-border bg-surface p-6', className]}
+    data-pagefind-ignore
+  >
+    <h2 id={`${id}-heading`} class="text-xl">
+      {NEWSLETTER.heading}
+    </h2>
+    <p class="mt-1 text-sm text-muted">{NEWSLETTER.text}</p>
+    <form
+      action={`https://buttondown.com/api/emails/embed-subscribe/${encodeURIComponent(username)}`}
+      method="post"
+      target="_blank"
+      {...{ rel: 'noopener noreferrer' }}
+      data-astro-reload
+      class="mt-4 flex flex-col gap-3 sm:flex-row"
+    >
+      <label for={`${id}-email`} class="sr-only">
+        Email address
+      </label>
+      <input
+        type="email"
+        name="email"
+        id={`${id}-email`}
+        required
+        autocomplete="email"
+        placeholder="you@example.com"
+        class="min-w-0 flex-1 rounded-lg border border-border-strong bg-bg px-4 py-2.5 text-base text-text placeholder:text-subtle focus-visible:border-accent"
+      />
+      <input type="hidden" name="embed" value="1" />
+      <button type="submit" class="btn btn-primary justify-center px-5 py-2.5">
+        Subscribe
+      </button>
+    </form>
+    <p class="mt-3 text-xs text-muted">{NEWSLETTER.privacy}</p>
+  </section>
+) : (
+  dev && (
+    <aside
+      class="rounded-lg border border-dashed border-border-strong p-4 text-sm text-muted"
+      data-pagefind-ignore
+    >
+      Newsletter form hidden (dev notice): set{' '}
+      <code class="font-mono">PUBLIC_BUTTONDOWN_USERNAME</code> in{' '}
+      <code class="font-mono">.env</code> to enable it. In production the form stays hidden until it
+      is set.
+    </aside>
+  )
+)}
