@@ -61,7 +61,7 @@ export const BLOG = {
   /** Posts per page on /blog/, category pages, and tag pages. */
   postsPerPage: 6,
   /** Posts shown under "Latest writing" on the home page. */
-  homePostCount: 6,
+  homePostCount: 3,
   relatedCount: 3,
   wordsPerMinute: 220,
   /** Tag pages with fewer posts than this are `noindex,follow` and left out of the sitemap. */
@@ -71,6 +71,7 @@ export const BLOG = {
 } as const;
 
 export const NAV = [
+  { label: 'Home', href: '/' },
   { label: 'Blog', href: '/blog/' },
   { label: 'Projects', href: '/projects/' },
   { label: 'About', href: '/about/' },
