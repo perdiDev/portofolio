@@ -108,6 +108,69 @@ export const ABOUT = {
   ],
 } as const;
 
+export interface ExperienceRole {
+  /** Job title for this step, e.g. "Senior Frontend Engineer". */
+  readonly title: string;
+  /** e.g. "Full-time", "Internship", "Contract". */
+  readonly employmentType?: string;
+  /** "YYYY-MM". */
+  readonly startDate: string;
+  /** "YYYY-MM", or `null` for a role that's still ongoing. */
+  readonly endDate: string | null;
+  readonly description: string;
+}
+
+export interface ExperienceEntry {
+  readonly company: string;
+  /** Leave empty to render the company name as plain text instead of a link. */
+  readonly companyUrl?: string;
+  readonly location?: string;
+  /** Newest first. A company with a single role still uses a one-item array. */
+  readonly roles: readonly ExperienceRole[];
+}
+
+/** TODO: replace with your real work history. Companies ordered newest first. */
+export const EXPERIENCE: readonly ExperienceEntry[] = [
+  {
+    company: 'PT Digital Karya Nusantara',
+    companyUrl: '',
+    location: 'Jakarta, Indonesia · Remote',
+    roles: [
+      {
+        title: 'Senior Frontend Engineer',
+        employmentType: 'Full-time',
+        startDate: '2023-06',
+        endDate: null,
+        description:
+          'Leading a team of 4 frontend engineers. Rebuilt the core dashboard in React and TypeScript, cutting load time by 40%, and introduced component-level testing and code review standards the rest of the org went on to adopt.',
+      },
+      {
+        title: 'Frontend Engineer',
+        employmentType: 'Full-time',
+        startDate: '2021-08',
+        endDate: '2023-06',
+        description:
+          'Shipped and maintained customer-facing features for the main product, working closely with design and backend. Migrated the legacy jQuery admin panel to a component-based architecture.',
+      },
+    ],
+  },
+  {
+    company: 'PT Teknologi Solusi Indonesia',
+    companyUrl: '',
+    location: 'Bandung, Indonesia',
+    roles: [
+      {
+        title: 'Junior Frontend Engineer',
+        employmentType: 'Full-time',
+        startDate: '2020-02',
+        endDate: '2021-07',
+        description:
+          'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+      },
+    ],
+  },
+] as const;
+
 export const NEWSLETTER = {
   privacy: 'No spam. Unsubscribe anytime.',
   heading: 'Get new posts by email',

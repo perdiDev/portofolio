@@ -1,0 +1,64 @@
+---
+import { EXPERIENCE, type ExperienceEntry } from '../config';
+import { formatDuration, formatMonthYear } from '../utils/format';
+
+function roleRange(startDate: string, endDate: string | null): string {
+  return `${formatMonthYear(startDate)} – ${endDate ? formatMonthYear(endDate) : 'Present'}`;
+}
+
+/** Earliest role start and latest role end, so a multi-role company shows one combined range. */
+function companySpan(entry: ExperienceEntry): { startDate: string; endDate: string | null } {
+  const startDate = [...entry.roles].sort((a, b) => a.startDate.localeCompare(b.startDate))[0].startDate;
+  const isOngoing = entry.roles.some((role) => role.endDate === null);
+  const endDate = isOngoing
+    ? null
+    : [...entry.roles].sort((a, b) => b.endDate!.localeCompare(a.endDate!))[0].endDate;
+  return { startDate, endDate };
+}
+---
+
+<ol class="not-prose">
+  {EXPERIENCE.map((entry, index) => {
+    const isLast = index === EXPERIENCE.length - 1;
+    const { startDate, endDate } = companySpan(entry);
+    return (
+      <li class="fade-up grid grid-cols-[1.25rem_1fr] gap-x-4" style={`--i:${index}`}>
+        <div class="flex flex-col items-center">
+          <span class="mt-1.5 size-2.5 shrink-0 rounded-full border-2 border-accent bg-bg" />
+          {!isLast && <span aria-hidden="true" class="mt-1.5 w-px grow bg-border" />}
+        </div>
+
+        <div class:list={['min-w-0', !isLast && 'pb-10']}>
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h3 class="text-xl text-heading">
+              {entry.companyUrl ? (
+                <a href={entry.companyUrl} target="_blank" rel="noopener noreferrer" class="link-grow">
+                  {entry.company}
+                </a>
+              ) : (
+                entry.company
+              )}
+            </h3>
+            <span class="meta shrink-0 tabular-nums">
+              {roleRange(startDate, endDate)} · {formatDuration(startDate, endDate)}
+            </span>
+          </div>
+          {entry.location && <p class="meta mt-0.5">{entry.location}</p>}
+
+          <ol class:list={entry.roles.length > 1 ? 'mt-4 space-y-5 border-l border-border pl-5' : 'mt-3'}>
+            {entry.roles.map((role) => (
+              <li>
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h4 class="font-serif text-lg text-text">{role.title}</h4>
+                  <span class="meta shrink-0 tabular-nums">{roleRange(role.startDate, role.endDate)}</span>
+                </div>
+                {role.employmentType && <p class="meta mt-0.5">{role.employmentType}</p>}
+                <p class="mt-2 text-pretty text-muted">{role.description}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </li>
+    );
+  })}
+</ol>

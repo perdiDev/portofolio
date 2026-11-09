@@ -1,4 +1,5 @@
 ---
+import Experience from '../components/Experience.astro';
 import Icon from '../components/Icon.astro';
 import Newsletter from '../components/Newsletter.astro';
 import PostList from '../components/PostList.astro';
@@ -26,6 +27,13 @@ const site = Astro.site!;
       </h1>
       <p class="mt-6 max-w-[56ch] font-serif text-xl leading-relaxed text-muted">{AUTHOR.intro}</p>
       <SocialLinks class="mt-7" />
+    </section>
+
+    <section class="mt-24" aria-labelledby="experience-heading">
+      <h2 id="experience-heading" class="mb-8 text-3xl">
+        Experience
+      </h2>
+      <Experience />
     </section>
 
     <section class="mt-24" aria-labelledby="latest-heading">
