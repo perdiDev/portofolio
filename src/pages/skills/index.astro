@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { SKILLS } from '../../config';
+import { breadcrumbJsonLd } from '../../utils/jsonld';
+import { getProjects, projectUrl, type Project } from '../../utils/posts';
+
+const projects = await getProjects();
+const projectById = new Map(projects.map((project) => [project.id, project]));
+
+function relatedProjects(ids: readonly string[]): Project[] {
+  return ids
+    .map((id) => projectById.get(id))
+    .filter((project): project is Project => Boolean(project));
+}
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Skills', href: '/skills/' },
+];
+---
+
+<BaseLayout
+  title="Skills"
+  description="What I work with day to day, grouped by the kind of problem it solves, and the projects that put each one to work."
+  jsonLd={[breadcrumbJsonLd(Astro.site!, crumbs)]}
+>
+  <div class="page page-top">
+    <PageHeader
+      title="Skills"
+      intro="What I reach for most, grouped by the kind of problem it solves, and the projects that put it to work."
+      breadcrumbs={crumbs}
+    />
+
+    <div class="divide-y divide-border border-y border-border">
+      {SKILLS.map((group, index) => {
+        const used = relatedProjects(group.projectIds);
+        return (
+          <section class="fade-up py-10" style={`--i:${index}`} aria-labelledby={`skill-${index}`}>
+            <div class="grid gap-x-10 gap-y-5 sm:grid-cols-[14rem_1fr]">
+              <div>
+                <Icon name={group.icon} class="size-5 text-accent" />
+                <h2 id={`skill-${index}`} class="mt-3 text-2xl">
+                  {group.title}
+                </h2>
+                <p class="mt-2 text-pretty text-muted">{group.description}</p>
+              </div>
+
+              <div class="min-w-0">
+                <p class="eyebrow">Skills</p>
+                <p class="mt-2 text-pretty font-serif text-lg leading-relaxed text-text">
+                  {group.skills.join(' · ')}
+                </p>
+
+                {used.length > 0 && (
+                  <div class="mt-6">
+                    <p class="eyebrow">Used in</p>
+                    <ul class="mt-2 space-y-1.5">
+                      {used.map((project) => (
+                        <li>
+                          <a
+                            href={projectUrl(project)}
+                            class="link-grow inline-flex items-center gap-1.5 text-text"
+                          >
+                            {project.data.title}
+                            <Icon name="arrow-up-right" class="size-3.5 text-muted" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>

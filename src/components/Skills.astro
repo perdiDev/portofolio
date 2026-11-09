@@ -1,0 +1,16 @@
+---
+import { SKILLS } from '../config';
+
+/** Unique skill titles, in the order they first appear across groups. */
+const names = [...new Set(SKILLS.flatMap((group) => group.skills))];
+---
+
+<div class="skill-track-wrap">
+  <ul class="skill-track" aria-label="Core skills">
+    {[...names, ...names].map((name, index) => (
+      <li class="skill-item" aria-hidden={index >= names.length ? 'true' : undefined}>
+        {name}
+      </li>
+    ))}
+  </ul>
+</div>

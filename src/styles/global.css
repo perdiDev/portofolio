@@ -329,6 +329,38 @@
   .status-badge[data-status='Open source']::before {
     background: #93c5fd;
   }
+
+  /* Skills marquee: a single line of plain text drifting sideways. No
+     borders, no boxes, no cards, just text sliding slowly and smoothly,
+     paused on hover. */
+  .skill-track-wrap {
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent);
+    mask-image: linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent);
+  }
+  .skill-track {
+    display: flex;
+    width: max-content;
+    animation: skill-walk 32s linear infinite;
+  }
+  .skill-track-wrap:hover .skill-track {
+    animation-play-state: paused;
+  }
+  .skill-item {
+    flex: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1.75rem;
+    padding-inline-end: 1.75rem;
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    color: var(--color-muted);
+  }
+  .skill-item::after {
+    content: '\00b7';
+    color: var(--color-border-strong);
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -490,6 +522,17 @@
   animation-delay: calc(min(var(--i, 0), 8) * 45ms);
 }
 
+/* Continuous sideways drift for the skills marquee. The track renders the
+   list twice back-to-back, so sliding exactly -50% loops seamlessly. */
+@keyframes skill-walk {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes reveal {
   from {
     opacity: 0;
@@ -588,6 +631,10 @@
   .reveal {
     animation: none !important;
     opacity: 1 !important;
+    transform: none !important;
+  }
+  .skill-track {
+    animation: none !important;
     transform: none !important;
   }
   .reading-progress {

@@ -74,6 +74,7 @@ export const NAV = [
   { label: 'Home', href: '/' },
   { label: 'Blog', href: '/blog/' },
   { label: 'Projects', href: '/projects/' },
+  { label: 'Skills', href: '/skills/' },
   { label: 'About', href: '/about/' },
   { label: 'Contact', href: '/contact/' },
 ] as const;
@@ -208,6 +209,48 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Merged performance and accessibility fixes into several widely used open-source libraries.',
     date: '2021',
     url: '',
+  },
+] as const;
+
+export interface SkillGroup {
+  readonly title: string;
+  /** Key of the icon in `src/components/Icon.astro`. */
+  readonly icon: 'layout' | 'server' | 'terminal' | 'cloud';
+  readonly description: string;
+  readonly skills: readonly string[];
+  /** Project ids (filenames under `src/content/projects`, without `.md`) built with this skill set. */
+  readonly projectIds: readonly string[];
+}
+
+/** TODO: replace with your real skill groups. Shown on the home page, after Projects. */
+export const SKILLS: readonly SkillGroup[] = [
+  {
+    title: 'Frontend & UI',
+    icon: 'layout',
+    description: 'Interfaces that stay fast and readable, from the component up to the pixel.',
+    skills: ['TypeScript', 'Astro', 'React', 'Tailwind CSS', 'Accessibility'],
+    projectIds: ['portfolio-engine', 'budget-tracker'],
+  },
+  {
+    title: 'Backend & Data',
+    icon: 'server',
+    description: 'APIs and data models that still hold up once real traffic and real data arrive.',
+    skills: ['Node.js', 'PostgreSQL', 'REST APIs', 'Data modeling'],
+    projectIds: ['budget-tracker'],
+  },
+  {
+    title: 'Tooling & DX',
+    icon: 'terminal',
+    description: 'CLIs and scripts that make the next hour of work a little faster than this one.',
+    skills: ['CLI design', 'Git', 'Bash', 'Markdown'],
+    projectIds: ['dev-notes-cli', 'portfolio-engine'],
+  },
+  {
+    title: 'Delivery & Performance',
+    icon: 'cloud',
+    description: 'Shipping with CI, performance budgets, and deploys nobody has to babysit.',
+    skills: ['Vercel', 'CI/CD', 'Lighthouse audits', 'SEO'],
+    projectIds: ['portfolio-engine'],
   },
 ] as const;
 

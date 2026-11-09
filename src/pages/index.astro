@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import Newsletter from '../components/Newsletter.astro';
 import PostList from '../components/PostList.astro';
 import ProjectRow from '../components/ProjectRow.astro';
+import Skills from '../components/Skills.astro';
 import SocialLinks from '../components/SocialLinks.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { AUTHOR, BLOG, SITE } from '../config';
@@ -58,7 +59,22 @@ const site = Astro.site!;
         </ul>
     </section>
 
-    <section class="reveal mt-16" aria-labelledby="achievements-heading">
+    <section class="mt-24" aria-labelledby="skills-heading">
+      <div class="mb-8 flex items-baseline justify-between gap-4">
+        <h2 id="skills-heading" class="text-3xl">
+          Skills
+        </h2>
+        <a
+          href="/skills/"
+          class="link-grow inline-flex items-center gap-1.5 text-sm text-muted hover:text-text"
+        >
+          All skills <Icon name="arrow-right" class="size-4" />
+        </a>
+      </div>
+      <Skills />
+    </section>
+
+    <section class="reveal mt-24" aria-labelledby="achievements-heading">
       <h2 id="achievements-heading" class="text-3xl">
         Achievements
       </h2>
