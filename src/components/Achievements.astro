@@ -1,0 +1,25 @@
+---
+import { ACHIEVEMENTS } from '../config';
+import Icon from './Icon.astro';
+---
+
+<ul class="not-prose grid grid-cols-1 border-t border-l border-border sm:grid-cols-2">
+  {ACHIEVEMENTS.map((achievement, index) => (
+    <li class="fade-up border-r border-b border-border p-6" style={`--i:${index}`}>
+      <div class="flex items-center justify-between gap-4">
+        <Icon name="award" class="size-5 text-accent" />
+        <span class="meta tabular-nums">{achievement.date}</span>
+      </div>
+      <h3 class="mt-4 text-lg text-heading">
+        {achievement.url ? (
+          <a href={achievement.url} target="_blank" rel="noopener noreferrer" class="link-grow">
+            {achievement.title}
+          </a>
+        ) : (
+          achievement.title
+        )}
+      </h3>
+      <p class="mt-2 text-pretty text-muted">{achievement.description}</p>
+    </li>
+  ))}
+</ul>

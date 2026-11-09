@@ -172,6 +172,45 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
   },
 ] as const;
 
+export interface Achievement {
+  readonly title: string;
+  readonly description: string;
+  /** "YYYY" or "YYYY-MM". */
+  readonly date: string;
+  /** Optional link to a write-up, certificate, or announcement. */
+  readonly url?: string;
+}
+
+/** TODO: replace with your real achievements. Newest first. */
+export const ACHIEVEMENTS: readonly Achievement[] = [
+  {
+    title: 'Speaker, JSConf Indonesia',
+    description:
+      'Gave a talk on practical performance patterns for React dashboards to an audience of 300+ developers.',
+    date: '2024',
+    url: '',
+  },
+  {
+    title: 'Shipped a 40% load-time improvement',
+    description:
+      'Led the rebuild of the core dashboard at PT Digital Karya Nusantara, cutting initial load time by 40% company-wide.',
+    date: '2023',
+    url: '',
+  },
+  {
+    title: 'AWS Certified Developer – Associate',
+    description: 'Certified in designing, developing, and deploying applications on AWS.',
+    date: '2022',
+    url: '',
+  },
+  {
+    title: 'Open-source contributor',
+    description: 'Merged performance and accessibility fixes into several widely used open-source libraries.',
+    date: '2021',
+    url: '',
+  },
+] as const;
+
 export const NEWSLETTER = {
   privacy: 'No spam. Unsubscribe anytime.',
   heading: 'Get new posts by email',

@@ -1,5 +1,6 @@
 ---
 import Experience from '../components/Experience.astro';
+import Achievements from '../components/Achievements.astro';
 import Icon from '../components/Icon.astro';
 import Newsletter from '../components/Newsletter.astro';
 import PostList from '../components/PostList.astro';
@@ -55,6 +56,15 @@ const site = Astro.site!;
             </li>
         ))}
         </ul>
+    </section>
+
+    <section class="reveal mt-16" aria-labelledby="achievements-heading">
+      <h2 id="achievements-heading" class="text-3xl">
+        Achievements
+      </h2>
+      <div class="mt-6">
+        <Achievements />
+      </div>
     </section>
 
     <section class="mt-24 mb-8" aria-labelledby="latest-heading">
