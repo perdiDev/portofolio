@@ -72,7 +72,7 @@ const sectionHeading = 'text-2xl sm:text-3xl';
         <p class="mt-4 max-w-[60ch] text-lg text-muted">{d.summary}</p>
 
         <dl
-          class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-border py-5 sm:grid-cols-4"
+          class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-border py-5 sm:grid-cols-3"
           data-pagefind-ignore
         >
           <div>
@@ -89,7 +89,7 @@ const sectionHeading = 'text-2xl sm:text-3xl';
               <dd class="mt-1.5 text-sm">{item.value}</dd>
             </div>
           ))}
-          <div class="col-span-2 sm:col-span-1">
+          <div class="col-span-full">
             <dt class="eyebrow">Stack</dt>
             <dd class="mt-1.5">
               <ul class="flex flex-wrap gap-1.5">
