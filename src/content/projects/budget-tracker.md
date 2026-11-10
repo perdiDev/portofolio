@@ -2,7 +2,7 @@
 title: Budget Tracker
 summary: A privacy-first personal budgeting app that imports bank exports, categorizes spending, and shows where the money goes.
 date: 2026-05-14
-order: 1
+order: 9
 featured: true
 status: Live
 role: Design, full-stack development

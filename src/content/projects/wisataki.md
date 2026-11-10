@@ -2,7 +2,7 @@
 title: Wisataki
 summary: Scan QR app for record destination trip to share that you complete your journey to beautiful place.
 date: 2024-05-14
-order: 1
+order: 5
 featured: true
 status: Archived
 role: Fullstack Software Engineer (Mobile)

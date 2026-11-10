@@ -2,7 +2,7 @@
 title: DevNotes CLI
 summary: A tiny command-line tool for capturing, tagging, and searching developer notes as plain Markdown files.
 date: 2026-09-10
-order: 2
+order: 10
 featured: true
 status: Open source
 role: Creator and maintainer

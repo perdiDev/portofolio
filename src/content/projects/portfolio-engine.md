@@ -2,7 +2,7 @@
 title: Site Starter
 summary: An opinionated Astro starter for fast, SEO-first developer blogs, with typed content, generated social images, and zero JavaScript by default.
 date: 2025-12-08
-order: 3
+order: 11
 featured: false
 status: In progress
 role: Author and maintainer
