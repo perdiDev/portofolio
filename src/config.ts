@@ -130,46 +130,99 @@ export interface ExperienceEntry {
   readonly roles: readonly ExperienceRole[];
 }
 
-/** TODO: replace with your real work history. Companies ordered newest first. */
+/** Companies ordered newest first. End date with null value mean work present  */
 export const EXPERIENCE: readonly ExperienceEntry[] = [
-  {
-    company: 'PT Digital Karya Nusantara',
-    companyUrl: '',
-    location: 'Jakarta, Indonesia · Remote',
-    roles: [
-      {
-        title: 'Senior Frontend Engineer',
-        employmentType: 'Full-time',
-        startDate: '2023-06',
-        endDate: null,
-        description:
-          'Leading a team of 4 frontend engineers. Rebuilt the core dashboard in React and TypeScript, cutting load time by 40%, and introduced component-level testing and code review standards the rest of the org went on to adopt.',
-      },
-      {
-        title: 'Frontend Engineer',
-        employmentType: 'Full-time',
-        startDate: '2021-08',
-        endDate: '2023-06',
-        description:
-          'Shipped and maintained customer-facing features for the main product, working closely with design and backend. Migrated the legacy jQuery admin panel to a component-based architecture.',
-      },
-    ],
-  },
-  {
-    company: 'PT Teknologi Solusi Indonesia',
-    companyUrl: '',
-    location: 'Bandung, Indonesia',
-    roles: [
-      {
-        title: 'Junior Frontend Engineer',
-        employmentType: 'Full-time',
-        startDate: '2020-02',
-        endDate: '2021-07',
-        description:
-          'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
-      },
-    ],
-  },
+    {
+        company: 'PLN IP UPPLTD Selayar',
+        companyUrl: '',
+        location: 'Selayar, Indonesia · Remote',
+        roles: [
+            {
+                title: 'Android Developer - Flutter',
+                employmentType: 'Freelence',
+                startDate: '2025-07',
+                endDate: '2025-08',
+                description:
+                'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+            },
+            {
+                title: 'Backend Developer',
+                employmentType: 'Freelence',
+                startDate: '2025-06',
+                endDate: '2025-07',
+                description:
+                'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+            },
+        ],
+    },
+    {
+        company: 'PT. Rise Lanskap Hortikultura',
+        companyUrl: 'https://okegarden.com/',
+        location: 'Depok, Indonesia · Remote',
+        roles: [
+            {
+                title: 'Fullstack Software Engineer',
+                employmentType: 'Internship',
+                startDate: '2025-09',
+                endDate: '2025-12',
+                description:
+                'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+            },
+        ],
+    },
+    {
+        company: 'PT Celebes Solusi Digital',
+        companyUrl: 'https://companieshouse.id/celebes-solusi-digital',
+        location: 'Makassar, Indonesia · On Site',
+        roles: [
+        {
+            title: 'Fullstack Developer',
+            employmentType: 'Full-time',
+            startDate: '2024-08',
+            endDate: '2025-03',
+            description:
+            'Leading a team of 4 frontend engineers. Rebuilt the core dashboard in React and TypeScript, cutting load time by 40%, and introduced component-level testing and code review standards the rest of the org went on to adopt.',
+        },
+        {
+            title: 'Instructor Ngoding Holiday Camp',
+            employmentType: 'Full-time',
+            startDate: '2024-12',
+            endDate: '2025-1',
+            description:
+            'Leading a team of 4 frontend engineers. Rebuilt the core dashboard in React and TypeScript, cutting load time by 40%, and introduced component-level testing and code review standards the rest of the org went on to adopt.',
+        }
+        ],
+    },
+    {
+        company: 'Coder Institute',
+        companyUrl: 'https://www.instagram.com/coderinstitute/',
+        location: 'Gowa, Indonesia · On Site',
+        roles: [
+        {
+            title: 'Head of Web Development',
+            employmentType: 'Part Time',
+            startDate: '2024-02',
+            endDate: '2025-01',
+            description:
+            'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+        },
+        ],
+    },
+    {
+        company: 'Google Developer Student Club',
+        companyUrl: 'https://www.instagram.com/gdgocunhas/',
+        location: 'Gowa, Indonesia · On Site',
+        roles: [
+        {
+            title: 'Core Team - Backend Technical',
+            employmentType: 'Part Time',
+            startDate: '2023-09',
+            endDate: '2024-09',
+            description:
+            'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+        },
+        ],
+    },
 ] as const;
 
 export interface Achievement {
@@ -184,29 +237,21 @@ export interface Achievement {
 /** TODO: replace with your real achievements. Newest first. */
 export const ACHIEVEMENTS: readonly Achievement[] = [
   {
-    title: 'Speaker, JSConf Indonesia',
-    description:
-      'Gave a talk on practical performance patterns for React dashboards to an audience of 300+ developers.',
-    date: '2024',
+    title: 'Semifinalis Samsung Solve for Tomorrow 2024 Kategori Universitas',
+    description: 'Samsung Electronics Indonesia',
+    date: 'Agustus 2024',
     url: '',
   },
   {
-    title: 'Shipped a 40% load-time improvement',
-    description:
-      'Led the rebuild of the core dashboard at PT Digital Karya Nusantara, cutting initial load time by 40% company-wide.',
-    date: '2023',
+    title: 'Juara Harapan 1 FIT Competition 2024',
+    description: 'Fakultas Teknologi Informasi dan HMPTI Universitas Kristen Satya Wacana (UKSW)',
+    date: 'Juli 2024',
     url: '',
   },
   {
-    title: 'AWS Certified Developer – Associate',
-    description: 'Certified in designing, developing, and deploying applications on AWS.',
+    title: 'Top 10 finalis - SECS Telkom University',
+    description: 'Telkom University',
     date: '2022',
-    url: '',
-  },
-  {
-    title: 'Open-source contributor',
-    description: 'Merged performance and accessibility fixes into several widely used open-source libraries.',
-    date: '2021',
     url: '',
   },
 ] as const;
