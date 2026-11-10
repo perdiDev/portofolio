@@ -10,9 +10,9 @@ function roleRange(startDate: string, endDate: string | null): string {
 function companySpan(entry: ExperienceEntry): { startDate: string; endDate: string | null } {
   const startDate = [...entry.roles].sort((a, b) => a.startDate.localeCompare(b.startDate))[0].startDate;
   const isOngoing = entry.roles.some((role) => role.endDate === null);
-  const endDate = isOngoing
-    ? null
-    : [...entry.roles].sort((a, b) => b.endDate!.localeCompare(a.endDate!))[0].endDate;
+  const endDate = isOngoing  ? null : [...entry.roles].sort(
+          (a, b) => new Date(b.endDate!).getTime() - new Date(a.endDate!).getTime()
+        )[0].endDate;
   return { startDate, endDate };
 }
 ---
