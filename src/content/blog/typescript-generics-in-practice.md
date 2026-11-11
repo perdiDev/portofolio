@@ -8,7 +8,7 @@ draft: false
 featured: true
 cover: ../../assets/blog/typescript-generics-cover.png
 coverAlt: "Code editor window showing a generic TypeScript function first<T> that returns the first item of an array or undefined"
-project: budget-tracker
+project: sapadesa
 ---
 
 Generics look intimidating in library typings, but in everyday code they solve one simple problem: keeping type information that would otherwise be thrown away. I will build up from small helpers.

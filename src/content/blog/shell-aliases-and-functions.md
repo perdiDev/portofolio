@@ -6,7 +6,7 @@ category: Tips & Tricks
 tags: [bash, cli, productivity, terminal]
 draft: false
 featured: false
-project: dev-notes-cli
+project: pmodoro-cli
 ---
 
 If you type the same long command more than a few times a day, the shell can do the typing for you. Aliases and functions are the two tools for this, and picking the right one avoids a lot of confusion. Here is what I have settled on after years of tweaking.
