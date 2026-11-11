@@ -14,7 +14,7 @@ export async function getPosts(): Promise<Post[]> {
 }
 
 /** Drafts are visible in `astro dev` only. In production they exist nowhere. */
-const isShow = (show: boolean) => import.meta.env.DEV || !show;
+const isShow = (show: boolean) => import.meta.env.DEV || show;
 
 /** Projects ordered by `order`, then date (newest first). */
 export async function getProjects(): Promise<Project[]> {
