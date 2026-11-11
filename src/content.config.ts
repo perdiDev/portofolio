@@ -56,6 +56,7 @@ const projects = defineCollection({
       date: z.coerce.date(),
       order: z.number().int(),
       featured: z.boolean().default(false),
+      show: z.boolean().default(true),
       status: z.enum(['Live', 'In progress', 'Archived', 'Open source']),
       role: z.string().min(2),
       duration: z.string().min(2),

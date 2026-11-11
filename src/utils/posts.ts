@@ -13,9 +13,12 @@ export async function getPosts(): Promise<Post[]> {
   return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
+/** Drafts are visible in `astro dev` only. In production they exist nowhere. */
+const isShow = (show: boolean) => import.meta.env.DEV || !show;
+
 /** Projects ordered by `order`, then date (newest first). */
 export async function getProjects(): Promise<Project[]> {
-  const projects = await getCollection('projects');
+  const projects = await getCollection('projects', ({ data }) => isShow(data.show));
   return projects.sort(
     (a, b) => a.data.order - b.data.order || b.data.date.valueOf() - a.data.date.valueOf(),
   );

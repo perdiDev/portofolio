@@ -4,6 +4,7 @@ summary: An opinionated Astro starter for fast, SEO-first developer blogs, with 
 date: 2025-12-08
 order: 11
 featured: false
+show: false
 status: In progress
 role: Author and maintainer
 duration: 4 months so far

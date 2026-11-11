@@ -4,6 +4,7 @@ summary: A tiny command-line tool for capturing, tagging, and searching develope
 date: 2026-09-10
 order: 10
 featured: true
+show: false
 status: Open source
 role: Creator and maintainer
 duration: 3 months, ongoing

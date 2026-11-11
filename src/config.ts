@@ -269,25 +269,25 @@ export interface SkillGroup {
 /** TODO: replace with your real skill groups. Shown on the home page, after Projects. */
 export const SKILLS: readonly SkillGroup[] = [
   {
-    title: 'Frontend & UI',
+    title: 'Website',
     icon: 'layout',
     description: 'Interfaces that stay fast and readable, from the component up to the pixel.',
-    skills: ['TypeScript', 'Astro', 'React', 'Tailwind CSS', 'Accessibility'],
-    projectIds: ['portfolio-engine', 'budget-tracker'],
+    skills: ['TypeScript', 'NextJS', 'Laravel', 'Filament', 'Astro', 'Tailwind CSS', 'Accessibility', 'Figma'],
+    projectIds: ['boat-safe-system', 'tukar-senyum', 'pokidulu', 'sapadesa'],
   },
   {
     title: 'Backend & Data',
     icon: 'server',
     description: 'APIs and data models that still hold up once real traffic and real data arrive.',
     skills: ['Node.js', 'PostgreSQL', 'REST APIs', 'Data modeling'],
-    projectIds: ['budget-tracker'],
+    projectIds: ['hyskysfc', 'sapadesa'],
   },
   {
     title: 'Tooling & DX',
     icon: 'terminal',
     description: 'CLIs and scripts that make the next hour of work a little faster than this one.',
     skills: ['CLI design', 'Git', 'Bash', 'Markdown'],
-    projectIds: ['dev-notes-cli', 'portfolio-engine'],
+    projectIds: ['pomodoro-cli', 'portfolio-engine'],
   },
   {
     title: 'Delivery & Performance',

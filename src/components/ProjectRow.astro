@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { project, as: Heading = 'h2', index = 0 } = Astro.props;
-const { title, summary, date, techStack, status } = project.data;
+const { title, summary, date, techStack, status, show } = project.data;
 ---
 
 <a
@@ -23,6 +23,7 @@ const { title, summary, date, techStack, status } = project.data;
   <div class="min-w-0">
     <Heading class="flex items-center gap-2 text-2xl leading-snug">
       {title}
+      { !show && <span class="chip border-amber-400/60 text-amber-300">Draft</span> }
       <Icon name="arrow-right" class="row-arrow size-5 text-accent" />
     </Heading>
     <p class="mt-1 text-pretty text-muted">{summary}</p>

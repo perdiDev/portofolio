@@ -4,6 +4,7 @@ summary: A privacy-first personal budgeting app that imports bank exports, categ
 date: 2026-05-14
 order: 9
 featured: true
+show: false
 status: Live
 role: Design, full-stack development
 duration: 5 months
