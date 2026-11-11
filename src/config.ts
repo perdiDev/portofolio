@@ -143,7 +143,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
                 startDate: '2025-07',
                 endDate: '2025-08',
                 description:
-                'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+                '• Automated operational workflows by building an algorithm that calculates and ranks diesel generator supply priority by efficiency, fully replacing the manual calculation process. • Built the mobile frontend with Flutter, applying Clean Architecture and BLoC state management to ensure a scalable, modular, and maintainable codebase.',
             },
             {
                 title: 'Backend Developer',
@@ -151,7 +151,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
                 startDate: '2025-06',
                 endDate: '2025-07',
                 description:
-                'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+                '• Designed and developed an end-to-end backend architecture using Golang and PostgreSQL, enabling centralized recording of solar and diesel energy forecast data. • Managed configuration and deployment on Microsoft Azure VM, delivering a reliable integrated system used daily by 5 operators and 1 supervisor in the field.',
             },
         ],
     },
@@ -166,7 +166,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
                 startDate: '2025-09',
                 endDate: '2025-12',
                 description:
-                'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+                "• Restructured the database architecture and expanded table relationships in an internal system to support business insight extraction, enabling analytics on plant preference trends (e.g., home gardens and dried plants). • Refactored Laravel backend API endpoints to optimize data flow for other internal systems, specifically streamlining the garden construction cost estimation (RAB) module. • Improved customer UX by fixing frontend issues, including responsiveness problems and truncated text in plant catalog card components.",
             },
         ],
     },
@@ -181,7 +181,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
             startDate: '2024-08',
             endDate: '2025-03',
             description:
-            'Leading a team of 4 frontend engineers. Rebuilt the core dashboard in React and TypeScript, cutting load time by 40%, and introduced component-level testing and code review standards the rest of the org went on to adopt.',
+            '• Led architecture design and development for key projects, and managed server deployment strategies to meet clients’ scalability requirements. • Integrated healthcare facility systems with the Indonesian Ministry of Health’s SatuSehat API using Laravel, owning the end-to-end synchronization of electronic medical record (EMR) data from sandbox testing through stable production operation. • Architected a complex multi-level Role-Based Access Control (RBAC) system for a BNSP professional certification platform (LSP Admin, Assessor, Assessee) using Spatie, Livewire, and Filament to accelerate rapid development. • Developed an end-to-end internal operations management system for an Umrah travel platform and two other client projects, focusing on digitizing ticket administration and pilgrim database management.',
         },
         {
             title: 'Instructor Ngoding Holiday Camp',
@@ -189,7 +189,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
             startDate: '2024-12',
             endDate: '2025-1',
             description:
-            'Leading a team of 4 frontend engineers. Rebuilt the core dashboard in React and TypeScript, cutting load time by 40%, and introduced component-level testing and code review standards the rest of the org went on to adopt.',
+            '• Taught foundational JavaScript to 45 learners, ranging from high school students to early-year university students. • Designed and delivered a hands-on DOM manipulation mini-project (a browser-based game), with a 95% completion rate among participants.',
         }
         ],
     },
@@ -204,7 +204,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
             startDate: '2024-02',
             endDate: '2025-01',
             description:
-            'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+            '• Led the planning and execution of the website division’s work programs, fostering strategic collaboration among members to ensure every initiative ran effectively. • Organized mentoring and technical teaching sessions focused on web development to strengthen team members’ programming skills.',
         },
         ],
     },
@@ -219,7 +219,7 @@ export const EXPERIENCE: readonly ExperienceEntry[] = [
             startDate: '2023-09',
             endDate: '2024-09',
             description:
-            'First engineering role out of university. Built internal tooling with Vue.js and learned how to ship production code as part of a small, fast-moving team.',
+            '• Mentored 75 GDSC members as a backend mentor, introducing core server-side web development concepts and guiding participants through them step by step. • Designed the backend web development syllabus and actively contributed teaching materials, giving participants a structured learning path from fundamentals to more advanced topics. • Contributed actively to all GDSC events, including initiating and running collaborations with companies and GDSC chapters from other universities.',
         },
         ],
     },
