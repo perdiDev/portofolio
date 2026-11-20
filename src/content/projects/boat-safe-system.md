@@ -1,51 +1,74 @@
 ---
 title: Boat Safe System - IOTNoz
-summary: AI apps that help parents for having conversetion with adhd children, record the conversetion and get the summary for analyse by profesional.
-date: 2025-12-08
+summary: Real-time boat monitoring system for maritime safety, providing live vessel tracking, accident detection, and 24/7 surveillance at sea.
+date: 2024-08-15
 order: 3
-featured: false
+featured: true
 status: Live
-role: Fullstack Web & IOT Engineer
-duration: 4 months so far
-techStack: [NextJS, Firebase, Map Library, Figma, C, Hardware Component, Arduino IDE]
-repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
+role: Fullstack Web & IoT Engineer
+duration: 6 months
+techStack: [Next.js, Firebase, Mapbox, React, TypeScript, Arduino, C++, IoT Sensors, Hardware Integration]
+repoUrl: https://github.com/IOTNOZ
+liveUrl: https://boat-alert-system-web.vercel.app/
 thumbnail:
-  image: ../../assets/projects/portfolio-engine/screenshot-1.png
-  alt: Landing page of the Site Starter template with the headline Write. Ship. Rank. and three feature cards
+  image: ../../assets/projects/boat-safe-system/screenshot-1.png
+  alt: Boat Safe System live map with a boat marker on OpenStreetMap tiles and a Live Tracking badge
 screenshots:
-  - image: ../../assets/projects/portfolio-engine/screenshot-1.png
-    alt: Site Starter landing page with the headline Write. Ship. Rank. and cards for SEO, zero JavaScript and typed content
-    caption: The starter ships with a calm, typography-first home page.
-  - image: ../../assets/projects/portfolio-engine/screenshot-2.png
-    alt: Lighthouse report showing four perfect scores of 100 for performance, accessibility, best practices and SEO
-    caption: Every template is audited with Lighthouse before a release.
-  - image: ../../assets/projects/portfolio-engine/screenshot-3.png
-    alt: Markdown file with front matter defining a title, description, date, category and tags for a blog post
-    caption: Posts are Markdown files validated by a typed schema at build time.
+  - image: ../../assets/projects/boat-safe-system/screenshot-1.png
+    alt: Full-width Leaflet map with a blue boat marker, zoom controls and a Live Tracking badge with the current time in WIB
+    caption: The home page opens on a live map that follows the boat's GPS position in real time.
+  - image: ../../assets/projects/boat-safe-system/screenshot-2.png
+    alt: Product page with the red sensor box on the left and Latar Belakang and Produk Akhir text on the right
+    caption: The product page explains the background and what the final device does.
+  - image: ../../assets/projects/boat-safe-system/screenshot-3.png
+    alt: Sistem Alat page showing the shore-side Sistem Darat unit next to its description
+    caption: Two hardware units, one on shore (Sistem Darat) and one on the boat (Sistem Laut), talk over LoRa.
+  - image: ../../assets/projects/boat-safe-system/screenshot-4.png
+    alt: Detail Komponen grid with cards for the ESP32, LoRa Ra-02 and MPU 9250 modules
+    caption: Each component (ESP32, LoRa Ra-02, MPU9250, GPS Neo 6M) is documented on the hardware page.
+  - image: ../../assets/projects/boat-safe-system/screenshot-5.png
+    alt: IOTNOZ 09 team page with an illustrated group photo and four member cards
+    caption: The IOTNOZ 09 team behind the project.
+  - image: ../../assets/projects/boat-safe-system/screenshot-6.png
+    alt: Partner page with the Dosen Pembimbing note and the Yayasan Konservasi Laut Indonesia program card
+    caption: Built with Yayasan Konservasi Laut (YKL) Indonesia for small-scale fishers.
+  - image: ../../assets/projects/boat-safe-system/screenshot-7.png
+    alt: Three phone screens showing the live map, the realtime monitoring hero and the product page
+    caption: The whole site is responsive, including the map on small screens.
 challenges:
-  - challenge: Making the defaults good enough that a new site scores 100 on Lighthouse without any tuning.
-    solution: I treated the Lighthouse run as a test in CI. A change that lowers a score fails the build, so regressions are caught in the pull request instead of after launch.
-  - challenge: SEO metadata that is easy to forget, such as canonical URLs, Open Graph images, and structured data.
-    solution: All of it is generated from one component and one typed helper, driven by the same frontmatter the page already needs. There is nothing to remember to add.
-  - challenge: Keeping the template opinionated without making it hard to change.
-    solution: Site-wide values live in a single config file, and every feature degrades gracefully when its environment variables are missing.
+  - challenge: Integrating real-time IoT sensor data from boats at sea with web dashboard for live tracking.
+    solution: Built a robust Firebase real-time database architecture with WebSocket connections to ensure low-latency data transmission from Arduino-based boat sensors to the web interface.
+  - challenge: Ensuring reliable GPS tracking and accident detection in maritime environments with limited connectivity.
+    solution: Implemented offline data buffering on IoT devices with automatic sync when connection is restored, plus redundant sensor validation to reduce false alerts.
+  - challenge: Creating an intuitive map interface that handles multiple vessels simultaneously without performance degradation.
+    solution: Used efficient map clustering algorithms and optimized marker rendering with Mapbox to handle dozens of vessels smoothly on various devices.
 learned:
-  - A starter is a product. Documentation and sensible defaults matter as much as the code.
-  - Failing the build on invalid content is kinder than finding broken pages in production.
-  - Small, well-named components make a codebase approachable to strangers.
-outcome: Still in progress, but already running this very site. The next steps are a visual theme switcher for forks, a CLI to scaffold new posts, and a public changelog.
-relatedPosts:
-  - effective-code-reviews
-  - writing-good-commit-messages
-  - debugging-habits
+  - Real-time IoT systems require careful consideration of network reliability and offline scenarios.
+  - Hardware-software integration demands thorough testing across different environmental conditions.
+  - Maritime safety applications need intuitive interfaces that work under stress and time pressure.
+  - Efficient data synchronization patterns are crucial for systems dealing with intermittent connectivity.
+outcome: Successfully deployed IoT boat monitoring system providing 24/7 maritime surveillance. The platform enables faster emergency response through real-time vessel tracking and automated accident detection alerts.
+relatedPosts: []
 ---
 
-Site Starter is the template behind this blog. It is an Astro project that gives you a fast, accessible, search-friendly site as soon as you clone it: a blog, a small project showcase, an RSS feed, a sitemap, and social images that generate themselves.
+**Boat Safe System** is a comprehensive IoT-based maritime monitoring solution designed to enhance safety at sea. The system combines hardware sensors installed on boats with a real-time web dashboard for continuous surveillance.
 
-### Principles
+### Key Features
 
-The starter follows a few strict rules: content first, no JavaScript unless it earns its place, and every page must be fully readable without a script. Everything else follows from those three.
+**Real-Time Monitoring**: The platform tracks vessel positions, movements, and status continuously using GPS and IoT sensors integrated with Arduino-based hardware.
 
-### Status
+**Accident Detection**: Automated alert system that detects anomalies and potential accidents, enabling rapid response and rescue operations.
 
-It is under active development. I am using this site as the proving ground: whenever something annoys me while writing a post, it becomes an issue in the starter.
+**24/7 Surveillance**: Continuous monitoring infrastructure that provides around-the-clock maritime safety coverage.
+
+**Live Position Tracking**: Interactive map interface showing real-time vessel locations and movement patterns for fleet management and safety coordination.
+
+### Technology Stack
+
+The web platform is built with **Next.js** and **TypeScript** for a robust, type-safe frontend. **Firebase** handles real-time data synchronization and authentication. **Mapbox** powers the interactive mapping features with smooth performance even when tracking multiple vessels.
+
+On the hardware side, **Arduino** microcontrollers interface with GPS modules, accelerometers, and communication modules to collect and transmit vessel data. The system is designed for reliability in harsh maritime conditions.
+
+### Impact
+
+The Boat Safe System addresses critical maritime safety challenges by providing fishermen, boat operators, and maritime authorities with real-time visibility into vessel status and location. This enables faster response times during emergencies and better coordination for search and rescue operations.
