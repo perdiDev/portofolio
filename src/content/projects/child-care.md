@@ -1,6 +1,6 @@
 ---
 title: Child Care - CyberSoul
-summary: AI apps that help parents for having conversetion with adhd children, record the conversetion and get the summary for analyse by profesional.
+summary: Mobile app that guides parents of children with ADHD through AI-led conversations and turns them into PDF reports for psychologists.
 date: 2024-12-08
 order: 3
 featured: false
@@ -10,42 +10,53 @@ duration: 4 months so far
 techStack: [Flutter, Gemini API, Firebase, Figma, Google Authentication]
 repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
 thumbnail:
-  image: ../../assets/projects/portfolio-engine/screenshot-1.png
-  alt: Landing page of the Site Starter template with the headline Write. Ship. Rank. and three feature cards
+  image: ../../assets/projects/child-care/screenshot-1.png
+  alt: Three phone screens of the ChildCare app showing the home page, the community feed and the tips page
 screenshots:
-  - image: ../../assets/projects/portfolio-engine/screenshot-1.png
-    alt: Site Starter landing page with the headline Write. Ship. Rank. and cards for SEO, zero JavaScript and typed content
-    caption: The starter ships with a calm, typography-first home page.
-  - image: ../../assets/projects/portfolio-engine/screenshot-2.png
-    alt: Lighthouse report showing four perfect scores of 100 for performance, accessibility, best practices and SEO
-    caption: Every template is audited with Lighthouse before a release.
-  - image: ../../assets/projects/portfolio-engine/screenshot-3.png
-    alt: Markdown file with front matter defining a title, description, date, category and tags for a blog post
-    caption: Posts are Markdown files validated by a typed schema at build time.
+  - image: ../../assets/projects/child-care/screenshot-1.png
+    alt: Three phone screens side by side, the Beranda home page with a Bincang dengan anak dipandu AI card, the Komunitas feed and the Tips page
+    caption: The main tabs, the home page with the AI-guided conversation entry, the parent community and treatment tips.
+  - image: ../../assets/projects/child-care/screenshot-2.png
+    alt: Beranda home page with a Mulai button, Daftar anak and Riwayat Percakapan sections, next to the FAQs page explaining the AI feature
+    caption: Parents start a conversation from the home page, pick a child and review past conversations. The FAQs explain how the AI flow works.
+  - image: ../../assets/projects/child-care/screenshot-3.png
+    alt: Profil page with menu items for account details, privacy, FAQs, contact and about, next to the Detail Aplikasi page with the ChildCare logo and team credits
+    caption: The profile tab holds account settings, privacy, FAQs and the about page with the CyberSoul team credits.
 challenges:
-  - challenge: Making the defaults good enough that a new site scores 100 on Lighthouse without any tuning.
-    solution: I treated the Lighthouse run as a test in CI. A change that lowers a score fails the build, so regressions are caught in the pull request instead of after launch.
-  - challenge: SEO metadata that is easy to forget, such as canonical URLs, Open Graph images, and structured data.
-    solution: All of it is generated from one component and one typed helper, driven by the same frontmatter the page already needs. There is nothing to remember to add.
-  - challenge: Keeping the template opinionated without making it hard to change.
-    solution: Site-wide values live in a single config file, and every feature degrades gracefully when its environment variables are missing.
+  - challenge: Children with ADHD often lose focus quickly, and parents are not sure which questions will help them open up.
+    solution: The parent writes down what they are worried about, and the Gemini API suggests a question based on a psychology approach. After the parent types the child's answer, the AI asks a follow-up question, and this repeats until the parent decides the conversation is long enough.
+  - challenge: A conversation on a phone is hard to hand over to a psychologist or psychiatrist.
+    solution: Each finished conversation is saved to the child's history and can be exported and shared as a PDF from the child's detail page, so the professional gets the full exchange and the AI insight in one document.
+  - challenge: One parent may care for more than one child, and each child's history must stay separate.
+    solution: Parents register each child once (Daftar anak), and every conversation is stored under that child in Firebase, behind Google sign-in.
 learned:
-  - A starter is a product. Documentation and sensible defaults matter as much as the code.
-  - Failing the build on invalid content is kinder than finding broken pages in production.
-  - Small, well-named components make a codebase approachable to strangers.
-outcome: Still in progress, but already running this very site. The next steps are a visual theme switcher for forks, a CLI to scaffold new posts, and a public changelog.
-relatedPosts:
-  - effective-code-reviews
-  - writing-good-commit-messages
-  - debugging-habits
+  - Prompts for sensitive topics need careful wording, because the AI's tone reaches a child through the parent.
+  - The output that matters most is the one a professional can read, so the PDF export was as important as the chat.
+  - Designing in Figma first made it easier for the team to agree on the flow before writing Flutter code.
+outcome: Built by Tim CyberSoul from Universitas Hasanuddin, with Muh. Fayzul Haq as team lead, Ni Made Dwi Jayanti as system analyst and me as developer. Version 1.0.0 covers AI-guided conversations, PDF sharing, a parent community and treatment tips.
+relatedPosts: []
 ---
 
-Site Starter is the template behind this blog. It is an Astro project that gives you a fast, accessible, search-friendly site as soon as you clone it: a blog, a small project showcase, an RSS feed, a sitemap, and social images that generate themselves.
+**ChildCare** is an Android app that helps parents of children with ADHD talk with their child and get psychological insight from those conversations. It was built by **Tim CyberSoul** from **Universitas Hasanuddin**.
 
-### Principles
+### How It Works
 
-The starter follows a few strict rules: content first, no JavaScript unless it earns its place, and every page must be fully readable without a script. Everything else follows from those three.
+1. The parent picks a child and describes what they are concerned about.
+2. The AI suggests a question to ask the child, using a psychology-based approach.
+3. The parent asks the question and types the child's answer into the app.
+4. The AI replies with a follow-up question. This continues until the parent feels the conversation is complete.
+5. The conversation is saved as a PDF that the parent can share with a psychologist or psychiatrist.
 
-### Status
+### Key Features
 
-It is under active development. I am using this site as the proving ground: whenever something annoys me while writing a post, it becomes an issue in the starter.
+**Beranda (home)**: Greets the parent, starts an AI-guided conversation (Bincang dengan anak dipandu AI), lists registered children (Daftar anak) and shows the conversation history (Riwayat Percakapan).
+
+**Komunitas**: A feed where parents share stories, with a button to create a new post.
+
+**Tips**: Treatment ideas that parents can try with their child, such as puzzles, card matching, games and journaling.
+
+**Profil**: Account details, privacy, FAQs, contact and information about the app.
+
+### Technology Stack
+
+The app is written in **Flutter**. Conversations are powered by the **Gemini API**. Data is stored in **Firebase**, and users sign in with **Google Authentication**. The UI was designed in **Figma**.
