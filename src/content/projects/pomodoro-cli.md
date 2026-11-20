@@ -1,51 +1,46 @@
 ---
 title: Pomodoro CLI
-summary: AI apps that help parents for having conversetion with adhd children, record the conversetion and get the summary for analyse by profesional.
-date: 2026-01-07
+summary: A Bash script that runs Pomodoro work and break cycles and sends each step as a desktop notification on Linux.
+date: 2025-11-28
 order: 8
 featured: false
 status: Live
-role: Fullstack Web Developer
-duration: 4 months so far
-techStack: [Laravel, Livewire, PostgresSQL, AWS Cloud]
-repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
+role: Developer
+duration: 1 day
+techStack: [Bash, libnotify, Linux]
+repoUrl: https://codeberg.org/perdidev/pomodoro-daemon
 thumbnail:
-  image: ../../assets/projects/portfolio-engine/screenshot-1.png
-  alt: Landing page of the Site Starter template with the headline Write. Ship. Rank. and three feature cards
+  image: ../../assets/projects/pomodoro-cli/screenshot-1.png
+  alt: Terminal window showing the first part of pomodoro-daemon.sh with the default timer values and the option parsing loop
 screenshots:
-  - image: ../../assets/projects/portfolio-engine/screenshot-1.png
-    alt: Site Starter landing page with the headline Write. Ship. Rank. and cards for SEO, zero JavaScript and typed content
-    caption: The starter ships with a calm, typography-first home page.
-  - image: ../../assets/projects/portfolio-engine/screenshot-2.png
-    alt: Lighthouse report showing four perfect scores of 100 for performance, accessibility, best practices and SEO
-    caption: Every template is audited with Lighthouse before a release.
-  - image: ../../assets/projects/portfolio-engine/screenshot-3.png
-    alt: Markdown file with front matter defining a title, description, date, category and tags for a blog post
-    caption: Posts are Markdown files validated by a typed schema at build time.
+  - image: ../../assets/projects/pomodoro-cli/screenshot-1.png
+    alt: Terminal window showing the first part of pomodoro-daemon.sh with the default timer values, the getopts loop and the first notify-send call
+    caption: Defaults are 25 minutes of work, 5 minutes of break and 4 rounds. Flags override each one.
+  - image: ../../assets/projects/pomodoro-cli/screenshot-2.png
+    alt: Terminal window showing the loop in pomodoro-daemon.sh that sleeps for the work time, counts down the last five seconds and sends break notifications
+    caption: Each round sleeps for the work time, counts down the last five seconds, then announces the break.
+  - image: ../../assets/projects/pomodoro-cli/screenshot-3.png
+    alt: Six dark desktop notifications in order, from the start summary to the final message that says it is time to hibernate
+    caption: The notification sequence for one session, rendered from the exact messages in the script.
 challenges:
-  - challenge: Making the defaults good enough that a new site scores 100 on Lighthouse without any tuning.
-    solution: I treated the Lighthouse run as a test in CI. A change that lowers a score fails the build, so regressions are caught in the pull request instead of after launch.
-  - challenge: SEO metadata that is easy to forget, such as canonical URLs, Open Graph images, and structured data.
-    solution: All of it is generated from one component and one typed helper, driven by the same frontmatter the page already needs. There is nothing to remember to add.
-  - challenge: Keeping the template opinionated without making it hard to change.
-    solution: Site-wide values live in a single config file, and every feature degrades gracefully when its environment variables are missing.
+  - challenge: A new notification for every step would pile up on the desktop and bury the timer.
+    solution: Every call uses the same x-canonical-private-synchronous hint, so the notification daemon replaces the previous bubble instead of stacking a new one.
+  - challenge: Waiting for a long timer gives no feedback that the script is still running.
+    solution: The last five seconds of each work round update one notification with a progress value, and each finished round updates a progress bar for the whole session.
 learned:
-  - A starter is a product. Documentation and sensible defaults matter as much as the code.
-  - Failing the build on invalid content is kinder than finding broken pages in production.
-  - Small, well-named components make a codebase approachable to strangers.
-outcome: Still in progress, but already running this very site. The next steps are a visual theme switcher for forks, a CLI to scaffold new posts, and a public changelog.
-relatedPosts:
-  - effective-code-reviews
-  - writing-good-commit-messages
-  - debugging-habits
+  - notify-send hints, such as a synchronous key and an int value, are enough to build a progress bar without any GUI toolkit.
+  - getopts needs a colon after a flag letter for that flag to take a value, so the -r option in this version still has a bug to fix.
+  - A script that only sleeps and notifies is simple to run in the background, but it has no pause or stop control yet.
+outcome: A small script I use for my own work sessions. Next steps are fixing the -r option, a missing line continuation in the final notification, and turning it into a real background service.
+relatedPosts: []
 ---
 
-Site Starter is the template behind this blog. It is an Astro project that gives you a fast, accessible, search-friendly site as soon as you clone it: a blog, a small project showcase, an RSS feed, a sitemap, and social images that generate themselves.
+**Pomodoro CLI** (the repository is called `pomodoro-daemon`) is a single Bash script that runs the Pomodoro technique from the terminal. It sends a desktop notification when a session starts, when a work round ends, when a break starts and when it is over.
 
-### Principles
+### Usage
 
-The starter follows a few strict rules: content first, no JavaScript unless it earns its place, and every page must be fully readable without a script. Everything else follows from those three.
+Run it with no arguments for 4 rounds of 25 minutes of work and 5 minutes of break. Use `-w` for work seconds, `-b` for break seconds and `-r` for the number of rounds.
 
 ### Status
 
-It is under active development. I am using this site as the proving ground: whenever something annoys me while writing a post, it becomes an issue in the starter.
+It works for daily use on Linux with a notification daemon that supports `notify-send` hints. It is a small script today, and I plan to grow it into a proper daemon.
