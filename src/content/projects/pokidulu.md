@@ -1,51 +1,48 @@
 ---
 title: Pokidulu
-summary: AI apps that help parents for having conversetion with adhd children, record the conversetion and get the summary for analyse by profesional.
+summary: Pre-order management platform for organizations. Build a catalog, share an order link, and track orders, payments and balance from one dashboard.
 date: 2026-12-08
 order: 6
 featured: false
 status: Live
 role: Fullstack Web Developer
 duration: 4 months so far
-techStack: [Laravel, Livewire, Midtrans Payment]
-repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
+techStack: [Laravel, Filament, Livewire, Laravel Reverb, Midtrans Payment]
 thumbnail:
-  image: ../../assets/projects/portfolio-engine/screenshot-1.png
-  alt: Landing page of the Site Starter template with the headline Write. Ship. Rank. and three feature cards
+  image: ../../assets/projects/pokidulu/screenshot-2.png
+  alt: Pokidulu organization dashboard with revenue, order, product and member cards above the latest orders list
 screenshots:
-  - image: ../../assets/projects/portfolio-engine/screenshot-1.png
-    alt: Site Starter landing page with the headline Write. Ship. Rank. and cards for SEO, zero JavaScript and typed content
-    caption: The starter ships with a calm, typography-first home page.
-  - image: ../../assets/projects/portfolio-engine/screenshot-2.png
-    alt: Lighthouse report showing four perfect scores of 100 for performance, accessibility, best practices and SEO
-    caption: Every template is audited with Lighthouse before a release.
-  - image: ../../assets/projects/portfolio-engine/screenshot-3.png
-    alt: Markdown file with front matter defining a title, description, date, category and tags for a blog post
-    caption: Posts are Markdown files validated by a typed schema at build time.
+  - image: ../../assets/projects/pokidulu/screenshot-1.png
+    alt: Pokidulu landing page with the headline Urus Pre-Order Jadi Gampang and a preview of the dashboard
+    caption: The landing page explains the product in one sentence and links straight to sign-up.
+  - image: ../../assets/projects/pokidulu/screenshot-2.png
+    alt: Pokidulu organization dashboard with revenue, order, product and member cards above the latest orders list
+    caption: The dashboard shows revenue, pending orders, products, members, available balance and the latest orders.
+  - image: ../../assets/projects/pokidulu/screenshot-3.png
+    alt: Product list with photo, category, price, stock, type and status columns, split into active, draft and archived tabs
+    caption: Products are managed in a table with status tabs and per-row status control.
+  - image: ../../assets/projects/pokidulu/screenshot-4.png
+    alt: Order list with order code, customer, order status, payment status and total columns
+    caption: Every order has a code, a customer, an order status and a payment status.
 challenges:
-  - challenge: Making the defaults good enough that a new site scores 100 on Lighthouse without any tuning.
-    solution: I treated the Lighthouse run as a test in CI. A change that lowers a score fails the build, so regressions are caught in the pull request instead of after launch.
-  - challenge: SEO metadata that is easy to forget, such as canonical URLs, Open Graph images, and structured data.
-    solution: All of it is generated from one component and one typed helper, driven by the same frontmatter the page already needs. There is nothing to remember to add.
-  - challenge: Keeping the template opinionated without making it hard to change.
-    solution: Site-wide values live in a single config file, and every feature degrades gracefully when its environment variables are missing.
+  - challenge: Organizations run pre-orders through chat and spreadsheets, so payments and orders drift apart.
+    solution: Orders and payments live in one system. Each order has a code, an order status and a separate payment status, and Midtrans handles the payment.
+  - challenge: One account has to manage several organizations without mixing their data.
+    solution: Every organization has its own workspace, with its own catalog, orders, finance and members.
 learned:
-  - A starter is a product. Documentation and sensible defaults matter as much as the code.
-  - Failing the build on invalid content is kinder than finding broken pages in production.
-  - Small, well-named components make a codebase approachable to strangers.
-outcome: Still in progress, but already running this very site. The next steps are a visual theme switcher for forks, a CLI to scaffold new posts, and a public changelog.
-relatedPosts:
-  - effective-code-reviews
-  - writing-good-commit-messages
-  - debugging-habits
+  - Separating the order status from the payment status makes the order list much easier to read.
+  - Admin screens built from table, filter and form building blocks are fast to extend as new needs come up.
+outcome: Live and still in development. The platform already covers events, products, orders, promos, finance and member management for each organization.
 ---
 
-Site Starter is the template behind this blog. It is an Astro project that gives you a fast, accessible, search-friendly site as soon as you clone it: a blog, a small project showcase, an RSS feed, a sitemap, and social images that generate themselves.
+Pokidulu helps communities and organizations run pre-orders without spreadsheets. An organization sets up its profile, builds a catalog of products or events, shares an order link, and follows incoming orders and payments from a single dashboard.
 
-### Principles
+### What it covers
 
-The starter follows a few strict rules: content first, no JavaScript unless it earns its place, and every page must be fully readable without a script. Everything else follows from those three.
+- Events and products, with stock, price, category and draft or archived states.
+- Orders with a customer, an order status and a payment status, plus a public page to track an order.
+- Promos, organization finance with an available balance, and member management.
 
 ### Status
 
-It is under active development. I am using this site as the proving ground: whenever something annoys me while writing a post, it becomes an issue in the starter.
+It is under active development. I work on it as a fullstack developer, from the Laravel backend to the admin screens.
