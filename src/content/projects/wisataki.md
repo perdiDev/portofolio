@@ -10,18 +10,18 @@ duration: 3 months
 techStack: [Flutter, Supabase, Firebase Authentication, Firestore, Figma]
 repoUrl: https://github.com/perdiDev/wisataki-try
 thumbnail:
-  image: ../../assets/projects/budget-tracker/screenshot-1.png
-  alt: Dashboard of the Budget Tracker app with income, spending and savings cards above a spending-over-time line chart
+  image: ../../assets/projects/wisataki/screenshot-1.png
+  alt: Three phone screens of the Wisataki app showing the home page, the QR scanner and the group size confirmation
 screenshots:
-  - image: ../../assets/projects/budget-tracker/screenshot-1.png
-    alt: Budget Tracker dashboard showing monthly income, spending, savings and a line chart of spending over time
-    caption: The overview page answers one question first, "am I on track this month?"
-  - image: ../../assets/projects/budget-tracker/screenshot-2.png
-    alt: Transactions table listing recent purchases with dates, merchants and signed amounts
-    caption: Transactions are imported from CSV exports and categorized automatically.
-  - image: ../../assets/projects/budget-tracker/screenshot-3.png
-    alt: Budgets page with progress bars for rent, groceries, transport, dining out, subscriptions and health
-    caption: Each budget turns amber at 90% so overspending is visible before it happens.
+  - image: ../../assets/projects/wisataki/screenshot-1.png
+    alt: Three phone screens side by side, the home page with a Scan Now card, the camera scanning a QR code and the group size confirmation dialog for Sumpa Bitta
+    caption: A visitor taps Scan Now, points the camera at the destination's QR code and only confirms the group size.
+  - image: ../../assets/projects/wisataki/screenshot-2.png
+    alt: Three phone screens side by side, the onboarding page, the Google sign-in page and the Sumpa Bitta destination detail page
+    caption: Onboarding and Google sign-in happen once. Each destination has a detail page with its visitor count and description.
+  - image: ../../assets/projects/wisataki/screenshot-3.png
+    alt: Three phone screens side by side, the manager QR code page with a download button, the add destination form and the visitor profile with a visit counter
+    caption: Managers add a destination and download its QR code for the entrance. The visitor profile counts completed trips.
 challenges:
   - challenge: Connecting app to google authentication always failed when test the build.
     solution: Implement the google auth always need 2 type of environment, one for localhost or development, and one for production.
