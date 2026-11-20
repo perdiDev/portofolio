@@ -53,31 +53,37 @@ const heroFull = full[0]!;
   </figure>
 
   {rest.length > 0 && (
-    <ul class="mt-4 grid grid-cols-2 gap-4" aria-label="More screenshots">
-      {rest.map((shot, i) => (
-        <li>
-          <figure class="m-0">
-            <a
-              href={full[i + 1]!.src}
-              data-lightbox
-              data-alt={shot.alt}
-              data-caption={shot.caption ?? ''}
-              class="reveal block overflow-hidden rounded-lg border border-border transition-colors hover:border-accent"
-              aria-label={`Open larger view: ${shot.alt}`}
-            >
-              <Picture
-                src={shot.image}
-                alt={shot.alt}
-                formats={['avif', 'webp']}
-                widths={[320, 480, 728]}
-                sizes="(min-width: 768px) 360px, 50vw"
-                class="h-auto w-full"
-              />
-            </a>
-            {shot.caption && <figcaption class="meta mt-2">{shot.caption}</figcaption>}
-          </figure>
-        </li>
-      ))}
+    <ul class="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2" aria-label="More screenshots">
+      {rest.map((shot, i) => {
+        // An odd count would leave the last tile alone in a half-empty row: let it span both columns.
+        const wide = rest.length % 2 === 1 && i === rest.length - 1;
+        return (
+          <li class:list={[wide && 'sm:col-span-2']}>
+            <figure class="m-0">
+              <a
+                href={full[i + 1]!.src}
+                data-lightbox
+                data-alt={shot.alt}
+                data-caption={shot.caption ?? ''}
+                class="reveal block aspect-[16/10] overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:border-accent"
+                aria-label={`Open larger view: ${shot.alt}`}
+              >
+                <Picture
+                  src={shot.image}
+                  alt={shot.alt}
+                  formats={['avif', 'webp']}
+                  widths={wide ? [480, 728, 1100, 1456] : [320, 480, 728]}
+                  sizes={
+                    wide ? '(min-width: 768px) 728px, 100vw' : '(min-width: 640px) 360px, 100vw'
+                  }
+                  class="size-full object-cover object-top"
+                />
+              </a>
+              {shot.caption && <figcaption class="meta mt-2">{shot.caption}</figcaption>}
+            </figure>
+          </li>
+        );
+      })}
     </ul>
   )}
 
