@@ -33,7 +33,7 @@ const navLinkClass =
 ---
 
 <header
-  class="relative border-b border-border/70"
+  class="relative border-b border-border/70 sm:relative sm:z-auto [&:has(details[open])]:fixed [&:has(details[open])]:left-0 [&:has(details[open])]:right-0 [&:has(details[open])]:top-0 [&:has(details[open])]:z-50 [&:has(details[open])]:bg-surface"
   transition:persist="site-header"
   data-site-header
 >
@@ -115,12 +115,12 @@ const navLinkClass =
             <Icon name="menu" class="group-open:hidden" />
             <Icon name="close" class="hidden group-open:block" />
           </summary>
-          <ul class="absolute inset-x-0 top-full z-50 border-b border-border bg-surface px-5 py-3 shadow-none">
+          <ul class="fixed inset-0 top-16 z-50 overflow-y-auto bg-surface px-5 py-8">
             {NAV.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="block py-3 text-base text-muted hover:text-text aria-[current=page]:text-accent data-[section]:text-text"
+                  class="block py-4 text-lg text-muted hover:text-text aria-[current=page]:text-accent data-[section]:text-text"
                   data-nav-link
                   {...state(item.href)}
                 >
@@ -167,6 +167,17 @@ const navLinkClass =
     if (!details) return;
     details.open = false;
 
+    // Prevent body scroll when mobile menu is open
+    const onToggle = () => {
+      if (details.open) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+
+    details.addEventListener('toggle', onToggle);
+
     const onKeydown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && details.open) {
         details.open = false;
@@ -181,6 +192,8 @@ const navLinkClass =
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('pointerdown', onPointerDown);
     cleanup = () => {
+      document.body.style.overflow = '';
+      details.removeEventListener('toggle', onToggle);
       document.removeEventListener('keydown', onKeydown);
       document.removeEventListener('pointerdown', onPointerDown);
     };

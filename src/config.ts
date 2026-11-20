@@ -25,7 +25,7 @@ export const AUTHOR = {
   email: 'perdidev@gmail.com',
   jobTitle: 'Software Engineer',
   /** TODO: replace with your real bio (shown on /about/ and in Person JSON-LD). */
-  bio: 'I am a software engineer who enjoys Linux, clean code, and explaining hard things in plain language. This blog is where I write down what I learn so other developers can skip the detours.',
+  bio: 'Informatics Engineering graduate specializing in Software Engineering, with hands-on experience for almost 4+ years.',
   /** Short intro for the home page hero. */
   intro:
     'I am Perdi, a software engineer. I write about programming, Linux, and the craft of building software, for developers who like clear explanations and working examples.',
