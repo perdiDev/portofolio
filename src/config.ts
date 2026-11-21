@@ -8,7 +8,7 @@ export interface SocialLink {
   readonly label: string;
   readonly url: string;
   /** Key of the icon in `src/components/Icon.astro`. */
-  readonly icon: 'github' | 'linkedin' | 'x' | 'mail';
+  readonly icon: 'github' | 'linkedin' | 'instagram' | 'x' | 'mail';
 }
 
 /** Blog categories. Add a value here and it becomes valid in frontmatter. */
@@ -37,6 +37,7 @@ const X_URL = '';
 export const SOCIALS: readonly SocialLink[] = [
   { label: 'GitHub', url: 'https://github.com/perdidev', icon: 'github' },
   { label: 'LinkedIn', url: 'https://www.linkedin.com/in/perdi-dev/', icon: 'linkedin' },
+  { label: 'Instagram', url: 'https://www.instagram.com/perdidev/', icon: 'instagram' },
   ...(X_URL ? [{ label: 'X', url: X_URL, icon: 'x' } as const] : []),
 ];
 

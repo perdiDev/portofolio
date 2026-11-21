@@ -8,6 +8,7 @@ import photo from '../assets/photo.jpeg';
 import { ACHIEVEMENTS, AUTHOR, EXPERIENCE, SOCIALS } from '../config';
 import { getProjects, projectUrl } from '../utils/posts';
 import { PLATES } from '../components/new-home-4/plates';
+import Icon from '../components/Icon.astro';
 
 const norm = (ym: string) => ym.replace(/-(\d)$/, '-0$1');
 const fmt = (ym: string) => {
@@ -87,6 +88,11 @@ const nav = [
   ['recognition', 'Recognition'],
   ['contact', 'Contact'],
 ] as const;
+
+const socials = SOCIALS.map((so) => ({
+  ...so,
+  handle: new URL(so.url).pathname.split('/').filter(Boolean).pop() ?? so.label,
+}));
 
 const description = `${AUTHOR.name}, ${AUTHOR.jobTitle}. ${AUTHOR.bio}`;
 const year = new Date().getFullYear();
@@ -326,16 +332,65 @@ const year = new Date().getFullYear();
 
         <!-- 06 Contact -->
         <section id="contact" class="sec contact" aria-labelledby="contact-h">
-          <p class="sec-n">05</p>
-          <h2 id="contact-h">Have something worth building?</h2>
-          <a class="big-mail ulink" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
-          <div class="contact-actions">
-            <button id="copy" class="btn" type="button">Copy email</button>
-            <span id="copied" class="small" role="status" aria-live="polite"></span>
-            {SOCIALS.map((s) => (
-              <a class="ulink small" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
-            ))}
+          <div class="contact-grid">
+            <div class="contact-copy">
+              <p class="sec-n">05</p>
+              <h2 id="contact-h">
+                <span class="cw"><span style="--w:0">Have</span></span>
+                <span class="cw"><span style="--w:1">something</span></span>
+                <span class="cw"><span style="--w:2">worth</span></span>
+                <span class="cw"><em style="--w:3">building?</em></span>
+              </h2>
+              <a class="big-mail ulink" href={`mailto:${AUTHOR.email}`}>
+                <span class="mail-t">{AUTHOR.email}</span>
+                <svg class="mail-arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+              </a>
+              <div class="contact-actions">
+                <button id="copy" class="btn" type="button" data-state="idle">
+                  <span class="btn-roll">
+                    <span class="btn-a">Copy email</span>
+                    <span class="btn-b" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 13l4 4L19 7" /></svg>
+                      Copied
+                    </span>
+                  </span>
+                </button>
+                <span id="copied" class="small" role="status" aria-live="polite"></span>
+              </div>
+            </div>
+
+            <figure class="mail-plate" aria-hidden="true">
+              <svg viewBox="0 0 480 360" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                <path class="ln" pathLength="1" d="M20 330 H460" style="--k:0" stroke-dasharray="2 7" opacity="0.5" />
+                <rect class="ln env-back" pathLength="1" x="60" y="130" width="360" height="200" style="--k:1" />
+                <path class="ln env-open" pathLength="1" d="M60 130 L240 22 L420 130 Z" style="--k:2" />
+                <g class="letter">
+                  <rect class="ln" pathLength="1" x="104" y="58" width="272" height="230" style="--k:3" />
+                  <path class="ln" pathLength="1" d="M136 108 H260 M136 140 H344 M136 168 H344 M136 196 H300" style="--k:4" />
+                  <circle class="seal" cx="336" cy="104" r="12" />
+                </g>
+                <path class="env-front" d="M60 130 L240 250 L420 130 V330 H60 Z" />
+                <path class="ln" pathLength="1" d="M60 330 L204 224 M420 330 L276 224" style="--k:5" />
+                <path class="ln env-front-edge" pathLength="1" d="M60 130 L240 250 L420 130" style="--k:5" />
+                <path class="env-flap" d="M60 130 L240 250 L420 130 Z" />
+              </svg>
+            </figure>
           </div>
+
+          <ul class="soc" aria-label="Elsewhere">
+            {socials.map((so, i) => (
+              <li class="soc-i" style={`--i:${i}`}>
+                <a class="soc-a" href={so.url} target="_blank" rel="me noopener noreferrer" aria-label={`${so.label}, ${so.handle} (opens in a new tab)`}>
+                  <span class="soc-top">
+                    <Icon name={so.icon} class="soc-ico" />
+                    <svg class="soc-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </span>
+                  <span class="soc-l">{so.label}</span>
+                  <span class="soc-h">@{so.handle}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <footer class="foot small">
@@ -479,17 +534,31 @@ const year = new Date().getFullYear();
         }));
       }
 
-      // Copy email
+      // Copy email: the label rolls to a check; failure falls back to visible text
       const copied = $('#copied');
-      $('#copy').addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(email);
-          copied.textContent = 'Copied to clipboard';
-        } catch (e) {
-          copied.textContent = 'Press Ctrl+C to copy: ' + email;
-        }
-        setTimeout(() => (copied.textContent = ''), 2400);
+      const copyBtn = $('#copy');
+      let copyTimer = 0;
+      copyBtn.addEventListener('click', async () => {
+        clearTimeout(copyTimer);
+        let ok = true;
+        try { await navigator.clipboard.writeText(email); } catch (e) { ok = false; }
+        copied.className = ok ? 'sr' : 'small';
+        copied.textContent = ok ? 'Copied to clipboard' : 'Press Ctrl+C to copy: ' + email;
+        if (ok) copyBtn.dataset.state = 'done';
+        copyTimer = setTimeout(() => { copyBtn.dataset.state = 'idle'; copied.textContent = ''; }, 2400);
       });
+
+      // Copy button leans toward the pointer
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches && !rm) {
+        copyBtn.style.transition = 'transform 300ms cubic-bezier(0.23, 1, 0.32, 1), background-color 160ms ease, border-color 160ms ease';
+        copyBtn.addEventListener('pointermove', (e) => {
+          const r = copyBtn.getBoundingClientRect();
+          const dx = (e.clientX - r.left - r.width / 2) / r.width;
+          const dy = (e.clientY - r.top - r.height / 2) / r.height;
+          copyBtn.style.transform = 'translate(' + (dx * 8).toFixed(1) + 'px,' + (dy * 6).toFixed(1) + 'px)';
+        });
+        copyBtn.addEventListener('pointerleave', () => { copyBtn.style.transform = ''; });
+      }
     </script>
   </body>
 </html>
@@ -843,10 +912,68 @@ const year = new Date().getFullYear();
   }
 
   /* ---- Contact ---- */
-  .contact { display: flex; flex-direction: column; align-items: flex-start; }
+  .contact-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .contact-copy { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
   .contact h2 { font-size: clamp(2.25rem, 5vw, 4rem); max-width: 16ch; }
-  .big-mail { margin-top: 2.5rem; font: italic 400 clamp(1.5rem, 3.4vw, 2.75rem)/1.2 var(--serif); letter-spacing: -0.02em; color: var(--accent); word-break: break-word; }
-  .contact-actions { margin-top: 2.25rem; display: flex; align-items: center; gap: 1.25rem; }
+  .cw { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.06em 0.08em 0.16em 0; margin-bottom: -0.16em; }
+  .cw > * { display: block; }
+  .big-mail { display: inline-flex; align-items: baseline; gap: 0.35em; margin-top: 2.5rem; font: italic 400 clamp(1.5rem, 3.4vw, 2.75rem)/1.2 var(--serif); letter-spacing: -0.02em; color: var(--accent); word-break: break-word; }
+  .mail-arrow { flex: none; align-self: center; transition: transform 400ms var(--ease-out); }
+  .contact-actions { margin-top: 2.25rem; display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem; min-height: 2.875rem; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* Copy button: label rolls up to a drawn check */
+  .btn-roll { display: grid; overflow: hidden; }
+  .btn-a, .btn-b { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 0.5rem; transition: transform 420ms var(--ease-out), opacity 300ms ease; }
+  .btn-b { transform: translateY(130%); opacity: 0; }
+  .btn-b path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .btn[data-state='done'] .btn-a { transform: translateY(-130%); opacity: 0; }
+  .btn[data-state='done'] .btn-b { transform: none; opacity: 1; }
+  .btn[data-state='done'] .btn-b path { stroke-dashoffset: 0; transition: stroke-dashoffset 500ms var(--ease-out) 180ms; }
+  .btn[data-state='done'] { background: var(--accent); border-color: var(--accent); }
+
+  /* Envelope plate: the letter rises out when the section enters */
+  .mail-plate { margin: 0; justify-self: end; width: 100%; max-width: 26rem; color: var(--accent); }
+  .mail-plate svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .mail-plate .env-front, .mail-plate .env-flap { fill: var(--bg); stroke: none; }
+  .mail-plate .env-open { fill: var(--bg-2); }
+  .mail-plate .letter { translate: 0 118px; transition: translate 1100ms var(--ease-out); }
+  .mail-plate .letter rect { fill: var(--bg); }
+  .mail-plate .seal { fill: var(--accent); stroke: none; transform-box: fill-box; transform-origin: center; }
+  .mail-plate .env-flap { transform-box: fill-box; transform-origin: 50% 0; transition: transform 700ms var(--ease-out), opacity 300ms ease 300ms; }
+  .js .contact.in .env-flap { transform: scaleY(-1) translateY(100%); transform-origin: 50% 0; opacity: 0; }
+  .js .contact .mail-plate .env-flap { transition-delay: 1500ms; }
+  .js .contact.in .letter { translate: 0 0; transition-delay: 1800ms; }
+  .contact-grid:has(.big-mail:hover) .letter, .contact-grid:has(.btn:hover) .letter { translate: 0 -16px !important; transition-delay: 0ms !important; transition-duration: 600ms; }
+  .contact-grid:has(.btn:hover) .seal, .contact-grid:has(.big-mail:hover) .seal { animation: seal-pop 700ms var(--ease-out); }
+  @keyframes seal-pop { 0% { transform: scale(1); } 40% { transform: scale(1.5); } 100% { transform: scale(1); } }
+
+  /* Elsewhere: three bordered cells that fill from below on hover */
+  .soc { margin-top: clamp(3rem, 6vw, 5rem); display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); border: 1px solid var(--line); }
+  .soc-i + .soc-i { border-left: 1px solid var(--line); }
+  .soc-a { position: relative; display: grid; gap: 0.2rem; padding: clamp(1.25rem, 2.5vw, 1.75rem); overflow: hidden; isolation: isolate; height: 100%; transition: color 300ms ease; }
+  .soc-a::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--ink); transform: scaleY(0); transform-origin: bottom; transition: transform 500ms var(--ease-out); }
+  .soc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.25rem; }
+  .soc-ico { width: 1.35rem; height: 1.35rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; color: var(--accent); transition: color 300ms ease; }
+  .soc-ico.icon-fill { fill: currentColor; stroke: none; }
+  .soc-arrow { color: var(--muted); transition: transform 400ms var(--ease-out), color 300ms ease; }
+  .soc-l { font: 400 clamp(1.25rem, 2vw, 1.625rem)/1.2 var(--serif); letter-spacing: -0.015em; }
+  .soc-h { font: 400 0.75rem/1.4 var(--mono); letter-spacing: 0.04em; color: var(--muted); transition: color 300ms ease; overflow-wrap: anywhere; }
+
+  /* Entrance */
+  .js .contact .cw > * { transform: translateY(112%); transition: transform 1100ms var(--ease-out) calc(120ms + var(--w) * 120ms); }
+  .js .contact.in .cw > * { transform: none; }
+  .js .contact .sec-n, .js .contact .big-mail, .js .contact .contact-actions { opacity: 0; translate: 0 12px; filter: blur(4px); transition: opacity 800ms var(--ease-out), translate 900ms var(--ease-out), filter 800ms var(--ease-out); }
+  .js .contact.in .sec-n { opacity: 1; translate: 0; filter: none; }
+  .js .contact.in .big-mail { opacity: 1; translate: 0; filter: none; transition-delay: 520ms; }
+  .js .contact.in .contact-actions { opacity: 1; translate: 0; filter: none; transition-delay: 680ms; }
+  .js .contact .ln { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1500ms cubic-bezier(0.45, 0, 0.2, 1) calc(150ms + var(--k) * 140ms); }
+  .js .contact.in .ln { stroke-dashoffset: 0; }
+  .js .contact .env-open, .js .contact .letter rect, .js .contact .seal { opacity: 0; transition: opacity 600ms ease 1500ms; }
+  .js .contact.in .env-open, .js .contact.in .letter rect, .js .contact.in .seal { opacity: 1; }
+  .js .contact .soc-i { opacity: 0; translate: 0 18px; transition: opacity 800ms var(--ease-out) calc(700ms + var(--i) * 120ms), translate 900ms var(--ease-out) calc(700ms + var(--i) * 120ms); }
+  .js .contact.in .soc-i { opacity: 1; translate: 0; }
+
   .foot { display: flex; justify-content: space-between; gap: 1rem; padding-block: 2rem; border-top: 1px solid var(--line); }
 
   /* ---- Hover (pointer devices only) ---- */
@@ -866,10 +993,20 @@ const year = new Date().getFullYear();
     .exp-btn:hover .exp-co { transform: translateX(6px); }
     .exp-btn:hover .exp-icon { border-color: var(--accent); }
     .exp:hover .exp-item:not(:hover) .exp-btn { opacity: 0.55; }
+    .big-mail:hover .mail-arrow { transform: translate(4px, -4px); }
+    .soc-a:hover { color: var(--bg); }
+    .soc-a:hover::before { transform: scaleY(1); }
+    .soc-a:hover .soc-ico, .soc-a:hover .soc-arrow, .soc-a:hover .soc-h { color: var(--bg); }
+    .soc-a:hover .soc-ico { color: var(--band-accent); }
+    .soc-a:hover .soc-arrow { transform: translate(4px, -4px); }
+    .soc:hover .soc-i:not(:hover) { opacity: 0.55; }
+    .soc-i { transition: opacity 400ms ease; }
   }
 
   /* ---- Responsive ---- */
   @media (max-width: 64rem) {
+    .contact-grid { grid-template-columns: minmax(0, 1fr); }
+    .mail-plate { justify-self: start; max-width: 20rem; }
     :root { --rail: 13.5rem; }
     .rail { padding: 2rem 1.25rem 1.5rem 1.5rem; }
     .exp { --col: 8.5rem; }
@@ -896,6 +1033,9 @@ const year = new Date().getFullYear();
     .band-head { flex-direction: column; align-items: flex-start; }
     .btn { height: 3rem; }
     .foot { flex-direction: column; }
+    .soc { grid-template-columns: minmax(0, 1fr); }
+    .soc-i + .soc-i { border-left: 0; border-top: 1px solid var(--line); }
+    .soc-top { margin-bottom: 1.25rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -918,6 +1058,8 @@ const year = new Date().getFullYear();
     .exp-body > * { opacity: 1; }
     .dot { animation: none; }
     .rk-d { animation: none !important; }
+    .js .contact .cw > *, .js .contact .sec-n, .js .contact .big-mail, .js .contact .contact-actions, .js .contact .ln, .js .contact .soc-i, .js .contact .env-open, .js .contact .letter rect, .js .contact .seal, .mail-plate .letter, .mail-plate .env-flap, .soc-a::before, .btn-a, .btn-b, .btn-b path { transition: none !important; transform: none; translate: 0; filter: none; opacity: 1; stroke-dashoffset: 0; animation: none !important; }
+    .mail-plate .env-flap { opacity: 0; }
     .js .rec-row::before, .js .rec-when > span, .js .rec-body, .js .rec-rank .ln, .js .rec-rank .rk-d, .js .rec-tag { transition: none !important; transform: none; translate: 0; filter: none; opacity: 1; stroke-dashoffset: 0; }
   }
 </style>
