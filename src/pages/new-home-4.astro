@@ -22,7 +22,7 @@ const fmt = (ym: string) => {
 const portrait = await getImage({ src: photo, width: 400, format: 'webp' });
 
 const projects = await Promise.all(
-  (await getProjects()).slice(0, 6).map(async (p, i) => ({
+  (await getProjects()).slice(0, 7).map(async (p, i) => ({
     n: String(i + 1).padStart(2, '0'),
     title: p.data.title,
     summary: p.data.summary,
@@ -331,10 +331,10 @@ const year = new Date().getFullYear();
       );
       $$('main section[id]').forEach((s) => map.has(s.id) && io.observe(s));
 
-      // Reveal on enter (once)
+      // Reveal on every entry: add .in when visible, remove it when it leaves so it replays
       const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const ro = new IntersectionObserver((es) => es.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+        e.target.classList.toggle('in', e.isIntersecting);
       }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
       $$('.reveal, .sec').forEach((el) => ro.observe(el));
 

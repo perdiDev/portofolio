@@ -24,6 +24,8 @@ import wkScan from '../../assets/projects/wisataki/phone-2.jpg';
 import wkConfirm from '../../assets/projects/wisataki/phone-3.jpg';
 import pdDashboard from '../../assets/projects/pokidulu/screenshot-2.png';
 import pdOrders from '../../assets/projects/pokidulu/screenshot-4.png';
+import sdLogin from '../../assets/projects/sapadesa/login.png';
+import sdLetter from '../../assets/projects/sapadesa/pembuatan-surat.png';
 
 export type Plate = {
   hue: string;
@@ -184,6 +186,26 @@ function artPokidulu() {
     ${txt(1450, 730, 'PRE-ORDER')}${txt(1450, 770, 'No. 0042')}`;
 }
 
+function artSapaDesa() {
+  k = 0;
+  const terrace = (y: number, amp: number, seed: number) => {
+    const pts: string[] = [];
+    for (let x = -20; x <= 1620; x += 40) pts.push(`${x} ${r1(y + amp * Math.sin(x / 170 + seed))}`);
+    return ln(`M${pts.join('L')}`);
+  };
+  const rows = [640, 700, 760, 820].map((y, i) => terrace(y, 22 - i * 3, i * 0.9)).join('');
+  const lines = Array.from({ length: 7 }, (_, i) => `M1330 ${240 + i * 44}H${i % 3 === 2 ? 1420 : 1500}`).join('');
+  return `
+    ${ln('M-20 560L180 400L300 490L470 330L640 560')}
+    ${rows}
+    ${ln('M1290 120H1560V520H1290Z')}
+    ${ln('M1330 170H1440', 'class="ln bold"')}
+    ${ln(lines)}
+    ${circ(1470, 450, 26)}${circ(1470, 450, 12)}
+    ${finder(70, 90, 90)}
+    ${txt(1425, 100, 'SURAT KETERANGAN')}${txt(70, 230, 'BONTO KARAENG', 'start')}`;
+}
+
 export const PLATES: Record<string, Plate> = {
   hyskysfc: {
     hue: '#2e7d8f',
@@ -241,5 +263,14 @@ export const PLATES: Record<string, Plate> = {
       { src: pdOrders, alt: 'Order list with order code, customer, status and total columns' },
     ],
     art: artPokidulu(),
+  },
+  sapadesa: {
+    hue: '#4f7a3a',
+    kind: 'browser',
+    shots: [
+      { src: sdLogin, alt: 'SapaDesa login page with a rice field and mountain background and the Portal Masuk sign-in card' },
+      { src: sdLetter, alt: 'Buat Surat page with a live preview of a Surat Keterangan Usaha with the village letterhead' },
+    ],
+    art: artSapaDesa(),
   },
 };
