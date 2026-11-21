@@ -18,6 +18,38 @@ const keepOnly = (id: string) => {
   }
 };
 
+const KEY = 'vt-origin';
+
+/** Where the plate left from (viewport px) and its colour; read by the next page's reveal. */
+const saveOrigin = (id: string) => {
+  const plate = $$<HTMLElement>('.plate').find((p) => p.style.viewTransitionName === `plate-${id}`);
+  if (!plate) return;
+  const r = plate.getBoundingClientRect();
+  const origin = {
+    x: Math.round(r.left + r.width / 2),
+    y: Math.round(r.top + r.height / 2),
+    hue: plate.style.getPropertyValue('--hue').trim(),
+  };
+  try {
+    sessionStorage.setItem(KEY, JSON.stringify(origin));
+  } catch {}
+  applyOrigin(origin);
+};
+
+const applyOrigin = (o: { x: number; y: number; hue: string }) => {
+  const root = document.documentElement.style;
+  root.setProperty('--vt-x', `${o.x}px`);
+  root.setProperty('--vt-y', `${o.y}px`);
+  if (o.hue) root.setProperty('--vt-hue', o.hue);
+};
+
+const loadOrigin = () => {
+  try {
+    const raw = sessionStorage.getItem(KEY);
+    if (raw) applyOrigin(JSON.parse(raw));
+  } catch {}
+};
+
 interface SwapEvent extends Event {
   activation?: { entry?: { url?: string }; from?: { url?: string } };
   viewTransition?: unknown;
@@ -28,7 +60,9 @@ if (!prefersReducedMotion()) {
   addEventListener('pageswap', (e) => {
     const ev = e as SwapEvent;
     if (!ev.viewTransition) return;
-    keepOnly(idFrom(ev.activation?.entry?.url) || idFrom(location.href));
+    const id = idFrom(ev.activation?.entry?.url) || idFrom(location.href);
+    keepOnly(id);
+    saveOrigin(id);
   });
 
   // Arriving: the same, plus bring the card the plate lands on into the viewport.
@@ -39,6 +73,7 @@ if (!prefersReducedMotion()) {
       .navigation;
     const id = idFrom(location.href) || idFrom(nav?.activation?.from?.url);
     keepOnly(id);
+    loadOrigin();
     if (location.pathname === '/' && id) {
       const plate = $$<HTMLElement>('.plate').find(
         (p) => p.style.viewTransitionName === `plate-${id}`,

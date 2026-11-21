@@ -31,13 +31,22 @@
     animation: none;
   }
 
-  /* Sequence: the old page recedes (blur, slight shrink) while the plate travels on an
-     in-out curve; the new page's text rises once the plate is nearly home. */
+  /* Sequence: the old page recedes into a wash of the project's colour while the new page is
+     revealed by a circle growing from where the plate left (--vt-x, --vt-y, --vt-hue are set in
+     scripts/foundation/transition.ts). The plate travels on top; the new text rises last. */
+  :root {
+    --vt-x: 50%;
+    --vt-y: 50%;
+    --vt-hue: var(--accent);
+  }
+  ::view-transition-group(root) {
+    background: color-mix(in oklab, var(--vt-hue) 26%, var(--bg));
+  }
   ::view-transition-old(root) {
-    animation: vt-leave 420ms cubic-bezier(0.55, 0, 0.8, 0.4) both;
+    animation: vt-leave 700ms cubic-bezier(0.55, 0, 0.8, 0.4) both;
   }
   ::view-transition-new(root) {
-    animation: vt-enter 800ms var(--ease-out) 380ms both;
+    animation: vt-reveal 1100ms cubic-bezier(0.65, 0, 0.2, 1) both;
   }
 
   /* The plate morphs between its two sizes; both ends share a 16:9 stage, so the contents only
@@ -75,15 +84,16 @@
   @keyframes vt-leave {
     to {
       opacity: 0;
-      transform: translateY(-18px) scale(0.985);
-      filter: blur(6px);
+      transform: scale(0.97);
+      filter: blur(8px);
     }
   }
-  @keyframes vt-enter {
+  @keyframes vt-reveal {
     from {
-      opacity: 0;
-      transform: translateY(36px);
-      filter: blur(4px);
+      clip-path: circle(0 at var(--vt-x) var(--vt-y));
+    }
+    to {
+      clip-path: circle(150vmax at var(--vt-x) var(--vt-y));
     }
   }
   @keyframes vt-plate-out {
@@ -94,6 +104,7 @@
   @keyframes vt-plate-in {
     from {
       opacity: 0;
+      scale: 1.12;
     }
   }
 }
