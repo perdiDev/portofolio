@@ -82,11 +82,11 @@ const experience = EXPERIENCE.slice(0, 5).map((e, i) => {
 });
 
 const nav = [
-  ['work', 'Selected work'],
-  ['experience', 'Experience'],
-  ['education', 'Education'],
+  ['work', 'Craft'],
+  ['experience', 'Journey'],
+  ['education', 'Foundations'],
   ['recognition', 'Recognition'],
-  ['contact', 'Contact'],
+  ['contact', 'Connect'],
 ] as const;
 
 const socials = SOCIALS.map((so) => ({
@@ -169,8 +169,8 @@ const year = new Date().getFullYear();
       </aside>
 
       <main class="main">
-        <!-- 02 Selected work -->
-        <section id="work" class="band" aria-label="Selected work">
+        <!-- 02 Craft -->
+        <section id="work" class="band" aria-label="Craft">
 
           <ul class="grid">
             {projects.map((p) => (
@@ -205,12 +205,12 @@ const year = new Date().getFullYear();
           </ul>
         </section>
 
-        <!-- 03 Experience -->
+        <!-- 03 Journey -->
         <section id="experience" class="sec" aria-labelledby="exp-h">
           <header class="sec-head reveal">
             <div>
               <p class="sec-n">02</p>
-              <h2 id="exp-h">Experience</h2>
+              <h2 id="exp-h">Journey</h2>
             </div>
           </header>
           <ol class="exp" id="exp-list">
@@ -253,12 +253,12 @@ const year = new Date().getFullYear();
           </ol>
         </section>
 
-        <!-- 04 Education -->
+        <!-- 04 Foundations -->
         <section id="education" class="sec edu" aria-labelledby="edu-h">
           <header class="sec-head reveal">
             <div>
               <p class="sec-n">03</p>
-              <h2 id="edu-h">Education</h2>
+              <h2 id="edu-h">Foundations</h2>
             </div>
           </header>
           <div class="edu-stage">
