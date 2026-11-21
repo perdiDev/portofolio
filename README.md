@@ -64,11 +64,11 @@ pnpm preview             # serves dist/client at http://localhost:4321 (see note
 src/
   assets/              # images imported by components/content (avatar, blog + project images)
   components/          # Header, Footer, SEO, PostCard, ProjectRow, TOC, ShareButtons, Newsletter,
-                       # Gallery (lightbox), YouTubeFacade, Breadcrumbs, Pagination, ViewCounter, Tag, Icon, ...
+                       # ProjectDetail + ProjectPlate (project page), Breadcrumbs, Pagination, ViewCounter, Tag, Icon, ...
   content/
     blog/              # one Markdown file per post (filename = slug)
     projects/          # one Markdown file per project (filename = slug)
-  layouts/             # BaseLayout, PostLayout, ProjectLayout, ListingLayout (paginated lists)
+  layouts/             # FoundationLayout, BaseLayout, PostLayout, ListingLayout (paginated lists)
   pages/               # routes (index, blog/, categories/, tags/, archive, projects/, about, contact,
                        #         search, 404, rss.xml, robots.txt, og/, api/views/)
   styles/

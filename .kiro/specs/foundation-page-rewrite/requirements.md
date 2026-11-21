@@ -34,4 +34,4 @@
 
 ### R6. Migration safety
 1. New pages SHALL ship behind `noindex` until the user confirms the swap.
-2. Old layouts (`BaseLayout`, `ListingLayout`, `PostLayout`, `ProjectLayout`) and old experiments SHALL be removed only after no route uses them.
+2. Old layouts (`BaseLayout`, `ListingLayout`, `PostLayout`; `ProjectLayout` is already removed) and old experiments SHALL be removed only after no route uses them.
