@@ -9,7 +9,7 @@ House style from `/new-home-4`. Use it for any new abstract illustration on any 
 
 Reference files:
 - `src/components/new-home-4/plates.ts`: helpers and 7 finished drawings.
-- `src/pages/new-home-4.astro`: CSS (search `.plate`, `.art`, `.ln`) and the markup (`set:html`).
+- `src/styles/new-home-4/work.css`: plate and art CSS (search `.plate`, `.art`, `.ln`). `src/components/new-home-4/Work.astro`: the markup (`set:html`).
 - `.tools/pw/plates.mjs`: screenshots each plate after its animation finishes.
 - `helpers.md` (this folder): copy-ready helper functions and recipes.
 
@@ -54,7 +54,7 @@ One illustration is a drawing of the subject's own world, in one stroke weight a
 ```
 Use mid-saturation hues (`#2e7d8f`, `#5b8a66`, `#7652b0`). Give each project a distinct hue. Check light and dark themes.
 
-**Draw-on animation:** `ln` paths use `stroke-dasharray:1; stroke-dashoffset:1` (works because of `pathLength="1"`) and transition to `0` when the card gets `.in`. Stagger with `calc(400ms + min(var(--k), 14) * 45ms)`. Dashed, label and fill layers fade in later (900 to 1300ms). Gate everything behind `.js` so no-JS users see the finished drawing. Add a `prefers-reduced-motion` block that removes dasharray and transitions. Copy the exact rules next to `.js .card .art .ln` in `new-home-4.astro`.
+**Draw-on animation:** `ln` paths use `stroke-dasharray:1; stroke-dashoffset:1` (works because of `pathLength="1"`) and transition to `0` when the card gets `.in`. Stagger with `calc(400ms + min(var(--k), 14) * 45ms)`. Dashed, label and fill layers fade in later (900 to 1300ms). Gate everything behind `.js` so no-JS users see the finished drawing. Add a `prefers-reduced-motion` block that removes dasharray and transitions. Copy the exact rules next to `.js .card .art .ln` in `src/styles/new-home-4/work.css`.
 
 **Dashed paths:** `ds` cannot also use the draw-on dash. It fades in with opacity and keeps `stroke-dasharray: 0.006 0.012`.
 

@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "spec-task-prep",
+      "description": "Before each spec task: remind to read DESIGN.md, reuse foundation parts and verify at the end.",
+      "trigger": "PreTaskExec",
+      "action": { "type": "command", "command": "node scripts/hooks/context.mjs task" },
+      "timeout": 10
+    }
+  ]
+}

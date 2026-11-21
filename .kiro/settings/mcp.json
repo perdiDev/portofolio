@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "astro-docs": {
+      "url": "https://mcp.docs.astro.build/mcp",
+      "disabled": false
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--headless"],
+      "disabled": false
+    }
+  }
+}

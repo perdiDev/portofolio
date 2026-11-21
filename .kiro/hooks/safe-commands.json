@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "allow-safe-commands",
+      "description": "Skip the permission prompt for git status/diff/log, pnpm check/build/verify/design:lint and Prettier checks. Chained or piped commands still prompt.",
+      "trigger": "PermissionRequest",
+      "matcher": "shell",
+      "action": { "type": "command", "command": "node scripts/hooks/permission-allow.mjs" },
+      "timeout": 5
+    }
+  ]
+}

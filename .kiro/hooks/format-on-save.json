@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "format-on-save",
+      "description": "Format saved .astro, .css, .ts, .mjs and .json files with the project's Prettier config.",
+      "trigger": "PostFileSave",
+      "matcher": "\\.(astro|css|ts|mjs|json)$",
+      "action": { "type": "command", "command": "node scripts/hooks/format-file.mjs" },
+      "timeout": 30
+    }
+  ]
+}

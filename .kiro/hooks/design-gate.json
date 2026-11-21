@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "design-gate",
+      "description": "When the agent stops, lint the changed files. If they break the design system, send the agent back to fix them (max 2 rounds per session).",
+      "trigger": "Stop",
+      "action": { "type": "command", "command": "node scripts/hooks/stop-gate.mjs" },
+      "timeout": 30
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "design-guard",
+      "description": "Before any write: block secrets and generated output, ask on raw hex colours, transition: all, inline define:vars and global styles in foundation code.",
+      "trigger": "PreToolUse",
+      "matcher": "write",
+      "action": { "type": "command", "command": "node scripts/hooks/design-guard.mjs" },
+      "timeout": 10
+    }
+  ]
+}

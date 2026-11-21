@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "new-file-review",
+      "description": "When a new component, layout or page is created, check it against the foundation before moving on.",
+      "trigger": "PostFileCreate",
+      "matcher": "^src/(components|layouts|pages)/.*\\.astro$",
+      "action": {
+        "type": "agent",
+        "prompt": "A new Astro file was just created. Before continuing, confirm it follows the foundation: pages render inside FoundationLayout and are built from <Section> and existing components; styles live in src/styles/<area>/*.css and use tokens only; behavior lives in src/scripts/ and is imported from a <script> tag; every animation has a prefers-reduced-motion path; images have width and height. Fix anything that does not, then run `node scripts/design-lint.mjs <file>`."
+      }
+    }
+  ]
+}
