@@ -31,19 +31,26 @@
     animation: none;
   }
 
+  /* Sequence: the old page recedes (blur, slight shrink) while the plate travels on an
+     in-out curve; the new page's text rises once the plate is nearly home. */
   ::view-transition-old(root) {
-    animation: vt-leave 320ms cubic-bezier(0.55, 0, 0.8, 0.4) both;
+    animation: vt-leave 420ms cubic-bezier(0.55, 0, 0.8, 0.4) both;
   }
   ::view-transition-new(root) {
-    animation: vt-enter 900ms var(--ease-out) 160ms both;
+    animation: vt-enter 800ms var(--ease-out) 380ms both;
   }
 
-  /* The plate morphs between its two sizes; both ends have the same 16:9 stage, so a short
-     cross-fade of the contents is enough. */
+  /* The plate morphs between its two sizes; both ends share a 16:9 stage, so the contents only
+     cross-fade, with the old one easing out slightly larger and the new one settling in. */
   ::view-transition-group(*.plate) {
-    animation-duration: 900ms;
-    animation-timing-function: var(--ease-out);
+    animation-duration: 1050ms;
+    animation-timing-function: cubic-bezier(0.83, 0, 0.17, 1);
     z-index: 2;
+  }
+  ::view-transition-image-pair(*.plate) {
+    isolation: isolate;
+    overflow: clip;
+    border-radius: 0;
   }
   ::view-transition-old(*.plate),
   ::view-transition-new(*.plate) {
@@ -52,10 +59,10 @@
     mix-blend-mode: normal;
   }
   ::view-transition-old(*.plate) {
-    animation: vt-plate-out 500ms ease both;
+    animation: vt-plate-out 520ms ease both;
   }
   ::view-transition-new(*.plate) {
-    animation: vt-plate-in 500ms ease 200ms both;
+    animation: vt-plate-in 620ms ease 260ms both;
   }
 
   /* While a transition runs, home cards show their plate whole so it has something to land on;
@@ -68,13 +75,15 @@
   @keyframes vt-leave {
     to {
       opacity: 0;
-      transform: translateY(-14px);
+      transform: translateY(-18px) scale(0.985);
+      filter: blur(6px);
     }
   }
   @keyframes vt-enter {
     from {
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(36px);
+      filter: blur(4px);
     }
   }
   @keyframes vt-plate-out {
