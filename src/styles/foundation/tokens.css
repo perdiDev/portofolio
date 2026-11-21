@@ -1,0 +1,47 @@
+/* Design tokens. The only file where colour literals are allowed (see DESIGN.md). */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --serif: var(--font-lora);
+  --sans: var(--font-inter);
+  --mono: var(--font-jetbrains-mono);
+  --rail: 17rem;
+  --gutter: clamp(1.5rem, 4.5vw, 5rem);
+  /* Near-black used to tint shadows under device mockups. Same in both themes. */
+  --shade: #0e0d0b;
+  /* Cursor label over project cards. Same in both themes; 6.7:1. */
+  --cursor-bg: #8a4a30;
+  --cursor-ink: #f4f1ea;
+}
+
+:root,
+[data-theme='light'] {
+  --bg: #f4f1ea;
+  --bg-2: #ece8df;
+  --ink: #1d1b18;
+  --muted: #6f6b63;
+  --line: #d9d4c8;
+  --accent: #8a4a30;
+  --band-bg: #1d1b18;
+  --band-ink: #f4f1ea;
+  --band-muted: #a8a397;
+  --band-line: #38342d;
+  --band-2: #26231f;
+  --band-accent: #e3ad8d;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #141311;
+  --bg-2: #1c1a17;
+  --ink: #ece7dd;
+  --muted: #9a958a;
+  --line: #2d2a25;
+  --accent: #dba685;
+  --band-bg: #ece7dd;
+  --band-ink: #1d1b18;
+  --band-muted: #5f5b53;
+  --band-line: #cdc7b8;
+  --band-2: #e0dacb;
+  --band-accent: #8a4a30;
+  color-scheme: dark;
+}

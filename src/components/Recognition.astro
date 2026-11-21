@@ -1,0 +1,57 @@
+---
+/**
+ * Recognition: ruled rows (year, title and note, a drawn seal with the rank).
+ * The list reveals as one; on fine pointers a soft light follows the pointer across a row.
+ */
+import '../styles/recognition.css';
+import Section from './foundation/Section.astro';
+import { ACHIEVEMENTS } from '../config';
+
+interface Props {
+  id: string;
+  n: string;
+  title: string;
+}
+
+const { id, n, title } = Astro.props;
+---
+
+<Section id={id} n={n} title={title}>
+  <ul class="rec" data-reveal data-glow>
+    {ACHIEVEMENTS.map((a, i) => (
+      <li class="rec-row" style={`--i:${i}`}>
+        <span class="rec-glow" aria-hidden="true" />
+        <span class="rec-when tnum">
+          <span>{a.date}</span>
+        </span>
+        <div class="rec-body">
+          <h3>{a.title}</h3>
+          <p class="small">{a.description}</p>
+        </div>
+        <span class="rec-rank">
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle class="rk-o ln" pathLength="1" cx="32" cy="32" r="30" />
+            <circle class="rk-d" cx="32" cy="32" r="24" />
+            <path
+              class="ln"
+              pathLength="1"
+              d="M32 19 L35.2 28.6 L45 28.6 L37 34.6 L40 44 L32 38.2 L24 44 L27 34.6 L19 28.6 L28.8 28.6 Z"
+            />
+          </svg>
+          <span class="rec-tag">{a.rank}</span>
+        </span>
+      </li>
+    ))}
+  </ul>
+</Section>
+
+<script>
+  import '../scripts/recognition';
+</script>

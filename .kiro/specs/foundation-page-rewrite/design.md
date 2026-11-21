@@ -5,9 +5,9 @@
 FoundationLayout (shell, SEO props)
   └─ Page (src/pages/**)       composes sections only
        └─ Section (foundation) hairline + number + h2 + reveal
-            └─ Area components (components/<area>/)  with styles/<area>/x.css and scripts/<area>/x.ts
+            └─ Section components (components/X.astro) with styles/x.css and scripts/x.ts
 ```
-Areas: `new-home-4` (home), `blog`, `projects`, `archive` (shared listing), `about`.
+Section files sit directly in `components/`, `styles/`, `scripts/` (no per-page folders); generic shell parts in `foundation/`.
 
 ## Layout changes needed
 `FoundationLayout` today covers head, theme bootstrap, rail, footer. Add, in this order and each as its own verified step:
@@ -26,12 +26,12 @@ Home keeps pixel parity at each step (regression script).
 | `TagList.astro` | rows, posts | mono uppercase labels |
 | `Toc.astro` | post | sticky, uses the rail's active-link logic |
 
-Each gets CSS in `src/styles/<area>/` and uses tokens only. Existing small components (`Breadcrumbs`, `ShareButtons`, `RelatedPosts`, `PostNav`, `TOC`, `Tag`, `Pagination`, `SocialLinks`) are restyled or replaced, not duplicated.
+Each gets CSS in `src/styles/` and uses tokens only. Existing small components (`Breadcrumbs`, `ShareButtons`, `RelatedPosts`, `PostNav`, `TOC`, `Tag`, `Pagination`, `SocialLinks`) are restyled or replaced, not duplicated.
 
 ## Page map
 | Route | Sections |
 |---|---|
-| `/` | take over `new-home-4` content (after sign-off) |
+| `/` | done: Work, Experience, Education, Recognition, Contact |
 | `/about` | intro with portrait, Experience, Education, Recognition, Contact (reuse home components) |
 | `/projects` | Listing of projects with plates (reuse `Work`), filters by status |
 | `/projects/[slug]` | PageHead, plate hero, facts (stack, role, status, links), Prose, gallery, next project |

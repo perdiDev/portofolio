@@ -1,0 +1,48 @@
+/* Section scaffold: hairline top edge that draws in, mono number, serif h2.
+   Imported by FoundationLayout (not by Section.astro) so it always precedes area CSS. */
+.sec {
+  position: relative;
+  padding-block: clamp(5rem, 11vw, 9rem);
+}
+.sec::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+.sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.sec-n {
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.sec h2 {
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
+  line-height: 1.08;
+}
+
+.js .sec::before {
+  transform: scaleX(0);
+  transition: transform 1200ms var(--ease-out);
+}
+.js .sec.in::before {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .sec::before {
+    transform: none;
+    transition: none;
+  }
+}

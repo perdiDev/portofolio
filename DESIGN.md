@@ -1,6 +1,6 @@
-# Design system: Foundation (from /new-home-4)
+# Design system: Foundation
 
-Every redesigned page is built from this. `/new-home-4` is the reference implementation: it only composes `FoundationLayout` and section components, and it is pixel-checked against its previous version.
+Every redesigned page is built from this. The home page `/` (`src/pages/index.astro`) is the reference implementation: it only composes `FoundationLayout` and section components, and it was pixel-checked against the `/new-home-4` draft it replaced (`/new-home-4` now redirects to `/`).
 
 ## Character
 Editorial and quiet. Warm paper, ink, one accent. A serif for voice, a sans for reading, a mono for metadata. Hairline rules instead of boxes and shadows. Motion explains structure (a line draws, a title rises out of a mask) and never decorates.
@@ -16,7 +16,7 @@ Editorial and quiet. Warm paper, ink, one accent. A serif for voice, a sans for 
 | `--accent` | `#8a4a30` | `#dba685` | the one accent: numbers, italics, active state |
 | `--band-*` | inverted set | inverted set | inverted surfaces (hover fills) |
 
-Other tokens: `--serif` Lora, `--sans` Inter, `--mono` JetBrains Mono, `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`, `--rail: 17rem`, `--gutter: clamp(1.5rem, 4.5vw, 5rem)`.
+Other tokens: `--serif` Lora, `--sans` Inter, `--mono` JetBrains Mono, `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`, `--rail: 17rem`, `--gutter: clamp(1.5rem, 4.5vw, 5rem)`, `--shade` (near-black for mockup shadows), `--cursor-bg` / `--cursor-ink` (cursor label, same in both themes). Fonts come from the Astro Fonts API (`--font-lora`, `--font-inter`, `--font-jetbrains-mono`) with metric fallbacks in `src/styles/fonts.css`.
 Per-project colour is a single `--hue` on a plate; tint, stroke and shadow are derived with `color-mix(in oklab, ...)`.
 
 Rule: components never contain a colour literal. Add a token instead. The only literals allowed outside `tokens.css` are device-mockup colours, tagged `lint-allow:hex`.
@@ -37,9 +37,9 @@ Rule: components never contain a colour literal. Add a token instead. The only l
 ## Components (reuse before creating)
 | Part | File | Notes |
 |---|---|---|
-| Layout | `src/layouts/FoundationLayout.astro` | props `title`, `description`, `nav`, `noindex` |
-| Section | `src/components/foundation/Section.astro` | `id`, `n`, `title`, `class`, `headless` |
-| Work grid and plate | `src/components/new-home-4/Work.astro`, `plates.ts` | see skill `abstract-illustration` |
+| Layout | `src/layouts/FoundationLayout.astro` | props `title`, `description`, `heading` (text of the one visually hidden `h1`), `nav` (`{ id, label }[]`), `noindex`, `seo` (passed to `SEO.astro`: `fullTitle`, `canonical`, `image`, `type`, `article`, `prev`, `next`, `jsonLd`). Footer carries site links. |
+| Section | `src/components/foundation/Section.astro` | `id`, `n`, `title`, `class`; `headless` = keep the rule, slot renders its own `h2#{id}-h`; `bare` = no scaffold, named by `aria-label`. CSS in `styles/foundation/section.css`, imported by the layout |
+| Work grid and plate | `src/components/Work.astro`, `src/components/plates.ts` | see skill `abstract-illustration` |
 | Timeline | `Experience.astro` + `src/utils/timeline.ts` | accordion, spine fills on scroll |
 | Education | `Education.astro` | masked title, drawn arches |
 | Recognition | `Recognition.astro` | ruled rows, pointer light |
@@ -63,4 +63,4 @@ Skip link first. Landmarks: `aside` rail, `nav` with label, `main`, `footer`. Ea
 Line drawings in one hue, drawn from the subject of the content. Method and helpers: `.kiro/skills/abstract-illustration`.
 
 ## Adding a page
-See `.kiro/skills/foundation-page/SKILL.md`. Short version: new file in `src/pages`, wrap in `FoundationLayout`, compose `Section` blocks, add a section component plus `styles/<area>/x.css` plus `scripts/<area>/x.ts` only when no existing one fits, then `pnpm verify`.
+See `.kiro/skills/foundation-page/SKILL.md`. Short version: new file in `src/pages`, wrap in `FoundationLayout`, compose `Section` blocks, add `components/X.astro` plus `styles/x.css` plus `scripts/x.ts` only when no existing one fits, then `pnpm verify`.

@@ -29,8 +29,8 @@
 /* Font families come from the Astro Fonts API (see astro.config.mjs). */
 /* Semantic aliases: these let Tailwind generate utilities under the token
    names from the design spec (bg-line, text-fg, text-accent-contrast) while
-   every existing bg-*/text-*/border-* utility keeps working unchanged. */
-@theme inline {
+   every existing bg-*/
+text-*/border-* utility keeps working unchanged. */ @theme inline {
   --font-serif: var(--font-lora);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
@@ -329,38 +329,6 @@
   .status-badge[data-status='Open source']::before {
     background: #93c5fd;
   }
-
-  /* Skills marquee: a single line of plain text drifting sideways. No
-     borders, no boxes, no cards, just text sliding slowly and smoothly,
-     paused on hover. */
-  .skill-track-wrap {
-    position: relative;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent);
-    mask-image: linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent);
-  }
-  .skill-track {
-    display: flex;
-    width: max-content;
-    animation: skill-walk 32s linear infinite;
-  }
-  .skill-track-wrap:hover .skill-track {
-    animation-play-state: paused;
-  }
-  .skill-item {
-    flex: none;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 1.75rem;
-    padding-inline-end: 1.75rem;
-    font-family: var(--font-serif);
-    font-size: 1.375rem;
-    color: var(--color-muted);
-  }
-  .skill-item::after {
-    content: '\00b7';
-    color: var(--color-border-strong);
-  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -520,17 +488,6 @@
 .fade-up {
   animation: fade-up 400ms var(--ease) both;
   animation-delay: calc(min(var(--i, 0), 8) * 45ms);
-}
-
-/* Continuous sideways drift for the skills marquee. The track renders the
-   list twice back-to-back, so sliding exactly -50% loops seamlessly. */
-@keyframes skill-walk {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 @keyframes reveal {
@@ -705,10 +662,6 @@ html.has-custom-cursor select {
     opacity: 1 !important;
     transform: none !important;
   }
-  .skill-track {
-    animation: none !important;
-    transform: none !important;
-  }
   .reading-progress {
     display: none !important;
   }
@@ -748,14 +701,6 @@ html.has-custom-cursor select {
   --pf-shadow-md: none;
   --pf-shadow-lg: none;
   --pf-icon-search: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.7549 11.255H11.9649L11.6849 10.985C12.6649 9.845 13.2549 8.365 13.2549 6.755C13.2549 3.165 10.3449 0.255005 6.75488 0.255005C3.16488 0.255005 0.254883 3.165 0.254883 6.755C0.254883 10.345 3.16488 13.255 6.75488 13.255C8.36488 13.255 9.84488 12.665 10.9849 11.685L11.2549 11.965V12.755L16.2549 17.745L17.7449 16.255L12.7549 11.255ZM6.75488 11.255C4.26488 11.255 2.25488 9.245 2.25488 6.755C2.25488 4.26501 4.26488 2.255 6.75488 2.255C9.24488 2.255 11.2549 4.26501 11.2549 6.755C11.2549 9.245 9.24488 11.255 6.75488 11.255Z' fill='%23a1a1aa'/%3E%3C/svg%3E%0A");
-}
-
-.sr-only-focusable:not(:focus):not(:focus-within) {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
 }
 
 /* ------------------------------------------------------------------ */

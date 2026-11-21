@@ -10,6 +10,8 @@
     "preview": "node scripts/preview.mjs",
     "astro": "astro",
     "check": "astro check",
+    "design:lint": "node scripts/design-lint.mjs",
+    "verify": "node scripts/design-lint.mjs && astro check && astro build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "assets": "node scripts/generate-assets.mjs",

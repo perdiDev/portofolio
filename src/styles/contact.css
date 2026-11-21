@@ -1,0 +1,396 @@
+/* Contact: masked question, email link, copy button, envelope plate, social cells. */
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+.contact-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.contact h2 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  max-width: 16ch;
+}
+.cw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.06em 0.08em 0.16em 0;
+  margin-bottom: -0.16em;
+}
+.cw > * {
+  display: block;
+}
+.big-mail {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  margin-top: 2.5rem;
+  font: italic 400 clamp(1.5rem, 3.4vw, 2.75rem)/1.2 var(--serif);
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  word-break: break-word;
+}
+.mail-arrow {
+  flex: none;
+  align-self: center;
+  transition: transform 400ms var(--ease-out);
+}
+.contact-actions {
+  margin-top: 2.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  min-height: 2.875rem;
+}
+
+/* Copy button: label rolls up to a drawn check */
+.btn-roll {
+  display: grid;
+  overflow: hidden;
+}
+.btn-a,
+.btn-b {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition:
+    transform 420ms var(--ease-out),
+    opacity 300ms ease;
+}
+.btn-b {
+  transform: translateY(130%);
+  opacity: 0;
+}
+.btn-b path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.btn[data-state='done'] .btn-a {
+  transform: translateY(-130%);
+  opacity: 0;
+}
+.btn[data-state='done'] .btn-b {
+  transform: none;
+  opacity: 1;
+}
+.btn[data-state='done'] .btn-b path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 500ms var(--ease-out) 180ms;
+}
+.btn[data-state='done'] {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Envelope plate: the letter rises out when the section enters */
+.mail-plate {
+  margin: 0;
+  justify-self: end;
+  width: 100%;
+  max-width: 26rem;
+  color: var(--accent);
+}
+.mail-plate svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.mail-plate .env-front,
+.mail-plate .env-flap {
+  fill: var(--bg);
+  stroke: none;
+}
+.mail-plate .env-open {
+  fill: var(--bg-2);
+}
+.mail-plate .letter {
+  translate: 0 118px;
+  transition: translate 1100ms var(--ease-out);
+}
+.mail-plate .letter rect {
+  fill: var(--bg);
+}
+.mail-plate .seal {
+  fill: var(--accent);
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.mail-plate .env-flap {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  transition:
+    transform 700ms var(--ease-out),
+    opacity 300ms ease 300ms;
+}
+.js .contact.in .env-flap {
+  transform: scaleY(-1) translateY(100%);
+  transform-origin: 50% 0;
+  opacity: 0;
+}
+.js .contact .mail-plate .env-flap {
+  transition-delay: 1500ms;
+}
+.js .contact.in .letter {
+  translate: 0 0;
+  transition-delay: 1800ms;
+}
+@keyframes seal-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Elsewhere: bordered cells that fill from below on hover */
+.soc {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  border: 1px solid var(--line);
+}
+.soc-i + .soc-i {
+  border-left: 1px solid var(--line);
+}
+.soc-a {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  overflow: hidden;
+  isolation: isolate;
+  height: 100%;
+  transition: color 300ms ease;
+}
+.soc-a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 500ms var(--ease-out);
+}
+.soc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.25rem;
+}
+.soc-ico {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--accent);
+  transition: color 300ms ease;
+}
+.soc-ico.icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+.soc-arrow {
+  color: var(--muted);
+  transition:
+    transform 400ms var(--ease-out),
+    color 300ms ease;
+}
+.soc-l {
+  font: 400 clamp(1.25rem, 2vw, 1.625rem)/1.2 var(--serif);
+  letter-spacing: -0.015em;
+}
+.soc-h {
+  font: 400 0.75rem/1.4 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  transition: color 300ms ease;
+  overflow-wrap: anywhere;
+}
+
+/* Entrance */
+.js .contact .cw > * {
+  transform: translateY(112%);
+  transition: transform 1100ms var(--ease-out) calc(120ms + var(--w) * 120ms);
+}
+.js .contact.in .cw > * {
+  transform: none;
+}
+.js .contact .sec-n,
+.js .contact .big-mail,
+.js .contact .contact-actions {
+  opacity: 0;
+  translate: 0 12px;
+  filter: blur(4px);
+  transition:
+    opacity 800ms var(--ease-out),
+    translate 900ms var(--ease-out),
+    filter 800ms var(--ease-out);
+}
+.js .contact.in .sec-n {
+  opacity: 1;
+  translate: 0;
+  filter: none;
+}
+.js .contact.in .big-mail {
+  opacity: 1;
+  translate: 0;
+  filter: none;
+  transition-delay: 520ms;
+}
+.js .contact.in .contact-actions {
+  opacity: 1;
+  translate: 0;
+  filter: none;
+  transition-delay: 680ms;
+}
+.js .contact .ln {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1500ms cubic-bezier(0.45, 0, 0.2, 1) calc(150ms + var(--k) * 140ms);
+}
+.js .contact.in .ln {
+  stroke-dashoffset: 0;
+}
+.js .contact .env-open,
+.js .contact .letter rect,
+.js .contact .seal {
+  opacity: 0;
+  transition: opacity 600ms ease 1500ms;
+}
+.js .contact.in .env-open,
+.js .contact.in .letter rect,
+.js .contact.in .seal {
+  opacity: 1;
+}
+.js .contact .soc-i {
+  opacity: 0;
+  translate: 0 18px;
+  transition:
+    opacity 800ms var(--ease-out) calc(700ms + var(--i) * 120ms),
+    translate 900ms var(--ease-out) calc(700ms + var(--i) * 120ms);
+}
+.js .contact.in .soc-i {
+  opacity: 1;
+  translate: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-grid:has(.big-mail:hover) .letter,
+  .contact-grid:has(.btn:hover) .letter {
+    translate: 0 -16px !important;
+    transition-delay: 0ms !important;
+    transition-duration: 600ms;
+  }
+  .contact-grid:has(.btn:hover) .seal,
+  .contact-grid:has(.big-mail:hover) .seal {
+    animation: seal-pop 700ms var(--ease-out);
+  }
+  /* Copy button leans toward the pointer (class set by scripts/contact.ts) */
+  .btn.is-magnet {
+    transition:
+      transform 300ms var(--ease-out),
+      background-color 160ms ease,
+      border-color 160ms ease;
+  }
+  .big-mail:hover .mail-arrow {
+    transform: translate(4px, -4px);
+  }
+  .soc-a:hover {
+    color: var(--bg);
+  }
+  .soc-a:hover::before {
+    transform: scaleY(1);
+  }
+  .soc-a:hover .soc-ico,
+  .soc-a:hover .soc-arrow,
+  .soc-a:hover .soc-h {
+    color: var(--bg);
+  }
+  .soc-a:hover .soc-ico {
+    color: var(--band-accent);
+  }
+  .soc-a:hover .soc-arrow {
+    transform: translate(4px, -4px);
+  }
+  .soc:hover .soc-i:not(:hover) {
+    opacity: 0.55;
+  }
+  .soc-i {
+    transition: opacity 400ms ease;
+  }
+}
+
+@media (max-width: 64rem) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mail-plate {
+    justify-self: start;
+    max-width: 20rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .soc {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .soc-i + .soc-i {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .soc-top {
+    margin-bottom: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Show the finished state without movement. Interactive states (copy label, social fill)
+     keep working; they only lose their transitions. */
+  .js .contact .cw > *,
+  .js .contact .sec-n,
+  .js .contact .big-mail,
+  .js .contact .contact-actions,
+  .js .contact .ln,
+  .js .contact .soc-i,
+  .js .contact .env-open,
+  .js .contact .letter rect,
+  .js .contact .seal,
+  .mail-plate .letter {
+    transition: none !important;
+    transform: none;
+    translate: 0 0 !important;
+    filter: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+    animation: none !important;
+  }
+  .mail-plate .env-flap {
+    transition: none !important;
+    opacity: 0;
+  }
+  .soc-a::before,
+  .btn-a,
+  .btn-b,
+  .btn-b path,
+  .mail-arrow,
+  .soc-arrow {
+    transition: none !important;
+  }
+}

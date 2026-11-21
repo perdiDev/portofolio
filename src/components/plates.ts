@@ -1,5 +1,5 @@
 /**
- * Project plates for /new-home-4.
+ * Project plates for the home page Work section (src/components/Work.astro).
  *
  * Each plate pairs the project's real screens with a line drawing taken from
  * the project's own subject: a day's load curve for a solar/diesel planner,
@@ -9,23 +9,23 @@
  */
 import type { ImageMetadata } from 'astro';
 
-import hyHome from '../../assets/projects/hyskysfc/home.jpeg';
-import hyPlts from '../../assets/projects/hyskysfc/plts.jpeg';
-import hyPltd from '../../assets/projects/hyskysfc/pltd.jpeg';
-import boatMap from '../../assets/projects/boat-safe-system/screenshot-1.png';
-import boatDevice from '../../assets/projects/boat-safe-system/screenshot-4.png';
-import ccHome from '../../assets/projects/child-care/beranda.jpg';
-import ccCommunity from '../../assets/projects/child-care/komunitas.jpg';
-import ccTips from '../../assets/projects/child-care/tips.jpg';
-import tsHome from '../../assets/projects/tukar-senyum/screenshot-1.png';
-import tsCatalog from '../../assets/projects/tukar-senyum/screenshot-2.png';
-import wkHome from '../../assets/projects/wisataki/phone-1.jpg';
-import wkScan from '../../assets/projects/wisataki/phone-2.jpg';
-import wkConfirm from '../../assets/projects/wisataki/phone-3.jpg';
-import pdDashboard from '../../assets/projects/pokidulu/screenshot-2.png';
-import pdOrders from '../../assets/projects/pokidulu/screenshot-4.png';
-import sdLogin from '../../assets/projects/sapadesa/login.png';
-import sdLetter from '../../assets/projects/sapadesa/pembuatan-surat.png';
+import hyHome from '../assets/projects/hyskysfc/home.jpeg';
+import hyPlts from '../assets/projects/hyskysfc/plts.jpeg';
+import hyPltd from '../assets/projects/hyskysfc/pltd.jpeg';
+import boatMap from '../assets/projects/boat-safe-system/screenshot-1.png';
+import boatDevice from '../assets/projects/boat-safe-system/screenshot-4.png';
+import ccHome from '../assets/projects/child-care/beranda.jpg';
+import ccCommunity from '../assets/projects/child-care/komunitas.jpg';
+import ccTips from '../assets/projects/child-care/tips.jpg';
+import tsHome from '../assets/projects/tukar-senyum/screenshot-1.png';
+import tsCatalog from '../assets/projects/tukar-senyum/screenshot-2.png';
+import wkHome from '../assets/projects/wisataki/phone-1.jpg';
+import wkScan from '../assets/projects/wisataki/phone-2.jpg';
+import wkConfirm from '../assets/projects/wisataki/phone-3.jpg';
+import pdDashboard from '../assets/projects/pokidulu/screenshot-2.png';
+import pdOrders from '../assets/projects/pokidulu/screenshot-4.png';
+import sdLogin from '../assets/projects/sapadesa/login.png';
+import sdLetter from '../assets/projects/sapadesa/pembuatan-surat.png';
 
 export type Plate = {
   hue: string;
@@ -34,10 +34,14 @@ export type Plate = {
   art: string;
 };
 
+/** Hue for a project without a plate of its own (the light-theme accent). */
+export const FALLBACK_HUE = '#8a4a30';
+
 /* ---------- drawing helpers (viewBox 0 0 1600 900) ---------- */
 
 let k = 0;
-const ln = (d: string, extra = '') => `<path class="ln" style="--k:${k++}" pathLength="1" d="${d}" ${extra}/>`;
+const ln = (d: string, extra = '') =>
+  `<path class="ln" style="--k:${k++}" pathLength="1" d="${d}" ${extra}/>`;
 const circ = (cx: number, cy: number, r: number) =>
   `<circle class="ln" style="--k:${k++}" pathLength="1" cx="${cx}" cy="${cy}" r="${r}"/>`;
 const txt = (x: number, y: number, s: string, anchor = 'middle') =>
@@ -49,7 +53,11 @@ function ring(cx: number, cy: number, r: number, seed: number, sx = 1.5, sy = 1)
   const pts: string[] = [];
   for (let i = 0; i <= 96; i++) {
     const t = (i / 96) * Math.PI * 2;
-    const w = 1 + 0.09 * Math.sin(3 * t + seed) + 0.05 * Math.sin(5 * t + seed * 2.1) + 0.03 * Math.cos(7 * t + seed);
+    const w =
+      1 +
+      0.09 * Math.sin(3 * t + seed) +
+      0.05 * Math.sin(5 * t + seed * 2.1) +
+      0.03 * Math.cos(7 * t + seed);
     pts.push(`${r1(cx + Math.cos(t) * r * w * sx)} ${r1(cy + Math.sin(t) * r * w * sy)}`);
   }
   return `M${pts.join('L')}Z`;
@@ -57,14 +65,17 @@ function ring(cx: number, cy: number, r: number, seed: number, sx = 1.5, sy = 1)
 
 /** Leaf from the origin along +x, rotated and moved into place. */
 const leaf = (x: number, y: number, a: number, l: number) =>
-  ln(`M0 0Q${l * 0.45} ${-l * 0.32} ${l} 0Q${l * 0.45} ${l * 0.32} 0 0M0 0L${l * 0.8} 0`, `transform="translate(${x} ${y}) rotate(${a})"`);
+  ln(
+    `M0 0Q${l * 0.45} ${-l * 0.32} ${l} 0Q${l * 0.45} ${l * 0.32} 0 0M0 0L${l * 0.8} 0`,
+    `transform="translate(${x} ${y}) rotate(${a})"`,
+  );
 
 /** Rose seen from above: a loose spiral. */
 function rose(cx: number, cy: number, size: number) {
   const pts: string[] = [];
   for (let i = 0; i <= 160; i++) {
     const t = (i / 160) * Math.PI * 7;
-    const r = (size * (0.06 + t / (Math.PI * 7))) * (1 + 0.08 * Math.sin(5 * t));
+    const r = size * (0.06 + t / (Math.PI * 7)) * (1 + 0.08 * Math.sin(5 * t));
     pts.push(`${r1(cx + Math.cos(t) * r)} ${r1(cy + Math.sin(t) * r)}`);
   }
   return ln(`M${pts.join('L')}`);
@@ -84,7 +95,9 @@ function receipt(x: number, y: number, w: number, h: number, a: number) {
 }
 
 const finder = (x: number, y: number, s: number) =>
-  ln(`M${x} ${y}h${s}v${s}h${-s}Z`) + ln(`M${x + s * 0.17} ${y + s * 0.17}h${s * 0.66}v${s * 0.66}h${-s * 0.66}Z`) + ln(`M${x + s * 0.34} ${y + s * 0.34}h${s * 0.32}v${s * 0.32}h${-s * 0.32}Z`);
+  ln(`M${x} ${y}h${s}v${s}h${-s}Z`) +
+  ln(`M${x + s * 0.17} ${y + s * 0.17}h${s * 0.66}v${s * 0.66}h${-s * 0.66}Z`) +
+  ln(`M${x + s * 0.34} ${y + s * 0.34}h${s * 0.32}v${s * 0.32}h${-s * 0.32}Z`);
 
 const pin = (x: number, y: number) =>
   ln(`M${x} ${y}c-14-22-30-36-30-56a30 30 0 0 1 60 0c0 20-16 34-30 56Z`) + circ(x, y - 58, 10);
@@ -93,10 +106,18 @@ const pin = (x: number, y: number) =>
 
 function artHySky() {
   k = 0;
-  const x0 = 100, x1 = 1500, base = 780, hx = (h: number) => x0 + ((x1 - x0) / 24) * h;
+  const x0 = 100,
+    x1 = 1500,
+    base = 780,
+    hx = (h: number) => x0 + ((x1 - x0) / 24) * h;
   const grid = [200, 345, 490, 635].map((y) => `M${x0} ${y}H${x1}`).join('');
-  const ticks = Array.from({ length: 25 }, (_, h) => `M${r1(hx(h))} ${base}v${h % 6 ? 8 : 16}`).join('');
-  const labels = [0, 6, 12, 18, 24].map((h) => txt(hx(h), base + 44, String(h).padStart(2, '0') + '.00')).join('');
+  const ticks = Array.from(
+    { length: 25 },
+    (_, h) => `M${r1(hx(h))} ${base}v${h % 6 ? 8 : 16}`,
+  ).join('');
+  const labels = [0, 6, 12, 18, 24]
+    .map((h) => txt(hx(h), base + 44, String(h).padStart(2, '0') + '.00'))
+    .join('');
   const rays = Array.from({ length: 10 }, (_, i) => {
     const a = (i / 10) * Math.PI * 2;
     return `M${r1(1420 + Math.cos(a) * 58)} ${r1(150 + Math.sin(a) * 58)}L${r1(1420 + Math.cos(a) * 80)} ${r1(150 + Math.sin(a) * 80)}`;
@@ -117,7 +138,9 @@ function artHySky() {
 
 function artBoat() {
   k = 0;
-  const a = [70, 125, 180, 240, 305, 375].map((r, i) => ln(ring(260, 210, r, 1.3 + i * 0.35))).join('');
+  const a = [70, 125, 180, 240, 305, 375]
+    .map((r, i) => ln(ring(260, 210, r, 1.3 + i * 0.35)))
+    .join('');
   const b = [60, 115, 175, 240, 310].map((r, i) => ln(ring(1380, 760, r, 4.1 + i * 0.3))).join('');
   const track = 'M-20 640C180 600 300 700 470 620S760 420 930 440S1130 380 1190 300';
   return `
@@ -131,11 +154,17 @@ function artBoat() {
 function artChildCare() {
   k = 0;
   const bubble = (x: number, y: number, w: number, right: boolean) => {
-    const h = 64, r = 28;
+    const h = 64,
+      r = 28;
     const tail = right ? `M${x + w - 18} ${y + h}l18 18l-2-22` : `M${x + 18} ${y + h}l-18 18l2-22`;
-    return ln(`M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z${tail}`);
+    return ln(
+      `M${x + r} ${y}H${x + w - r}A${r} ${r} 0 0 1 ${x + w} ${y + r}V${y + h - r}A${r} ${r} 0 0 1 ${x + w - r} ${y + h}H${x + r}A${r} ${r} 0 0 1 ${x} ${y + h - r}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z${tail}`,
+    );
   };
-  const lines = Array.from({ length: 9 }, (_, i) => `M1400 ${300 + i * 46}H${i % 3 === 2 ? 1470 : 1530}`).join('');
+  const lines = Array.from(
+    { length: 9 },
+    (_, i) => `M1400 ${300 + i * 46}H${i % 3 === 2 ? 1470 : 1530}`,
+  ).join('');
   return `
     ${bubble(60, 110, 260, false)}${bubble(150, 230, 210, true)}${bubble(60, 350, 300, false)}${bubble(170, 470, 190, true)}${bubble(60, 590, 240, false)}
     ${ln('M1370 160H1510L1560 210V800H1370Z')}${ln('M1510 160V210H1560')}
@@ -162,7 +191,10 @@ function artWisataki() {
   k = 0;
   const ridge = (y: number, amp: number, seed: number) => {
     const pts: string[] = [];
-    for (let x = -20; x <= 1620; x += 40) pts.push(`${x} ${r1(y - amp * (0.6 + 0.4 * Math.sin(x / 210 + seed)) * Math.abs(Math.sin(x / 330 + seed)))}`);
+    for (let x = -20; x <= 1620; x += 40)
+      pts.push(
+        `${x} ${r1(y - amp * (0.6 + 0.4 * Math.sin(x / 210 + seed)) * Math.abs(Math.sin(x / 330 + seed)))}`,
+      );
     return ln(`M${pts.join('L')}`);
   };
   return `
@@ -190,11 +222,15 @@ function artSapaDesa() {
   k = 0;
   const terrace = (y: number, amp: number, seed: number) => {
     const pts: string[] = [];
-    for (let x = -20; x <= 1620; x += 40) pts.push(`${x} ${r1(y + amp * Math.sin(x / 170 + seed))}`);
+    for (let x = -20; x <= 1620; x += 40)
+      pts.push(`${x} ${r1(y + amp * Math.sin(x / 170 + seed))}`);
     return ln(`M${pts.join('L')}`);
   };
   const rows = [640, 700, 760, 820].map((y, i) => terrace(y, 22 - i * 3, i * 0.9)).join('');
-  const lines = Array.from({ length: 7 }, (_, i) => `M1330 ${240 + i * 44}H${i % 3 === 2 ? 1420 : 1500}`).join('');
+  const lines = Array.from(
+    { length: 7 },
+    (_, i) => `M1330 ${240 + i * 44}H${i % 3 === 2 ? 1420 : 1500}`,
+  ).join('');
   return `
     ${ln('M-20 560L180 400L300 490L470 330L640 560')}
     ${rows}
@@ -221,8 +257,14 @@ export const PLATES: Record<string, Plate> = {
     hue: '#2f6690',
     kind: 'browser',
     shots: [
-      { src: boatMap, alt: 'Boat Safe System live map with a boat marker and a Live Tracking badge' },
-      { src: boatDevice, alt: 'Detail Komponen page with the ESP32, LoRa Ra-02 and MPU 9250 modules' },
+      {
+        src: boatMap,
+        alt: 'Boat Safe System live map with a boat marker and a Live Tracking badge',
+      },
+      {
+        src: boatDevice,
+        alt: 'Detail Komponen page with the ESP32, LoRa Ra-02 and MPU 9250 modules',
+      },
     ],
     art: artBoat(),
   },
@@ -259,7 +301,10 @@ export const PLATES: Record<string, Plate> = {
     hue: '#7652b0',
     kind: 'browser',
     shots: [
-      { src: pdDashboard, alt: 'Pokidulu organization dashboard with revenue, order, product and member cards' },
+      {
+        src: pdDashboard,
+        alt: 'Pokidulu organization dashboard with revenue, order, product and member cards',
+      },
       { src: pdOrders, alt: 'Order list with order code, customer, status and total columns' },
     ],
     art: artPokidulu(),
@@ -268,8 +313,14 @@ export const PLATES: Record<string, Plate> = {
     hue: '#4f7a3a',
     kind: 'browser',
     shots: [
-      { src: sdLogin, alt: 'SapaDesa login page with a rice field and mountain background and the Portal Masuk sign-in card' },
-      { src: sdLetter, alt: 'Buat Surat page with a live preview of a Surat Keterangan Usaha with the village letterhead' },
+      {
+        src: sdLogin,
+        alt: 'SapaDesa login page with a rice field and mountain background and the Portal Masuk sign-in card',
+      },
+      {
+        src: sdLetter,
+        alt: 'Buat Surat page with a live preview of a Surat Keterangan Usaha with the village letterhead',
+      },
     ],
     art: artSapaDesa(),
   },

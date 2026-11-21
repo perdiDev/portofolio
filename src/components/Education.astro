@@ -1,0 +1,107 @@
+---
+/**
+ * Foundations: the degree as a masked, rising title beside a drawn seal (arches + a small graph).
+ * Data from EDUCATION in config.ts. The last word of the degree is the emphasis.
+ */
+import '../styles/education.css';
+import Section from './foundation/Section.astro';
+import { EDUCATION } from '../config';
+
+interface Props {
+  id: string;
+  n: string;
+  title: string;
+}
+
+const { id, n, title } = Astro.props;
+const { level, degree, school, city, country, start, end } = EDUCATION;
+const words = degree.split(' ');
+const lead = words.slice(0, -1).join(' ');
+const last = words[words.length - 1];
+const years = `${start} – ${end}`;
+const ring = `${school} · ${city} · ${degree} · ${years} ·`.toUpperCase();
+const ringId = `${id}-ring`;
+---
+
+<Section id={id} n={n} title={title} class="edu">
+  <div class="edu-stage">
+    <div class="edu-copy">
+      <p class="edu-level">{level}</p>
+      <h3 class="edu-degree">
+        {lead && (
+          <span class="edu-w">
+            <span style="--w:0">{lead}</span>
+          </span>
+        )}
+        <span class="edu-w">
+          <em style={`--w:${lead ? 1 : 0}`}>{last}</em>
+        </span>
+      </h3>
+      <span class="edu-rule" aria-hidden="true"></span>
+      <p class="edu-school">{school}</p>
+      <p class="small edu-where">
+        {city}, {country} <span class="edu-yrs tnum">{years}</span>
+      </p>
+    </div>
+    <figure class="edu-plate" data-parallax aria-hidden="true">
+      <svg
+        viewBox="0 0 480 480"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <defs>
+          <path id={ringId} d="M240 40 a200 200 0 1 1 -0.01 0"></path>
+        </defs>
+        <g class="edu-seal">
+          <circle class="ln" pathLength="1" cx="240" cy="240" r="222" style="--k:0"></circle>
+          <circle class="ln" pathLength="1" cx="240" cy="240" r="176" style="--k:1"></circle>
+          <text class="edu-txt" fill="currentColor" stroke="none">
+            <textPath href={`#${ringId}`} textLength="1240" lengthAdjust="spacing">
+              {ring}
+            </textPath>
+          </text>
+        </g>
+        <g class="edu-arches">
+          <path
+            class="ln l1"
+            pathLength="1"
+            d="M130 410 V270 A110 110 0 0 1 350 270 V410"
+            style="--k:2"
+          ></path>
+          <path
+            class="ln l2"
+            pathLength="1"
+            d="M165 410 V270 A75 75 0 0 1 315 270 V410"
+            style="--k:3"
+          ></path>
+          <path
+            class="ln l3"
+            pathLength="1"
+            d="M200 410 V270 A40 40 0 0 1 280 270 V410"
+            style="--k:4"
+          ></path>
+          <path class="ln" pathLength="1" d="M96 410 H384" style="--k:5"></path>
+        </g>
+        <g class="edu-net">
+          <path
+            class="ln"
+            pathLength="1"
+            d="M240 232 L212 292 M240 232 L268 292 M212 292 L268 292 M212 292 L240 352 M268 292 L240 352 M240 232 L240 352"
+            style="--k:6"
+          ></path>
+          <circle class="nd" cx="240" cy="232" r="4.5" style="--n:0"></circle>
+          <circle class="nd" cx="212" cy="292" r="4.5" style="--n:1"></circle>
+          <circle class="nd" cx="268" cy="292" r="4.5" style="--n:2"></circle>
+          <circle class="nd" cx="240" cy="352" r="4.5" style="--n:3"></circle>
+        </g>
+      </svg>
+    </figure>
+  </div>
+</Section>
+
+<script>
+  import '../scripts/education';
+</script>

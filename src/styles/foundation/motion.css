@@ -1,0 +1,21 @@
+/* Generic entrance. scripts/foundation/reveal.ts toggles .in on .reveal, .sec and [data-reveal]
+   while they are on screen, so entrances replay. Only hidden under .js. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 800ms var(--ease-out) calc(var(--i, 0) * 90ms),
+    transform 900ms var(--ease-out) calc(var(--i, 0) * 90ms);
+}
+.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -26,9 +26,24 @@ export const AUTHOR = {
   jobTitle: 'Software Engineer',
   /** TODO: replace with your real bio (shown on /about/ and in Person JSON-LD). */
   bio: 'Informatics Engineering graduate specializing in Software Engineering, with hands-on experience for almost 4+ years.',
-  /** Short intro for the home page hero. */
-  intro:
-    'I am Perdi, a software engineer. I write about programming, Linux, and the craft of building software, for developers who like clear explanations and working examples.',
+} as const;
+
+/** Local time shown in the site rail. */
+export const LOCAL_TIME = {
+  city: 'Makassar',
+  timeZone: 'Asia/Makassar',
+  label: 'WITA',
+} as const;
+
+/** Shown in the Foundations section on the home page. The last word of `degree` is emphasised. */
+export const EDUCATION = {
+  level: 'Bachelor’s degree',
+  degree: 'Informatics Engineering',
+  school: 'Universitas Hasanuddin',
+  city: 'Makassar',
+  country: 'Indonesia',
+  start: 2022,
+  end: 2026,
 } as const;
 
 /** TODO: add your X profile URL. Entries without a URL are skipped everywhere. */
@@ -61,8 +76,6 @@ export const SITE = {
 export const BLOG = {
   /** Posts per page on /blog/, category pages, and tag pages. */
   postsPerPage: 6,
-  /** Posts shown under "Latest writing" on the home page. */
-  homePostCount: 3,
   relatedCount: 3,
   wordsPerMinute: 220,
   /** Tag pages with fewer posts than this are `noindex,follow` and left out of the sitemap. */

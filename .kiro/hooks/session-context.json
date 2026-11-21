@@ -3,7 +3,7 @@
   "hooks": [
     {
       "name": "session-context",
-      "description": "Start every session knowing that /new-home-4 is the foundation, the branch, and the dirty-file count.",
+      "description": "Start every session knowing that the home page (/) is the foundation reference, the branch, and the dirty-file count.",
       "trigger": "SessionStart",
       "action": { "type": "command", "command": "node scripts/hooks/context.mjs session" },
       "timeout": 10

@@ -1,66 +1,93 @@
 ---
-import { EXPERIENCE, type ExperienceEntry } from '../config';
-import { formatDuration, formatMonthYear } from '../utils/format';
+/**
+ * Journey: an accordion timeline. Dates on the left, a spine that fills as the page is read,
+ * one row per company; the first row starts open.
+ */
+import '../styles/experience.css';
+import Section from './foundation/Section.astro';
+import { EXPERIENCE } from '../config';
+import { toTimeline } from '../utils/timeline';
 
-function roleRange(startDate: string, endDate: string | null): string {
-  return `${formatMonthYear(startDate)} – ${endDate ? formatMonthYear(endDate) : 'Present'}`;
+interface Props {
+  id: string;
+  n: string;
+  title: string;
+  /** How many companies to show, newest first. */
+  limit?: number;
 }
 
-/** Earliest role start and latest role end, so a multi-role company shows one combined range. */
-function companySpan(entry: ExperienceEntry): { startDate: string; endDate: string | null } {
-  const startDate = [...entry.roles].sort((a, b) => a.startDate.localeCompare(b.startDate))[0].startDate;
-  const isOngoing = entry.roles.some((role) => role.endDate === null);
-  const endDate = isOngoing  ? null : [...entry.roles].sort(
-          (a, b) => new Date(b.endDate!).getTime() - new Date(a.endDate!).getTime()
-        )[0].endDate;
-  return { startDate, endDate };
-}
+const { id, n, title, limit = 5 } = Astro.props;
+const rows = toTimeline(EXPERIENCE.slice(0, limit), `${id}-row`);
 ---
 
-<ol class="not-prose">
-  {EXPERIENCE.map((entry, index) => {
-    const isLast = index === EXPERIENCE.length - 1;
-    const { startDate, endDate } = companySpan(entry);
-    return (
-      <li class="fade-up grid grid-cols-[1.25rem_1fr] gap-x-4" style={`--i:${index}`}>
-        <div class="flex flex-col items-center">
-          <span class="mt-1.5 size-2.5 shrink-0 rounded-full border-2 border-accent bg-bg" />
-          {!isLast && <span aria-hidden="true" class="mt-1.5 w-px grow bg-border" />}
-        </div>
-
-        <div class:list={['min-w-0', !isLast && 'pb-10']}>
-          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h3 class="text-xl text-heading">
-              {entry.companyUrl ? (
-                <a href={entry.companyUrl} target="_blank" rel="noopener noreferrer" class="link-grow">
-                  {entry.company}
-                </a>
-              ) : (
-                entry.company
-              )}
-            </h3>
-            <span class="meta shrink-0 tabular-nums">
-              {roleRange(startDate, endDate)} · {formatDuration(startDate, endDate)}
-            </span>
+<Section id={id} n={n} title={title}>
+  <ol class="exp" data-timeline>
+    {rows.map((e, i) => {
+      const open = i === 0 ? 'true' : 'false';
+      return (
+        <li class="exp-item reveal" style={`--i:${i}`} data-open={open}>
+          <h3>
+            <button
+              class="exp-btn"
+              type="button"
+              id={`${e.id}-btn`}
+              aria-expanded={open}
+              aria-controls={e.id}
+            >
+              <span class="exp-when tnum">
+                <span class="exp-range">
+                  {e.ongoing && <i class="dot" aria-hidden="true" />}
+                  {e.range}
+                </span>
+                <span class="exp-span">{e.span}</span>
+              </span>
+              <span class="exp-main">
+                <span class="exp-co">{e.company}</span>
+                <span class="exp-role">{e.titles}</span>
+              </span>
+              <span class="exp-icon" aria-hidden="true" />
+            </button>
+          </h3>
+          <div class="exp-panel" id={e.id} role="region" aria-labelledby={`${e.id}-btn`}>
+            <div class="exp-clip">
+              <div class="exp-body">
+                {e.location && (
+                  <p class="small" style="--k:0">
+                    {e.location}
+                  </p>
+                )}
+                {e.roles.map((r, j) => (
+                  <div class="exp-roleblock" style={`--k:${j + 1}`}>
+                    <p class="exp-rt">{r.title}</p>
+                    <p class="small">{r.meta}</p>
+                    <ul class="bullets">
+                      {r.bullets.map((b, k) => (
+                        <li style={`--b:${k}`}>{b}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                {e.url && (
+                  <a
+                    class="ulink small"
+                    style={`--k:${e.roles.length + 1}`}
+                    href={e.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visit website <span aria-hidden="true">↗</span>
+                    <span class="sr">of {e.company} (opens in a new tab)</span>
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
-          {entry.location && <p class="meta mt-0.5">{entry.location}</p>}
+        </li>
+      );
+    })}
+  </ol>
+</Section>
 
-          <ol class:list={entry.roles.length > 1 ? 'mt-4 space-y-5 border-l border-border pl-5' : 'mt-3'}>
-            {entry.roles.map((role) => (
-              <li>
-                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <h4 class="font-serif text-lg text-text">{role.title}</h4>
-                  {entry.roles.length > 1 && (
-                    <span class="meta shrink-0 tabular-nums">{roleRange(role.startDate, role.endDate)}</span>
-                  )}
-                </div>
-                {role.employmentType && <p class="meta mt-0.5">{role.employmentType}</p>}
-                <p class="mt-2 text-pretty text-muted">{role.description}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </li>
-    );
-  })}
-</ol>
+<script>
+  import '../scripts/experience';
+</script>

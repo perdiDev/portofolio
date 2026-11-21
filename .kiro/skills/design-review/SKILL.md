@@ -16,6 +16,6 @@ Output a short report: **Blocking**, **Should fix**, **Nice to have**. Each item
 6. **Responsive.** Open at 1280, 1024, 768, 390. No horizontal scroll (`document.documentElement.scrollWidth <= innerWidth`), rail collapses under 48rem, no clipped text.
 7. **Performance.** Images through `astro:assets` with dimensions; only the first image is eager; no new JS dependency; per-page JS stays small (check `dist/client/_astro` sizes after build).
 8. **Visual.** Screenshot light and dark, desktop and mobile; read them. Look for: orphaned labels, uneven section spacing, text over busy illustration, dark-mode contrast of drawings.
-9. **Regression.** For `/new-home-4` or any restyle, compare before/after full-page screenshots with PIL `ImageChops.difference`; report differing pixel count.
+9. **Regression.** For the home page `/` or any restyle, compare before/after full-page screenshots with PIL `ImageChops.difference`; report differing pixel count.
 
 Tools: Playwright scripts in `.tools/pw/`, the `playwright` skill and MCP server, Lighthouse via `.tools/pw/lh*.mjs`.

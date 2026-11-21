@@ -1,0 +1,433 @@
+/* Work: project grid, plates (tinted stage + line drawing + real screens) and the stack dock. */
+.band {
+  padding-block: 0 clamp(5rem, 10vw, 9rem);
+  position: relative;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.card {
+  position: relative;
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+}
+.card:first-child::before {
+  display: none;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+.card-link {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+  transition: opacity 600ms var(--ease-out);
+}
+.card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border: 1px solid var(--line);
+}
+.card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border-right: 1px solid var(--line);
+}
+.card-left .card-title {
+  display: block;
+}
+.card-left .card-no {
+  display: block;
+  margin-bottom: 0.9rem;
+}
+.card-no {
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.card-title {
+  justify-self: start;
+  font: 400 clamp(1.75rem, 3.2vw, 2.75rem)/1.1 var(--serif);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 420ms var(--ease-out);
+  padding-bottom: 3px;
+}
+.card-status {
+  font: 400 0.6875rem/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.card-sum {
+  color: var(--muted);
+  font-size: 1rem;
+  text-wrap: pretty;
+  align-self: center;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+/* Plate: a tinted stage, a line drawing from the project's subject, the real screens on top */
+.plate {
+  --tint: color-mix(in oklab, var(--hue) 9%, var(--bg));
+  --stroke: color-mix(in oklab, var(--hue) 62%, var(--bg));
+  --deep: color-mix(in oklab, var(--hue) 55%, var(--shade));
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  container-type: inline-size;
+  isolation: isolate;
+  background: var(--tint);
+  border: 1px solid color-mix(in oklab, var(--hue) 18%, var(--line));
+}
+[data-theme='dark'] .plate {
+  --tint: color-mix(in oklab, var(--hue) 16%, var(--bg));
+  --stroke: color-mix(in oklab, var(--hue) 70%, var(--ink));
+}
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.art .bold {
+  stroke-width: 2.6;
+}
+.art .gr {
+  stroke-opacity: 0.35;
+  stroke-dasharray: 2 8;
+}
+.art .fl {
+  stroke: var(--stroke);
+  stroke-opacity: 0.4;
+}
+.art pattern path {
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+}
+/* SVG user units: scales with the 1600-wide viewBox, not with page text */
+.art .tx {
+  fill: var(--stroke);
+  stroke: none;
+  font: 500 15px/1 var(--mono); /* lint-allow:px-font */
+  letter-spacing: 0.12em;
+}
+.art .ds {
+  stroke-dasharray: 0.006 0.012;
+}
+
+.screens {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+/* Device mockup colours stay literal: they imitate real hardware, not the theme. */
+.shot {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  background: #fff; /* lint-allow:hex */
+  box-shadow:
+    0 1.2cqw 3.2cqw -0.8cqw color-mix(in oklab, var(--deep) 45%, transparent),
+    0 0.2cqw 0.5cqw color-mix(in oklab, var(--deep) 18%, transparent);
+  transition:
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
+}
+.shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Phones: three handsets, the main one raised in the middle */
+.plate-phones .shot {
+  top: 50%;
+  height: 80%;
+  aspect-ratio: 9 / 19.5;
+  border: 0.45cqw solid #161512; /* lint-allow:hex */
+  border-radius: 2.6cqw;
+}
+.plate-phones .shot-1 {
+  left: 50%;
+  translate: -50% -52%;
+  z-index: 2;
+}
+.plate-phones .shot-0 {
+  left: 50%;
+  translate: -158% -46%;
+  rotate: -3deg;
+}
+.plate-phones .shot-2 {
+  left: 50%;
+  translate: 58% -46%;
+  rotate: 3deg;
+}
+
+/* Browser: the main page and one detail page laid over its corner */
+.plate-browser .shot {
+  border-radius: 0.7cqw;
+  padding-top: 1.7cqw;
+  aspect-ratio: 16 / 10.6;
+  background: #fbfaf7; /* lint-allow:hex */
+}
+.plate-browser .shot::before {
+  content: '';
+  position: absolute;
+  left: 1.1cqw;
+  top: 0.6cqw;
+  width: 18%;
+  height: 0.5cqw;
+  border-radius: 1cqw;
+  background: color-mix(in oklab, var(--hue) 22%, #e9e6df); /* lint-allow:hex */
+}
+.plate-browser .shot img {
+  border-top: 1px solid #e6e2da; /* lint-allow:hex */
+}
+.plate-browser .shot-0 {
+  left: 9%;
+  top: 9%;
+  width: 66%;
+}
+.plate-browser .shot-1 {
+  right: 6%;
+  bottom: 7%;
+  width: 38%;
+  z-index: 2;
+}
+
+/* Stack dock: a small bordered grid that rises over the bottom of the plate, like the macOS dock */
+.dock {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 1.25cqw;
+  display: flex;
+  max-width: calc(100% - 4cqw);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: 0 0.8rem 2rem -0.8rem color-mix(in oklab, var(--deep) 60%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 140%) scale(0.92);
+  transform-origin: 50% 100%;
+  transition:
+    transform 520ms cubic-bezier(0.34, 1.45, 0.64, 1),
+    opacity 220ms ease;
+}
+.dock-i {
+  padding: 0.5rem 0.8rem;
+  font: 500 0.6875rem/1 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  white-space: nowrap;
+  border-left: 1px solid var(--line);
+  opacity: 0;
+  transform: translateY(0.6rem) scale(0.85);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+.dock-i:first-child {
+  border-left: 0;
+}
+.dock-more {
+  color: var(--accent);
+}
+
+/* Entrance: the rule draws, the head rises, the plate wipes open, the drawing inks itself, screens settle */
+.js .card.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.js .card::before {
+  transform: scaleX(0);
+  transition: transform 1100ms var(--ease-out);
+}
+.js .card.in::before {
+  transform: none;
+}
+.js .card .card-left,
+.js .card .card-sum {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 800ms var(--ease-out);
+}
+.js .card .card-title {
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 800ms var(--ease-out),
+    background-size 420ms var(--ease-out);
+}
+.js .card .plate {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 900ms var(--ease-out) 100ms;
+}
+.js .card .art .ln {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1600ms cubic-bezier(0.45, 0, 0.2, 1)
+    calc(400ms + min(var(--k), 14) * 45ms);
+}
+.js .card .art .ds {
+  stroke-dasharray: 0.006 0.012;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease 900ms;
+}
+.js .card .art .tx,
+.js .card .art .fl {
+  opacity: 0;
+  transition: opacity 700ms ease 1300ms;
+}
+.js .card .shot {
+  opacity: 0;
+  transform: translateY(8cqw);
+  transition:
+    opacity 600ms var(--ease-out) calc(380ms + var(--j) * 110ms),
+    transform 1100ms var(--ease-out) calc(380ms + var(--j) * 110ms),
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
+}
+.js .card .card-sum {
+  transition-delay: 380ms;
+}
+.js .card.in .card-left,
+.js .card.in .card-sum {
+  opacity: 1;
+  transform: none;
+}
+.js .card.in .plate {
+  clip-path: inset(0);
+}
+.js .card.in .art .ln {
+  stroke-dashoffset: 0;
+}
+.js .card.in .art .ds,
+.js .card.in .art .tx {
+  opacity: 1;
+}
+.js .card.in .art .fl {
+  opacity: 1;
+}
+.js .card.in .shot {
+  opacity: 1;
+  transform: none;
+}
+/* Scroll focus: the project at the reading line stays full strength (scripts/work.ts) */
+.grid[data-focus] .card:not([data-active]) .card-link {
+  opacity: 0.5;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-link:is(:hover, :focus-visible) .dock {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  .card-link:is(:hover, :focus-visible) .dock-i {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 320ms ease calc(160ms + var(--k) * 45ms),
+      transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1) calc(160ms + var(--k) * 45ms);
+  }
+  .plate-phones:is(.card-link:hover *) .shot-0 {
+    translate: -168% -47%;
+    rotate: -5deg;
+  }
+  .plate-phones:is(.card-link:hover *) .shot-2 {
+    translate: 68% -47%;
+    rotate: 5deg;
+  }
+  .plate-phones:is(.card-link:hover *) .shot-1 {
+    translate: -50% -55%;
+  }
+  .plate-browser:is(.card-link:hover *) .shot-0 {
+    translate: -1.2% -1.6%;
+  }
+  .plate-browser:is(.card-link:hover *) .shot-1 {
+    translate: 1.4% -2.4%;
+  }
+  .card-link:hover .card-title {
+    background-size: 100% 1px;
+  }
+}
+
+@media (max-width: 48rem) {
+  .dock {
+    display: none;
+  }
+  .card-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .card-left {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .card::before {
+    transform: none;
+    transition: none;
+  }
+  .js .card .card-left,
+  .js .card .card-sum {
+    transform: none;
+    transition: opacity 300ms ease;
+  }
+  .js .card .plate {
+    clip-path: none;
+    transition: none;
+  }
+  .js .card .art .ln {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .js .card .art .ds {
+    stroke-dasharray: 0.006 0.012;
+  }
+  .js .card .shot {
+    transform: none;
+    transition: opacity 300ms ease;
+  }
+  .shot {
+    transition: none !important;
+  }
+  .dock,
+  .dock-i {
+    transition: opacity 200ms ease !important;
+    transform: translate(-50%, 0) !important;
+  }
+  .dock-i {
+    transform: none !important;
+  }
+}

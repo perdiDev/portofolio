@@ -53,8 +53,10 @@ const ui = {
 /** Resolves a style override to the light/dark value matching the active Expressive Code theme.
  * @param {keyof typeof ui.light} key
  */
-const pick = (key) => (/** @type {{ theme: { type: string } }} */ { theme }) =>
-  theme.type === 'dark' ? ui.dark[key] : ui.light[key];
+const pick =
+  (key) =>
+  (/** @type {{ theme: { type: string } }} */ { theme }) =>
+    theme.type === 'dark' ? ui.dark[key] : ui.light[key];
 
 // https://astro.build/config
 export default defineConfig({
@@ -66,6 +68,13 @@ export default defineConfig({
   build: { format: 'directory', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   devToolbar: { enabled: false },
+  // Old home drafts. The last one (/new-home-4) became the home page; the others are removed.
+  redirects: {
+    '/new-home': '/',
+    '/new-home-2': '/',
+    '/new-home-3': '/',
+    '/new-home-4': '/',
+  },
 
   env: {
     schema: {

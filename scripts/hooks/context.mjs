@@ -12,7 +12,7 @@ const git = (...a) => { try { return execFileSync('git', a, { encoding: 'utf8' }
 if (mode === 'session') {
   const branch = git('rev-parse', '--abbrev-ref', 'HEAD');
   const dirty = git('status', '--porcelain').split('\n').filter(Boolean).length;
-  console.log(`Project: Astro portfolio. /new-home-4 is the design foundation for every page. Branch ${branch || '?'}, ${dirty} uncommitted file(s).\n${RULES}\nSteering and skills: .kiro/steering/, .kiro/skills/foundation-page, .kiro/skills/design-review. Rewrite plan: .kiro/specs/foundation-page-rewrite/.`);
+  console.log(`Project: Astro portfolio. The home page (/) is the reference for the design foundation. Branch ${branch || '?'}, ${dirty} uncommitted file(s).\n${RULES}\nSteering and skills: .kiro/steering/, .kiro/skills/foundation-page, .kiro/skills/design-review. Rewrite plan: .kiro/specs/foundation-page-rewrite/.`);
 } else if (mode === 'prompt') {
   const prompt = String(ev.prompt ?? ev.user_prompt ?? '');
   if (!prompt || /\b(page|design|section|layout|component|style|css|ui|ux|animation|theme|responsive|mobile)\b/i.test(prompt)) console.log(RULES);

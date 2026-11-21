@@ -1,0 +1,138 @@
+---
+/**
+ * Work: one row per project. A ruled head (number, title, status, summary) over a plate:
+ * a tinted stage with a line drawing from the project's subject and its real screens.
+ * Each card is one link, named by its own content; the stack dock is decorative and read
+ * from a visually hidden sentence instead.
+ */
+import '../styles/work.css';
+import { getImage } from 'astro:assets';
+import Section from './foundation/Section.astro';
+import { FALLBACK_HUE, PLATES, type Plate } from './plates';
+import { getProjects, projectUrl } from '../utils/posts';
+
+interface Props {
+  id: string;
+  title: string;
+  /** How many projects to show, newest first. */
+  limit?: number;
+}
+
+const { id, title, limit = 7 } = Astro.props;
+const STACK_SHOWN = 5;
+
+/* Rendered widths of each screen as a share of the plate (see work.css), so the browser picks
+   a small file on phones. Plate width is about 100vw - 3rem below 48rem, and 70vw above. */
+const SHOT_SIZES = {
+  phone: { widths: [240, 360, 520], sizes: '(max-width: 48rem) 20vw, 15vw' },
+  page: { widths: [640, 960, 1400], sizes: '(max-width: 48rem) 64vw, 48vw' },
+  detail: { widths: [360, 560, 760], sizes: '(max-width: 48rem) 37vw, 27vw' },
+} as const;
+
+const projects = await Promise.all(
+  (await getProjects()).slice(0, limit).map(async (p, i) => {
+    const plate: Plate = PLATES[p.id] ?? {
+      hue: FALLBACK_HUE,
+      kind: 'browser',
+      art: '',
+      shots: [{ src: p.data.thumbnail.image, alt: p.data.thumbnail.alt }],
+    };
+    const shots = await Promise.all(
+      plate.shots.map(async (s, j) => {
+        const size = SHOT_SIZES[plate.kind === 'phones' ? 'phone' : j === 0 ? 'page' : 'detail'];
+        const img = await getImage({
+          src: s.src,
+          width: Math.max(...size.widths),
+          widths: [...size.widths],
+          format: 'webp',
+        });
+        return { alt: s.alt, img, sizes: size.sizes };
+      }),
+    );
+    const stack = p.data.techStack.slice(0, STACK_SHOWN);
+    const more = Math.max(0, p.data.techStack.length - STACK_SHOWN);
+    return {
+      n: String(i + 1).padStart(2, '0'),
+      title: p.data.title,
+      summary: p.data.summary,
+      status: p.data.status,
+      year: p.data.date.getUTCFullYear(),
+      stack,
+      more,
+      stackText: `Built with ${stack.join(', ')}${more ? ` and ${more} more` : ''}.`,
+      href: projectUrl(p),
+      plate: { ...plate, shots },
+    };
+  }),
+);
+---
+
+<Section id={id} title={title} class="band" bare>
+  <ul class="grid" data-work>
+    {projects.map((p, i) => (
+      <li class="card reveal">
+        <a class="card-link" href={p.href} data-cursor>
+          <span class="card-head">
+            <span class="card-left">
+              <span class="card-title">
+                <span class="card-no tnum">{p.n}</span>
+                <span>{p.title}</span>
+              </span>
+              <span class="card-status">
+                {p.status} · {p.year}
+              </span>
+            </span>
+            <span class="card-sum">{p.summary}</span>
+          </span>
+          <span class={`plate plate-${p.plate.kind}`} style={`--hue:${p.plate.hue}`}>
+            {p.plate.art && (
+              <svg
+                class="art"
+                viewBox="0 0 1600 900"
+                preserveAspectRatio="xMidYMid slice"
+                aria-hidden="true"
+                set:html={p.plate.art}
+              />
+            )}
+            <span class="screens">
+              {p.plate.shots.map((s, j) => (
+                <span class={`shot shot-${j}`} style={`--j:${j}`}>
+                  <img
+                    src={s.img.src}
+                    srcset={s.img.srcSet.attribute}
+                    sizes={s.sizes}
+                    width={s.img.attributes.width}
+                    height={s.img.attributes.height}
+                    alt={s.alt}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 && j === 0 ? 'high' : undefined}
+                    decoding="async"
+                  />
+                </span>
+              ))}
+            </span>
+            {p.stack.length > 0 && (
+              <span class="dock" aria-hidden="true">
+                {p.stack.map((t, k) => (
+                  <span class="dock-i" style={`--k:${k}`}>
+                    {t}
+                  </span>
+                ))}
+                {p.more > 0 && (
+                  <span class="dock-i dock-more tnum" style={`--k:${p.stack.length}`}>
+                    {p.more}+
+                  </span>
+                )}
+              </span>
+            )}
+          </span>
+          {p.stack.length > 0 && <span class="sr">{p.stackText}</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+</Section>
+
+<script>
+  import '../scripts/work';
+</script>

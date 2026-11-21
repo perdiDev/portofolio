@@ -1,6 +1,6 @@
 # .kiro: workspace configuration
 
-Everything here supports one goal: build every page on the `/new-home-4` foundation, to a consistent standard, with the checks running automatically. Design reference: `../DESIGN.md`.
+Everything here supports one goal: build every page on the design foundation (reference: the home page `/`), to a consistent standard, with the checks running automatically. Design reference: `../DESIGN.md`.
 
 | Kiro feature | Where | What it does here |
 |---|---|---|

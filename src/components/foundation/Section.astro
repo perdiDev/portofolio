@@ -1,0 +1,40 @@
+---
+/**
+ * A page section on the foundation: hairline top edge, mono number, serif h2, entrance via .in.
+ * Styles live in styles/foundation/section.css (imported by FoundationLayout).
+ *
+ * - default:  renders the number and `h2#{id}-h`, labelled by it.
+ * - headless: no header; the slot renders its own heading with id `{id}-h`.
+ * - bare:     no scaffold at all (no rule, padding or header); named by `title` via aria-label.
+ */
+interface Props {
+  id: string;
+  /** Section number shown above the title, e.g. "02". */
+  n?: string;
+  title: string;
+  class?: string;
+  headless?: boolean;
+  bare?: boolean;
+}
+
+const { id, n, title, class: className, headless = false, bare = false } = Astro.props;
+const headingId = `${id}-h`;
+---
+
+{bare ? (
+  <section id={id} class={className} aria-label={title}>
+    <slot />
+  </section>
+) : (
+  <section id={id} class:list={['sec', className]} aria-labelledby={headingId}>
+    {!headless && (
+      <header class="sec-head reveal">
+        <div>
+          {n && <p class="sec-n">{n}</p>}
+          <h2 id={headingId}>{title}</h2>
+        </div>
+      </header>
+    )}
+    <slot />
+  </section>
+)}

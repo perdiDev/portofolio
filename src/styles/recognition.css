@@ -1,0 +1,231 @@
+/* Recognition: ruled rows with a masked year, a drawn seal and a pointer light. */
+.rec {
+  --p: 0;
+}
+.rec-row {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) 11rem;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.75rem 0;
+  isolation: isolate;
+}
+.rec-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+.rec-row::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-out);
+}
+.rec-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.rec-glow {
+  position: absolute;
+  inset: 0 -1.25rem;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+  background: radial-gradient(
+    26rem circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--accent) 11%, transparent),
+    transparent 70%
+  );
+}
+.rec-when {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.15em;
+  font: 400 clamp(1.75rem, 3vw, 2.5rem)/1.1 var(--serif);
+  font-style: italic;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+.rec-when > span {
+  display: block;
+}
+.rec-body {
+  min-width: 0;
+}
+.rec-row h3 {
+  font: 400 clamp(1.125rem, 1.7vw, 1.4rem)/1.3 var(--serif);
+  transition: transform 500ms var(--ease-out);
+}
+.rec-body .small {
+  margin-top: 0.3rem;
+}
+.rec-rank {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--accent);
+}
+.rec-rank svg {
+  width: 2.75rem;
+  height: 2.75rem;
+  overflow: visible;
+  flex: none;
+}
+.rk-d {
+  stroke-dasharray: 1.5 4.2;
+  stroke-opacity: 0.6;
+  transform-origin: 32px 32px;
+  animation: rk-spin 40s linear infinite paused;
+}
+.rec-tag {
+  min-width: 0;
+  font: 500 0.6875rem/1.3 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 300ms ease;
+}
+@keyframes rk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Entrance: each row's rule draws, the year rises from a mask, text eases up out of a blur, the seal inscribes itself */
+.js .rec-row::before {
+  transform: scaleX(0);
+  transition: transform 1200ms var(--ease-out) calc(var(--i) * 130ms);
+}
+.js .rec.in .rec-row::before {
+  transform: none;
+}
+.js .rec-when > span {
+  transform: translateY(115%);
+  transition: transform 1000ms var(--ease-out) calc(220ms + var(--i) * 130ms);
+}
+.js .rec.in .rec-when > span {
+  transform: none;
+}
+.js .rec-body {
+  opacity: 0;
+  translate: 0 12px;
+  filter: blur(5px);
+  transition:
+    opacity 800ms var(--ease-out) calc(340ms + var(--i) * 130ms),
+    translate 900ms var(--ease-out) calc(340ms + var(--i) * 130ms),
+    filter 800ms var(--ease-out) calc(340ms + var(--i) * 130ms);
+}
+.js .rec.in .rec-body {
+  opacity: 1;
+  translate: 0;
+  filter: none;
+}
+.js .rec-rank .ln {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1500ms cubic-bezier(0.45, 0, 0.2, 1) calc(500ms + var(--i) * 130ms);
+}
+.js .rec.in .rec-rank .ln {
+  stroke-dashoffset: 0;
+}
+.js .rec-rank .rk-d {
+  opacity: 0;
+  transition: opacity 800ms ease calc(1100ms + var(--i) * 130ms);
+}
+.js .rec.in .rec-rank .rk-d {
+  opacity: 1;
+}
+.js .rec-tag {
+  opacity: 0;
+  translate: -8px 0;
+  transition:
+    opacity 700ms var(--ease-out) calc(900ms + var(--i) * 130ms),
+    translate 800ms var(--ease-out) calc(900ms + var(--i) * 130ms),
+    color 300ms ease;
+}
+.js .rec.in .rec-tag {
+  opacity: 1;
+  translate: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rec-row:hover::after {
+    transform: scaleX(1);
+  }
+  .rec-row:hover .rec-glow {
+    opacity: 1;
+  }
+  .rec-row:hover h3 {
+    transform: translateX(8px);
+  }
+  .rec-row:hover .rec-tag {
+    color: var(--ink);
+  }
+  .rec-row:hover .rk-d {
+    animation-play-state: running;
+    stroke-opacity: 1;
+  }
+  .rec:hover .rec-row:not(:hover) .rec-body,
+  .rec:hover .rec-row:not(:hover) .rec-when {
+    opacity: 0.5;
+  }
+  .rec-body,
+  .rec-when {
+    transition: opacity 400ms ease;
+  }
+}
+
+@media (max-width: 64rem) {
+  .rec-row {
+    grid-template-columns: 8.5rem minmax(0, 1fr) 9rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .rec-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+    align-items: start;
+  }
+  .rec-rank {
+    margin-top: 0.6rem;
+    gap: 0.7rem;
+  }
+  .rec-rank svg {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rk-d {
+    animation: none !important;
+  }
+  .js .rec-row::before,
+  .js .rec-when > span,
+  .js .rec-body,
+  .js .rec-rank .ln,
+  .js .rec-rank .rk-d,
+  .js .rec-tag {
+    transition: none !important;
+    transform: none;
+    translate: 0;
+    filter: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
