@@ -7,6 +7,7 @@ import { getImage } from 'astro:assets';
 import photo from '../assets/photo.jpeg';
 import { ACHIEVEMENTS, AUTHOR, EXPERIENCE, SKILLS, SOCIALS } from '../config';
 import { getProjects, projectUrl } from '../utils/posts';
+import { PLATES } from '../components/new-home-4/plates';
 
 const norm = (ym: string) => ym.replace(/-(\d)$/, '-0$1');
 const fmt = (ym: string) => {
@@ -18,7 +19,7 @@ const fmt = (ym: string) => {
   });
 };
 
-const portrait = await getImage({ src: photo, width: 900, format: 'webp' });
+const portrait = await getImage({ src: photo, width: 400, format: 'webp' });
 
 const projects = await Promise.all(
   (await getProjects()).slice(0, 6).map(async (p, i) => ({
@@ -27,10 +28,17 @@ const projects = await Promise.all(
     summary: p.data.summary,
     status: p.data.status,
     year: p.data.date.getUTCFullYear(),
-    stack: p.data.techStack.slice(0, 4).join(' · '),
     href: projectUrl(p),
-    img: await getImage({ src: p.data.thumbnail.image, width: 1200, format: 'webp' }),
-    alt: p.data.thumbnail.alt,
+    plate: await (async () => {
+      const pl = PLATES[p.id] ?? { hue: '#8a4a30', kind: 'browser' as const, art: '', shots: [{ src: p.data.thumbnail.image, alt: p.data.thumbnail.alt }] };
+      const shots = await Promise.all(
+        pl.shots.map(async (s, j) => ({
+          alt: s.alt,
+          img: await getImage({ src: s.src, width: pl.kind === 'phones' ? 520 : j === 0 ? 1400 : 760, format: 'webp' }),
+        })),
+      );
+      return { ...pl, shots };
+    })(),
   })),
 );
 
@@ -55,16 +63,7 @@ const experience = EXPERIENCE.slice(0, 5).map((e, i) => {
   };
 });
 
-const skillNames = [...new Set(SKILLS.flatMap((g) => g.skills))];
-
-const headline = [
-  { t: 'Software' }, { t: 'that' }, { t: 'stays' },
-  { t: 'out', em: true }, { t: 'of', em: true }, { t: 'the', em: true }, { t: 'way', em: true },
-  { t: 'and' }, { t: 'keeps' }, { t: 'its' }, { t: 'promises.' },
-];
-
 const nav = [
-  ['about', 'Introduction'],
   ['work', 'Selected work'],
   ['experience', 'Experience'],
   ['craft', 'Capabilities'],
@@ -96,7 +95,7 @@ const year = new Date().getFullYear();
     </script>
   </head>
   <body>
-    <a class="skip" href="#about">Skip to content</a>
+    <a class="skip" href="#work">Skip to content</a>
     <div class="progress" aria-hidden="true"><i id="bar"></i></div>
     <div class="cursor" id="cursor" aria-hidden="true">View</div>
 
@@ -104,7 +103,10 @@ const year = new Date().getFullYear();
       <!-- Side rail -->
       <aside class="rail">
         <div class="rail-top">
-          <a class="brand" href="#about">Perdi</a>
+          <figure class="avatar">
+            <img src={portrait.src} width={portrait.attributes.width} height={portrait.attributes.height} alt="Portrait of Perdi" fetchpriority="high" decoding="async" />
+          </figure>
+          <a class="brand" href="#work">Perdi</a>
           <p class="role-line">{AUTHOR.jobTitle}</p>
         </div>
 
@@ -121,6 +123,13 @@ const year = new Date().getFullYear();
           </ol>
         </nav>
 
+        <div class="rail-bottom">
+        <svg class="scrawl" viewBox="0 0 220 120" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path pathLength="1" d="M10 78 C 18 40, 34 26, 40 44 C 46 62, 24 92, 32 84 C 44 72, 52 40, 62 46 C 72 52, 56 84, 70 80 C 84 76, 86 52, 96 54 C 106 56, 96 80, 108 78 C 122 76, 124 46, 134 48 C 144 50, 134 78, 146 76 C 160 74, 160 50, 170 52 C 180 54, 172 74, 184 72 C 194 70, 198 62, 210 58" />
+          <path pathLength="1" d="M18 98 C 50 90, 84 104, 120 96 S 176 90, 206 98" />
+          <path pathLength="1" d="M60 22 C 70 12, 82 14, 78 24 C 74 34, 62 30, 70 20 C 78 10, 96 12, 104 20" />
+          <path pathLength="1" d="M138 24 C 146 18, 156 20, 152 28 C 148 34, 140 32, 146 26 C 152 20, 166 20, 172 26" />
+        </svg>
         <div class="rail-foot">
           <p class="clock"><span class="dot" aria-hidden="true"></span> Makassar <time id="clock" class="tnum">--:--</time></p>
           <button id="theme" class="theme" type="button" aria-label="Switch to dark mode" aria-pressed="false">
@@ -133,70 +142,33 @@ const year = new Date().getFullYear();
             </svg>
           </button>
         </div>
+        </div>
       </aside>
 
       <main class="main">
-        <!-- 01 Introduction -->
-        <section id="about" class="hero" aria-labelledby="h1">
-          <div class="hero-text">
-            <p class="eyebrow rise" style="--d:0ms">Software engineer · Indonesia</p>
-            <h1 id="h1" aria-label="Software that stays out of the way and keeps its promises.">
-              {headline.map((w, i) => (
-                <span class="w" aria-hidden="true"><span class:list={['wi', w.em && 'em']} style={`--i:${i}`}>{w.t}</span></span>
-              ))}
-            </h1>
-            <p class="lede rise" style="--d:170ms">
-              {AUTHOR.bio} I work across web, mobile and backend, from the database to the last pixel.
-            </p>
-            <p class="links rise" style="--d:240ms">
-              <a class="btn" href="#work">View selected work</a>
-              {SOCIALS.map((s) => (
-                <a class="ulink" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
-              ))}
-            </p>
-          </div>
-          <figure class="portrait reveal-clip">
-            <img src={portrait.src} width={portrait.attributes.width} height={portrait.attributes.height} alt="Portrait of Perdi" fetchpriority="high" decoding="async" />
-          </figure>
-        </section>
-
-        <!-- Skills ticker -->
-        <div class="ticker" aria-hidden="true">
-          <div class="ticker-track">
-            {[0, 1].map(() => (
-              <ul>
-                {skillNames.map((n) => <li>{n}</li>)}
-              </ul>
-            ))}
-          </div>
-        </div>
-
         <!-- 02 Selected work -->
-        <section id="work" class="band" aria-labelledby="work-h">
-          <header class="band-head reveal">
-            <div>
-              <p class="sec-n">02 · Selected work</p>
-              <h2 id="work-h">Things I have <em>built</em>, shipped and kept running.</h2>
-            </div>
-            <p class="band-count tnum">{String(projects.length).padStart(2, '0')}<span> projects</span></p>
-          </header>
+        <section id="work" class="band" aria-label="Selected work">
 
           <ul class="grid">
-            {projects.map((p, i) => (
-              <li class="card reveal" style={`--i:${i % 3}`}>
+            {projects.map((p) => (
+              <li class="card reveal">
                 <a class="card-link" href={p.href} data-cursor>
-                  <span class="card-top">
-                    <span class="card-no">{p.n}</span>
-                    <span class="card-status">{p.status} · {p.year}</span>
+                  <span class="card-head">
+                    <span class="card-left">
+                      <span class="card-title"><span class="card-no tnum">{p.n}</span>{p.title}</span>
+                      <span class="card-status">{p.status} · {p.year}</span>
+                    </span>
+                    <span class="card-sum">{p.summary}</span>
                   </span>
-                  <span class="mat">
-                    <img src={p.img.src} width={p.img.attributes.width} height={p.img.attributes.height} alt={p.alt} loading="lazy" decoding="async" />
-                  </span>
-                  <span class="card-title">{p.title}</span>
-                  <span class="card-sum">{p.summary}</span>
-                  <span class="card-foot">
-                    <span class="card-stack">{p.stack}</span>
-                    <span class="card-go" aria-hidden="true">↗</span>
+                  <span class={`plate plate-${p.plate.kind}`} style={`--hue:${p.plate.hue}`}>
+                    {p.plate.art && <svg class="art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" set:html={p.plate.art} />}
+                    <span class="screens">
+                      {p.plate.shots.map((s, j) => (
+                        <span class={`shot shot-${j}`} style={`--j:${j}`}>
+                          <img src={s.img.src} width={s.img.attributes.width} height={s.img.attributes.height} alt={s.alt} loading="lazy" decoding="async" />
+                        </span>
+                      ))}
+                    </span>
                   </span>
                 </a>
               </li>
@@ -208,7 +180,7 @@ const year = new Date().getFullYear();
         <section id="experience" class="sec" aria-labelledby="exp-h">
           <header class="sec-head reveal">
             <div>
-              <p class="sec-n">03</p>
+              <p class="sec-n">02</p>
               <h2 id="exp-h">Experience</h2>
             </div>
           </header>
@@ -253,7 +225,7 @@ const year = new Date().getFullYear();
         <section id="craft" class="sec" aria-labelledby="craft-h">
           <header class="sec-head reveal">
             <div>
-              <p class="sec-n">04</p>
+              <p class="sec-n">03</p>
               <h2 id="craft-h">Capabilities</h2>
             </div>
           </header>
@@ -274,7 +246,7 @@ const year = new Date().getFullYear();
         <section id="recognition" class="sec" aria-labelledby="rec-h">
           <header class="sec-head reveal">
             <div>
-              <p class="sec-n">05</p>
+              <p class="sec-n">04</p>
               <h2 id="rec-h">Recognition</h2>
             </div>
           </header>
@@ -293,12 +265,15 @@ const year = new Date().getFullYear();
 
         <!-- 06 Contact -->
         <section id="contact" class="sec contact" aria-labelledby="contact-h">
-          <p class="sec-n">06</p>
+          <p class="sec-n">05</p>
           <h2 id="contact-h">Have something worth building?</h2>
           <a class="big-mail ulink" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
           <div class="contact-actions">
             <button id="copy" class="btn" type="button">Copy email</button>
             <span id="copied" class="small" role="status" aria-live="polite"></span>
+            {SOCIALS.map((s) => (
+              <a class="ulink small" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+            ))}
           </div>
         </section>
 
@@ -362,7 +337,16 @@ const year = new Date().getFullYear();
         if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
       }), { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
       $$('.reveal, .sec').forEach((el) => ro.observe(el));
-      requestAnimationFrame(() => $('.reveal-clip')?.classList.add('in'));
+
+      // Project focus follows the reading line
+      const grid = $('.grid');
+      const cards = $$('.card', grid);
+      const fo = new IntersectionObserver((es) => es.forEach((e) => {
+        if (!e.isIntersecting) return;
+        cards.forEach((c) => c.toggleAttribute('data-active', c === e.target));
+        grid.dataset.focus = '';
+      }), { rootMargin: '-45% 0px -45% 0px' });
+      cards.forEach((c) => fo.observe(c));
 
       // Scroll progress
       const bar = $('#bar');
@@ -468,9 +452,25 @@ const year = new Date().getFullYear();
   .shell { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); min-height: 100dvh; }
   .rail {
     position: sticky; top: 0; height: 100dvh; padding: 2.5rem 2rem 2rem 2.5rem;
-    display: flex; flex-direction: column; justify-content: space-between;
+    display: grid; grid-template-rows: 1fr auto 1fr;
     border-right: 1px solid var(--line);
   }
+  /* Identity is centred horizontally and vertically in the space between the top and the nav */
+  .rail-top { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  /* Bottom row: abstract handwriting fills the gap above the clock and theme toggle */
+  .rail-bottom { display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; min-height: 0; }
+  .scrawl { width: 100%; max-width: 12rem; height: auto; max-height: 100%; margin: auto; color: var(--accent); opacity: 0.7; overflow: visible; }
+  .scrawl path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .js .scrawl path { stroke-dashoffset: 1; animation: scrawl 2.4s cubic-bezier(0.45, 0, 0.2, 1) forwards; }
+  .js .scrawl path:nth-child(2) { animation-delay: 1.6s; animation-duration: 1s; }
+  .js .scrawl path:nth-child(3) { animation-delay: 2.2s; animation-duration: 0.8s; }
+  .js .scrawl path:nth-child(4) { animation-delay: 2.6s; animation-duration: 0.8s; }
+  @keyframes scrawl { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .js .scrawl path { animation: none; stroke-dashoffset: 0; } }
+  @media (max-height: 640px) { .scrawl { display: none; } }
+  .avatar { margin: 0 0 1.5rem; width: 6.5rem; aspect-ratio: 3 / 4; border-radius: 999px 999px 0 0; overflow: hidden; background: var(--bg-2); outline: 1px solid var(--line); outline-offset: 5px; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) contrast(1.05) brightness(0.98); transition: filter 600ms var(--ease-out); }
+  [data-theme='dark'] .avatar img { filter: grayscale(1) contrast(1.05) brightness(0.85); }
   .brand { font: 500 1.5rem/1 var(--serif); letter-spacing: -0.02em; font-style: italic; }
   .role-line { margin-top: 0.6rem; font-size: 0.8125rem; color: var(--muted); }
 
@@ -494,26 +494,6 @@ const year = new Date().getFullYear();
 
   .main { padding: 0 var(--gutter); width: 100%; min-width: 0; overflow-x: clip; }
 
-  /* ---- Hero ---- */
-  .hero { min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(14rem, 24rem); align-items: center; gap: clamp(2rem, 5vw, 5rem); padding-block: 6rem; }
-  .hero-text { display: flex; flex-direction: column; gap: 2rem; align-items: flex-start; }
-  .eyebrow { font: 400 0.75rem/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  h1 { font-size: clamp(2.5rem, 5vw, 5rem); line-height: 1.06; font-weight: 400; max-width: 14ch; }
-  .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; margin-right: 0.24em; }
-  .wi { display: inline-block; transform: translateY(105%); animation: wup 900ms var(--ease-out) calc(120ms + var(--i) * 55ms) forwards; }
-  .wi.em { font-style: italic; color: var(--accent); }
-  @keyframes wup { to { transform: none; } }
-  .lede { max-width: 46ch; color: var(--muted); font-size: 1.0625rem; text-wrap: pretty; }
-  .links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
-
-  .reveal-clip { clip-path: inset(100% 0 0 0); transition: clip-path 1100ms var(--ease-out) 200ms; }
-  .reveal-clip.in { clip-path: inset(0 0 0 0); }
-  .reveal-clip img { scale: 1.18; transition: scale 1400ms var(--ease-out) 200ms, filter 600ms var(--ease-out); }
-  .reveal-clip.in img { scale: 1; }
-  .portrait { margin: 0; aspect-ratio: 3 / 4; border-radius: 999px 999px 0 0; overflow: hidden; background: var(--bg-2); outline: 1px solid var(--line); outline-offset: 10px; }
-  .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(1) contrast(1.05) brightness(0.98); transition: filter 600ms var(--ease-out), transform 700ms var(--ease-out); }
-  [data-theme='dark'] .portrait img { filter: grayscale(1) contrast(1.05) brightness(0.85); }
-
   .btn { display: inline-flex; align-items: center; height: 2.875rem; padding: 0 1.5rem; border-radius: 999px; background: var(--ink); color: var(--bg); border: 1px solid var(--ink); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: transform 160ms var(--ease-out), background-color 160ms ease, border-color 160ms ease; }
   .btn:active { transform: scale(0.97); }
   .ulink { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; background-size: 0 1px; transition: background-size 260ms var(--ease-out); padding-bottom: 2px; }
@@ -526,41 +506,59 @@ const year = new Date().getFullYear();
   .sec h2 { font-size: clamp(2rem, 3.8vw, 3.25rem); line-height: 1.08; }
 
   /* ---- Projects: full-bleed inverted band + grid ---- */
-  .band { padding-block: clamp(5rem, 10vw, 9rem); border-top: 1px solid var(--line); position: relative; }
+  .band { padding-block: 0 clamp(5rem, 10vw, 9rem); position: relative; }
   .band-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
   .band-head h2 { font-size: clamp(2rem, 4.4vw, 3.75rem); line-height: 1.08; max-width: 18ch; }
-  .band-count { font: italic 400 clamp(3rem, 8vw, 7rem)/0.9 var(--serif); letter-spacing: -0.04em; color: transparent; -webkit-text-stroke: 1px var(--accent); white-space: nowrap; }
-  .band-count span { font: 400 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; -webkit-text-stroke: 0; color: var(--muted); margin-left: 0.6rem; }
 
-  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: clamp(2.5rem, 4vw, 4rem) clamp(1.5rem, 2.4vw, 2.5rem); }
-  .grid > .card:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; }
-  .grid > .card:nth-child(2) { grid-column: 3; grid-row: 1; }
-  .grid > .card:nth-child(3) { grid-column: 3; grid-row: 2; }
-  .grid > .card:nth-child(4) { grid-column: 1; grid-row: 3; }
-  .grid > .card:nth-child(5) { grid-column: 1; grid-row: 4; }
-  .grid > .card:nth-child(6) { grid-column: 2 / 4; grid-row: 3 / 5; }
-  .card-link { display: flex; flex-direction: column; gap: 1rem; height: 100%; transition: opacity 300ms ease; }
-  .card-top { display: flex; justify-content: space-between; align-items: baseline; font: 400 0.6875rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .card-no { font: italic 400 1.5rem/1 var(--serif); letter-spacing: -0.02em; color: var(--accent); text-transform: none; }
-  .mat { display: block; padding: 0.7rem; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; position: relative; }
-  .mat img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: top center; transition: transform 700ms var(--ease-out); }
-  .card-title { font: 400 clamp(1.375rem, 2vw, 1.75rem)/1.2 var(--serif); letter-spacing: -0.02em; align-self: flex-start; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 320ms var(--ease-out); padding-bottom: 2px; }
-  .card-sum { color: var(--muted); font-size: 0.9375rem; text-wrap: pretty; max-width: 44ch; }
-  .card-foot { margin-top: auto; padding-top: 0.75rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--line); font: 400 0.75rem/1.5 var(--mono); color: var(--muted); }
-  .card-go { font-size: 1rem; color: var(--accent); transition: transform 300ms var(--ease-out); }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .card { position: relative; padding-block: clamp(2.5rem, 5vw, 4.5rem); }
+  .card:first-child::before { display: none; }
+  .card::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line); transform-origin: left; }
+  .card-link { display: flex; flex-direction: column; gap: clamp(1.25rem, 2vw, 1.75rem); transition: opacity 600ms var(--ease-out); }
+  .card-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border: 1px solid var(--line); }
+  .card-left { display: flex; flex-direction: column; gap: 0.9rem; padding: clamp(1.25rem, 2.5vw, 2rem); border-right: 1px solid var(--line); }
+  .card-left .card-title { display: block; }
+  .card-left .card-no { display: block; margin-bottom: 0.9rem; }
+  .card-no { font: 400 0.75rem/1 var(--mono); letter-spacing: 0.06em; color: var(--accent); }
+  .card-title { justify-self: start; font: 400 clamp(1.75rem, 3.2vw, 2.75rem)/1.1 var(--serif); letter-spacing: -0.025em; text-wrap: balance; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 420ms var(--ease-out); padding-bottom: 3px; }
+  .card-status { font: 400 0.6875rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  /* Plate: a tinted stage, a line drawing from the project's subject, the real screens on top */
+  .plate { --tint: color-mix(in oklab, var(--hue) 9%, var(--bg)); --stroke: color-mix(in oklab, var(--hue) 62%, var(--bg)); --deep: color-mix(in oklab, var(--hue) 55%, #0e0d0b);
+    position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; container-type: inline-size; isolation: isolate;
+    background: var(--tint); border: 1px solid color-mix(in oklab, var(--hue) 18%, var(--line)); }
+  [data-theme='dark'] .plate { --tint: color-mix(in oklab, var(--hue) 16%, var(--bg)); --stroke: color-mix(in oklab, var(--hue) 70%, var(--ink)); }
+  .art { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; fill: none; stroke: var(--stroke); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .art .bold { stroke-width: 2.6; }
+  .art .gr { stroke-opacity: 0.35; stroke-dasharray: 2 8; }
+  .art .fl { stroke: var(--stroke); stroke-opacity: 0.4; }
+  .art pattern path { stroke: var(--stroke); stroke-width: 1.4; }
+  .art .tx { fill: var(--stroke); stroke: none; font: 500 15px/1 var(--mono); letter-spacing: 0.12em; }
+  .art .ds { stroke-dasharray: 0.006 0.012; }
+
+  .screens { position: absolute; inset: 0; display: block; }
+  .shot { position: absolute; display: block; overflow: hidden; background: #fff;
+    box-shadow: 0 1.2cqw 3.2cqw -0.8cqw color-mix(in oklab, var(--deep) 45%, transparent), 0 0.2cqw 0.5cqw color-mix(in oklab, var(--deep) 18%, transparent);
+    transition: translate 900ms var(--ease-out), rotate 900ms var(--ease-out); }
+  .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+  /* Phones: three handsets, the main one raised in the middle */
+  .plate-phones .shot { top: 50%; height: 80%; aspect-ratio: 9 / 19.5; border: 0.45cqw solid #161512; border-radius: 2.6cqw; }
+  .plate-phones .shot-1 { left: 50%; translate: -50% -52%; z-index: 2; }
+  .plate-phones .shot-0 { left: 50%; translate: -158% -46%; rotate: -3deg; }
+  .plate-phones .shot-2 { left: 50%; translate: 58% -46%; rotate: 3deg; }
+
+  /* Browser: the main page and one detail page laid over its corner */
+  .plate-browser .shot { border-radius: 0.7cqw; padding-top: 1.7cqw; aspect-ratio: 16 / 10.6; background: #fbfaf7; }
+  .plate-browser .shot::before { content: ''; position: absolute; left: 1.1cqw; top: 0.6cqw; width: 18%; height: 0.5cqw; border-radius: 1cqw; background: color-mix(in oklab, var(--hue) 22%, #e9e6df); }
+  .plate-browser .shot img { border-top: 1px solid #e6e2da; }
+  .plate-browser .shot-0 { left: 9%; top: 9%; width: 66%; }
+  .plate-browser .shot-1 { right: 6%; bottom: 7%; width: 38%; z-index: 2; }
+
+  .card-sum { color: var(--muted); font-size: 1rem; text-wrap: pretty; align-self: center; padding: clamp(1.25rem, 2.5vw, 2rem); }
 
   .cursor { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; display: grid; place-items: center; width: 5.25rem; height: 5.25rem; border-radius: 50%; background: var(--accent); color: #1d1b18; font: 500 0.75rem/1 var(--sans); letter-spacing: 0.04em; opacity: 0; transition: opacity 200ms ease; will-change: transform; }
   .cursor.show { opacity: 1; }
   [data-theme='dark'] .cursor { color: #f4f1ea; background: #8a4a30; }
-
-  /* ---- Ticker ---- */
-  .ticker { overflow: hidden; margin-inline: calc(var(--gutter) * -1); padding-block: 1.75rem; border-top: 1px solid var(--line); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
-  .ticker-track { display: flex; width: max-content; animation: tick 50s linear infinite; }
-  .ticker ul { display: flex; flex: none; }
-  .ticker li { font: italic 400 clamp(1.25rem, 2.2vw, 1.75rem)/1 var(--serif); color: var(--muted); padding-inline: 1.75rem; position: relative; white-space: nowrap; }
-  .ticker li::after { content: '✦'; position: absolute; right: -0.45em; top: 50%; transform: translateY(-50%); font-style: normal; font-size: 0.55em; color: var(--accent); }
-  @keyframes tick { to { transform: translateX(-50%); } }
-  @media (hover: hover) { .ticker:hover .ticker-track { animation-play-state: paused; } }
 
   .progress { position: fixed; left: 0; right: 0; top: 0; height: 2px; z-index: 25; pointer-events: none; }
   .progress i { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
@@ -568,6 +566,25 @@ const year = new Date().getFullYear();
   /* Reveal on enter, only when JS is on */
   .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity 800ms var(--ease-out) calc(var(--i, 0) * 90ms), transform 900ms var(--ease-out) calc(var(--i, 0) * 90ms); }
   .js .reveal.in { opacity: 1; transform: none; }
+  .js .card.reveal { opacity: 1; transform: none; transition: none; }
+  .js .card::before { transform: scaleX(0); transition: transform 1100ms var(--ease-out); }
+  .js .card.in::before { transform: none; }
+  .js .card .card-left, .js .card .card-sum { opacity: 0; transform: translateY(14px); transition: opacity 700ms var(--ease-out), transform 800ms var(--ease-out); }
+  .js .card .card-title { transition: opacity 700ms var(--ease-out), transform 800ms var(--ease-out), background-size 420ms var(--ease-out); }
+    .js .card .plate { clip-path: inset(0 0 100% 0); transition: clip-path 900ms var(--ease-out) 100ms; }
+  .js .card .art .ln { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1600ms cubic-bezier(0.45, 0, 0.2, 1) calc(400ms + min(var(--k), 14) * 45ms); }
+  .js .card .art .ds { stroke-dasharray: 0.006 0.012; stroke-dashoffset: 0; opacity: 0; transition: opacity 900ms ease 900ms; }
+  .js .card .art .tx, .js .card .art .fl { opacity: 0; transition: opacity 700ms ease 1300ms; }
+  .js .card .shot { opacity: 0; transform: translateY(8cqw); transition: opacity 600ms var(--ease-out) calc(380ms + var(--j) * 110ms), transform 1100ms var(--ease-out) calc(380ms + var(--j) * 110ms), translate 900ms var(--ease-out), rotate 900ms var(--ease-out); }
+  .js .card .card-sum { transition-delay: 380ms; }
+  .js .card.in .card-left, .js .card.in .card-sum { opacity: 1; transform: none; }
+  .js .card.in .plate { clip-path: inset(0); }
+  .js .card.in .art .ln { stroke-dashoffset: 0; }
+  .js .card.in .art .ds, .js .card.in .art .tx { opacity: 1; }
+  .js .card.in .art .fl { opacity: 1; }
+  .js .card.in .shot { opacity: 1; transform: none; }
+  /* Scroll focus: the project at the reading line stays full strength */
+  .grid[data-focus] .card:not([data-active]) .card-link { opacity: 0.5; }
   .sec { position: relative; border-top: 0; }
   .sec::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line); transform-origin: left; }
   .js .sec::before { transform: scaleX(0); transition: transform 1200ms var(--ease-out); }
@@ -625,29 +642,21 @@ const year = new Date().getFullYear();
     .ulink:hover { background-size: 100% 1px; }
     .theme:hover, .arrow:hover:not(:disabled) { border-color: var(--ink); }
     .toc a:not([aria-current]):hover { color: var(--ink); }
-    .portrait:hover img { filter: none; }
-    .grid:hover .card-link:not(:hover) { opacity: 0.45; }
-    .card-link:hover .mat img { transform: scale(1.04); }
+    .avatar:hover img { filter: none; }
+    .plate-phones:is(.card-link:hover *) .shot-0 { translate: -168% -47%; rotate: -5deg; }
+    .plate-phones:is(.card-link:hover *) .shot-2 { translate: 68% -47%; rotate: 5deg; }
+    .plate-phones:is(.card-link:hover *) .shot-1 { translate: -50% -55%; }
+    .plate-browser:is(.card-link:hover *) .shot-0 { translate: -1.2% -1.6%; }
+    .plate-browser:is(.card-link:hover *) .shot-1 { translate: 1.4% -2.4%; }
     .card-link:hover .card-title { background-size: 100% 1px; }
-    .card-link:hover .card-go { transform: translate(3px, -3px); }
     .exp-btn:hover .exp-co { transform: translateX(4px); }
     .craft:hover .craft-row:not(:hover) { opacity: 0.45; }
   }
-
-  /* ---- Entrance (once, on load) ---- */
-  .rise { opacity: 0; transform: translateY(12px); animation: rise 700ms var(--ease-out) var(--d, 0ms) forwards; }
-  @keyframes rise { to { opacity: 1; transform: none; } }
 
   /* ---- Responsive ---- */
   @media (max-width: 64rem) {
     :root { --rail: 13.5rem; }
     .rail { padding: 2rem 1.25rem 1.5rem 1.5rem; }
-    .hero { grid-template-columns: 1fr; padding-block: 5rem; }
-    .portrait { width: min(18rem, 70%); order: -1; }
-    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
-    .grid > .card:nth-child(n) { grid-column: auto; grid-row: auto; }
-    .grid > .card:nth-child(1), .grid > .card:nth-child(6) { grid-column: 1 / -1; }
-    .hero { min-height: 0; }
     .exp-btn { grid-template-columns: 8.5rem minmax(0, 1fr) 1.5rem; }
     .exp-body { padding-left: calc(8.5rem + 1.5rem); }
     .craft-row, .rec-row { grid-template-columns: 8.5rem minmax(0, 1fr); }
@@ -655,19 +664,16 @@ const year = new Date().getFullYear();
   @media (max-width: 48rem) {
     .shell { display: block; }
     .rail { position: static; height: auto; flex-direction: row; align-items: center; padding: 1.1rem var(--gutter); border-right: 0; border-bottom: 1px solid var(--line); }
-    .toc, .clock, .role-line { display: none; }
-    .rail-top { display: flex; align-items: baseline; }
-    .hero { padding-block: 3.5rem 4.5rem; }
-    .portrait { width: min(15rem, 62%); outline-offset: 8px; margin-bottom: 0.5rem; }
+    .toc, .clock, .role-line, .avatar { display: none; }
+    .rail-top { display: flex; flex-direction: row; align-items: baseline; margin: 0; text-align: left; }
     .exp-btn { grid-template-columns: minmax(0, 1fr) 1.5rem; padding: 1.5rem 0; gap: 0.5rem 1rem; }
     .exp-when { grid-column: 1 / -1; }
     .exp-icon { grid-row: 2; grid-column: 2; }
     .exp-body { padding: 0 0 2rem; }
     .craft-row, .rec-row { grid-template-columns: 1fr; gap: 0.5rem; }
-    .grid { grid-template-columns: 1fr; }
-    .grid > .card:nth-child(n) { grid-column: auto; }
+    .card-head { grid-template-columns: minmax(0, 1fr); }
+    .card-left { border-right: 0; border-bottom: 1px solid var(--line); }
     .band-head { flex-direction: column; align-items: flex-start; }
-    .ticker li { padding-inline: 1.25rem; }
     .btn { height: 3rem; }
     .foot { flex-direction: column; }
   }
@@ -675,15 +681,14 @@ const year = new Date().getFullYear();
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .dot { animation: none; }
-    .rise { animation: fade 300ms ease var(--d, 0ms) forwards; transform: none; }
-    .wi { transform: none; animation: none; }
-    .reveal-clip { clip-path: none; transition: none; }
-    .reveal-clip img { scale: 1; transition: none; }
-    .js .reveal, .js .sec::before { opacity: 1; transform: none; transition: none; }
-    .ticker-track { animation: none; }
+    .js .reveal, .js .sec::before, .js .card::before { opacity: 1; transform: none; transition: none; }
+    .js .card .card-left, .js .card .card-sum { transform: none; transition: opacity 300ms ease; }
+    .js .card .plate { clip-path: none; transition: none; }
+    .js .card .art .ln { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
+    .js .card .art .ds { stroke-dasharray: 0.006 0.012; }
+    .js .card .shot { transform: none; transition: opacity 300ms ease; }
+    .shot { transition: none !important; }
     .progress { display: none; }
-    @keyframes fade { to { opacity: 1; } }
-    .exp-panel, .exp-icon::before, .exp-icon::after, .toc a, .toc-l::after, .portrait img, .mat img, .theme svg { transition: none !important; }
-    .card-link:hover .mat img { transform: none; }
+    .exp-panel, .exp-icon::before, .exp-icon::after, .toc a, .toc-l::after, .theme svg { transition: none !important; }
   }
 </style>
