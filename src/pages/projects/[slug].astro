@@ -1,8 +1,17 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
-import ProjectLayout from '../../layouts/ProjectLayout.astro';
-import { getPosts, getProjects, postsForProject } from '../../utils/posts';
+import FoundationLayout from '../../layouts/FoundationLayout.astro';
+import ProjectDetail from '../../components/ProjectDetail.astro';
+import { OG } from '../../config';
+import {
+  breadcrumbJsonLd,
+  softwareSourceCodeJsonLd,
+  type BreadcrumbItem,
+} from '../../utils/jsonld';
+import { getPosts, getProjects, postsForProject, projectUrl } from '../../utils/posts';
+import { projectSections } from '../../utils/project-sections';
+import { absoluteUrl, ogImagePath } from '../../utils/seo';
 
 export const getStaticPaths = (async () => {
   const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
@@ -22,8 +31,48 @@ export const getStaticPaths = (async () => {
 
 const { project, related, prev, next } = Astro.props;
 const { Content } = await render(project);
+
+const site = Astro.site!;
+const d = project.data;
+const url = absoluteUrl(projectUrl(project), site);
+const ogImage = absoluteUrl(ogImagePath('projects', project.id), site);
+const crumbs: BreadcrumbItem[] = [
+  { name: 'Home', href: '/' },
+  { name: 'Projects', href: '/projects/' },
+  { name: d.title, href: projectUrl(project) },
+];
+const jsonLd = [
+  softwareSourceCodeJsonLd({
+    site,
+    url,
+    name: d.title,
+    description: d.summary,
+    codeRepository: d.repoUrl,
+    programmingLanguage: d.techStack,
+    dateCreated: d.date,
+    image: ogImage,
+  }),
+  breadcrumbJsonLd(site, crumbs),
+];
+const nav = projectSections(project, related.length);
 ---
 
-<ProjectLayout project={project} related={related} prev={prev} next={next}>
-  <Content />
-</ProjectLayout>
+<FoundationLayout
+  title={d.title}
+  description={d.summary}
+  ownHeading
+  nav={nav}
+  seo={{
+    image: {
+      url: ogImage,
+      alt: `${d.title}, a project by Perdi`,
+      width: OG.width,
+      height: OG.height,
+    },
+    jsonLd,
+  }}
+>
+  <ProjectDetail project={project} related={related} prev={prev} next={next} sections={nav}>
+    <Content />
+  </ProjectDetail>
+</FoundationLayout>

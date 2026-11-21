@@ -1,0 +1,99 @@
+---
+/**
+ * A project's plate: tinted stage, line drawing from its subject, its real screens, and
+ * (optionally) the stack dock. Used by the Work grid and the project page hero. Both name
+ * it `plate-{id}` for the cross-page view transition (see styles/transitions.css).
+ * Spans only, so it is valid inside a link.
+ */
+import '../styles/plate.css';
+import { getImage } from 'astro:assets';
+import { FALLBACK_HUE, PLATES, type Plate } from './plates';
+import type { Project } from '../utils/posts';
+
+interface Props {
+  project: Project;
+  /** Render the stack dock (hover only, home grid). */
+  dock?: boolean;
+  /** Above the fold: eager, high priority first screen. */
+  eager?: boolean;
+}
+
+const { project, dock = false, eager = false } = Astro.props;
+
+/* Rendered widths of each screen as a share of the plate, so the browser picks a small file on
+   phones. Plate width is about 100vw - 3rem below 48rem, and 70vw above. */
+const SHOT_SIZES = {
+  phone: { widths: [240, 360, 520], sizes: '(max-width: 48rem) 20vw, 15vw' },
+  page: { widths: [640, 960, 1400], sizes: '(max-width: 48rem) 64vw, 48vw' },
+  detail: { widths: [360, 560, 760], sizes: '(max-width: 48rem) 37vw, 27vw' },
+} as const;
+
+const STACK_SHOWN = 5;
+
+const plate: Plate = PLATES[project.id] ?? {
+  hue: FALLBACK_HUE,
+  kind: 'browser',
+  art: '',
+  shots: [{ src: project.data.thumbnail.image, alt: project.data.thumbnail.alt }],
+};
+const shots = await Promise.all(
+  plate.shots.map(async (s, j) => {
+    const size = SHOT_SIZES[plate.kind === 'phones' ? 'phone' : j === 0 ? 'page' : 'detail'];
+    const img = await getImage({
+      src: s.src,
+      width: Math.max(...size.widths),
+      widths: [...size.widths],
+      format: 'webp',
+    });
+    return { alt: s.alt, img, sizes: size.sizes };
+  }),
+);
+const stack = dock ? project.data.techStack.slice(0, STACK_SHOWN) : [];
+const more = dock ? Math.max(0, project.data.techStack.length - STACK_SHOWN) : 0;
+---
+
+<span
+  class={`plate plate-${plate.kind}`}
+  style={`--hue:${plate.hue}; view-transition-name: plate-${project.id}`}
+>
+  {plate.art && (
+    <svg
+      class="art"
+      viewBox="0 0 1600 900"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+      set:html={plate.art}
+    />
+  )}
+  <span class="screens">
+    {shots.map((s, j) => (
+      <span class={`shot shot-${j}`} style={`--j:${j}`}>
+        <img
+          src={s.img.src}
+          srcset={s.img.srcSet.attribute}
+          sizes={s.sizes}
+          width={s.img.attributes.width}
+          height={s.img.attributes.height}
+          alt={s.alt}
+          loading={eager ? 'eager' : 'lazy'}
+          fetchpriority={eager && j === 0 ? 'high' : undefined}
+          decoding="async"
+        />
+      </span>
+    ))}
+  </span>
+  {stack.length > 0 && (
+    <span class="dock" aria-hidden="true">
+      {stack.map((t, k) => (
+        <span class="dock-i" style={`--k:${k}`}>
+          {t}
+        </span>
+      ))}
+      {more > 0 && (
+        <span class="dock-i dock-more tnum" style={`--k:${stack.length}`}>
+          {more}+
+        </span>
+      )}
+    </span>
+  )}
+</span>

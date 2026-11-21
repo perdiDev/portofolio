@@ -1,0 +1,681 @@
+/* Project page: hero (title, plate, facts), numbered sections, ruled rows, lightbox, pager.
+   Plate styles come from plate.css. Entrances play when reveal.ts adds .in. */
+
+.pj-hero {
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+}
+
+.pj-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 200ms ease;
+}
+.pj-back-arrow {
+  display: inline-block;
+  transition: transform 320ms var(--ease-out);
+}
+
+.pj-head {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  max-width: 54rem;
+  margin-block: clamp(1.5rem, 4vw, 3rem) clamp(2.25rem, 5vw, 4rem);
+}
+.pj-kicker {
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.pj-title {
+  font-size: clamp(2.75rem, 7vw, 5.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+.pj-w {
+  display: inline-block;
+  overflow: hidden;
+  /* room for descenders inside the mask */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  vertical-align: top;
+}
+.pj-w > span {
+  display: inline-block;
+}
+.pj-sum {
+  max-width: 40rem;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.pj-stage {
+  display: block;
+}
+
+/* Facts: one ruled row, like the head of a Work card */
+.pj-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--line);
+}
+.pj-facts > div {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border-left: 1px solid var(--line);
+}
+.pj-facts > div:first-child {
+  border-left: 0;
+}
+.pj-facts dt,
+.pj-tag {
+  font: 400 0.6875rem/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pj-facts dd {
+  margin: 0;
+  font: 400 1.0625rem/1.4 var(--serif);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.pj-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+.pj-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0;
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0.02em;
+}
+.pj-stack li {
+  padding-inline: 0.9rem;
+  border-left: 1px solid var(--line);
+}
+.pj-stack li:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.pj-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.btn-line {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+/* Sections */
+.pj-sec {
+  --pj-measure: 44rem;
+}
+.pj-prose {
+  max-width: var(--pj-measure);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.pj-prose > * + * {
+  margin-top: 1.25em;
+}
+.pj-prose h2,
+.pj-prose h3,
+.pj-prose h4 {
+  margin-top: 2.2em;
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  line-height: 1.2;
+}
+.pj-prose h3 + *,
+.pj-prose h2 + * {
+  margin-top: 0.75em;
+}
+.pj-prose ul,
+.pj-prose ol {
+  display: grid;
+  gap: 0.6rem;
+  padding-left: 1.4rem;
+}
+.pj-prose ul {
+  list-style: none;
+}
+.pj-prose ul > li {
+  position: relative;
+}
+.pj-prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.4rem;
+  top: 0.85em;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--accent);
+}
+.pj-prose ol {
+  list-style: decimal;
+}
+.pj-prose ol > li::marker {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+.pj-prose a {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 1px;
+}
+.pj-prose strong {
+  font-weight: 600;
+}
+.pj-prose code:not(pre code) {
+  font: 0.875em var(--mono);
+  padding: 0.1em 0.35em;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+}
+.pj-prose blockquote {
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--accent);
+  font: italic 1.25rem/1.5 var(--serif);
+}
+.pj-prose img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+
+/* Screens: first full width, the rest in pairs, an odd last one spans */
+.pj-shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.75rem);
+}
+.pj-shots > li:first-child,
+.pj-shots > li:last-child:nth-child(even) {
+  grid-column: 1 / -1;
+}
+.pj-shots figure {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+.pj-shot {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.pj-shot img {
+  width: 100%;
+  height: auto;
+  transition: transform 900ms var(--ease-out);
+}
+.pj-video {
+  margin-top: clamp(1.25rem, 3vw, 2.5rem);
+}
+.pj-video a {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.pj-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pj-video iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+.pj-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 5.25rem;
+  height: 5.25rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--cursor-bg);
+  color: var(--cursor-ink);
+  font: 500 0.75rem/1 var(--sans);
+  letter-spacing: 0.04em;
+  transition: transform 320ms var(--ease-out);
+}
+
+/* Ruled rows: challenges, lessons, related writing */
+.pj-rows {
+  border-bottom: 1px solid var(--line);
+}
+.pj-row {
+  position: relative;
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+}
+.pj-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+.pj-challenge,
+.pj-learned {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem clamp(1.5rem, 3vw, 3rem);
+}
+.pj-learned {
+  grid-template-columns: 4rem minmax(0, 1fr);
+}
+.pj-learned p {
+  max-width: 40rem;
+  font-size: 1.0625rem;
+  text-wrap: pretty;
+}
+.pj-no {
+  font: 400 0.75rem/1.9 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.pj-q {
+  font: 400 clamp(1.25rem, 2vw, 1.625rem)/1.3 var(--serif);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.pj-a {
+  display: grid;
+  gap: 0.5rem;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.pj-outcome {
+  max-width: 46rem;
+  font: 400 clamp(1.5rem, 2.8vw, 2.25rem)/1.35 var(--serif);
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+.pj-post a {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1rem 1.5rem;
+}
+.pj-post-t {
+  font: 400 clamp(1.125rem, 1.8vw, 1.4rem)/1.3 var(--serif);
+  letter-spacing: -0.01em;
+}
+.pj-post-a {
+  color: var(--accent);
+  transition: transform 320ms var(--ease-out);
+}
+
+/* Pager */
+.pj-more {
+  padding-block: clamp(3rem, 7vw, 6rem);
+}
+.pj-pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+.pj-pn {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  padding-block: 0.5rem;
+}
+.pj-pn-next {
+  text-align: right;
+  justify-items: end;
+  grid-column: 2;
+}
+.pj-pn-t {
+  justify-self: start;
+  font: 400 clamp(1.75rem, 3.4vw, 3rem)/1.1 var(--serif);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 420ms var(--ease-out);
+}
+.pj-pn-next .pj-pn-t {
+  justify-self: end;
+  background-position: 100% 100%;
+}
+.pj-pn-s {
+  max-width: 24rem;
+  text-wrap: pretty;
+}
+
+/* Lightbox */
+.pj-dialog {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 0;
+  background: color-mix(in oklab, var(--bg) 94%, transparent);
+  color: var(--ink);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.pj-dialog[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 1rem;
+}
+.pj-dialog-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pj-count {
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.pj-x {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 160ms var(--ease-out),
+    border-color 160ms ease;
+}
+.pj-x:active {
+  transform: scale(0.97);
+}
+.pj-dialog-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  min-height: 0;
+}
+.pj-dialog figure {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  min-height: 0;
+  margin: 0;
+}
+.pj-dialog img {
+  max-width: 100%;
+  max-height: 72dvh;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.pj-dialog figcaption {
+  max-width: 46rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* Entrance */
+.js .pj-hero .pj-back,
+.js .pj-hero .pj-kicker,
+.js .pj-hero .pj-sum,
+.js .pj-hero .pj-facts,
+.js .pj-hero .pj-foot {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 800ms var(--ease-out);
+}
+.js .pj-hero .pj-kicker {
+  transition-delay: 100ms;
+}
+.js .pj-hero .pj-sum {
+  transition-delay: 420ms;
+}
+.js .pj-hero .pj-facts {
+  transition-delay: 700ms;
+}
+.js .pj-hero .pj-foot {
+  transition-delay: 820ms;
+}
+.js .pj-hero .pj-w > span {
+  transform: translateY(112%);
+  transition: transform 1000ms var(--ease-out) calc(160ms + var(--w, 0) * 90ms);
+}
+.js .pj-hero .art .ln {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1600ms cubic-bezier(0.45, 0, 0.2, 1)
+    calc(500ms + min(var(--k), 14) * 45ms);
+}
+.js .pj-hero .art .ds {
+  stroke-dasharray: 0.006 0.012;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease 1000ms;
+}
+.js .pj-hero .art .tx,
+.js .pj-hero .art .fl {
+  opacity: 0;
+  transition: opacity 700ms ease 1400ms;
+}
+.js .pj-hero .shot {
+  opacity: 0;
+  transform: translateY(8cqw);
+  transition:
+    opacity 600ms var(--ease-out) calc(500ms + var(--j) * 110ms),
+    transform 1100ms var(--ease-out) calc(500ms + var(--j) * 110ms),
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
+}
+.js .pj-hero.in :is(.pj-back, .pj-kicker, .pj-sum, .pj-facts, .pj-foot) {
+  opacity: 1;
+  transform: none;
+}
+.js .pj-hero.in .pj-w > span {
+  transform: none;
+}
+.js .pj-hero.in .art .ln {
+  stroke-dashoffset: 0;
+}
+.js .pj-hero.in .art :is(.ds, .tx, .fl) {
+  opacity: 1;
+}
+.js .pj-hero.in .shot {
+  opacity: 1;
+  transform: none;
+}
+
+/* Rows draw their rule as they enter; the generic .reveal supplies the rise */
+.js .pj-row::before {
+  transform: scaleX(0);
+  transition: transform 1100ms var(--ease-out);
+}
+.js .pj-row.in::before {
+  transform: none;
+}
+.js .pj-shot img {
+  transform: scale(1.06);
+}
+.js .reveal.in .pj-shot img {
+  transform: none;
+  transition: transform 1400ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pj-back:hover {
+    color: var(--ink);
+  }
+  .pj-back:hover .pj-back-arrow {
+    transform: translateX(-4px);
+  }
+  .btn-line:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .pj-prose a:hover {
+    color: var(--accent);
+  }
+  .js .reveal.in .pj-shot:hover img {
+    transform: scale(1.025);
+  }
+  .pj-video a:hover .pj-play {
+    transform: scale(1.08);
+  }
+  .pj-post a:hover .pj-post-a {
+    transform: translateX(6px);
+  }
+  .pj-post a:hover .pj-post-t,
+  .pj-pn:hover .pj-pn-t {
+    background-size: 100% 1px;
+  }
+  .pj-x:hover {
+    border-color: var(--ink);
+  }
+}
+.pj-post-t {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 420ms var(--ease-out);
+  justify-self: start;
+}
+
+@media (max-width: 64rem) {
+  .pj-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pj-facts > div:nth-child(3) {
+    border-left: 0;
+  }
+  .pj-facts > div:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+  .pj-challenge {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+  .pj-challenge .pj-a {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 48rem) {
+  .pj-shots {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pj-stack {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .pj-stack li {
+    padding: 0;
+    border: 0;
+  }
+  .pj-links {
+    width: 100%;
+  }
+  .pj-links .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .pj-post a {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .pj-post .pj-tag {
+    grid-column: 1 / -1;
+  }
+  .pj-pager {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pj-pn-next {
+    grid-column: 1;
+    text-align: left;
+    justify-items: start;
+  }
+  .pj-pn-next .pj-pn-t {
+    justify-self: start;
+  }
+  .pj-dialog-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pj-dialog-body > .pj-x {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .pj-hero :is(.pj-back, .pj-kicker, .pj-sum, .pj-facts, .pj-foot) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .js .pj-hero .pj-w > span {
+    transform: none;
+    transition: none;
+  }
+  .js .pj-hero .art .ln {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .js .pj-hero .art :is(.ds, .tx, .fl),
+  .js .pj-hero .shot {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .js .pj-row::before {
+    transform: none;
+    transition: none;
+  }
+  .js .pj-shot img,
+  .js .reveal.in .pj-shot img {
+    transform: none;
+    transition: none;
+  }
+  .pj-back-arrow,
+  .pj-post-a,
+  .pj-play,
+  .pj-pn-t,
+  .pj-post-t {
+    transition: none !important;
+  }
+}

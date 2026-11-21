@@ -1,0 +1,137 @@
+/* Plate: a tinted stage, a line drawing from the project's subject, the real screens on top.
+   Shared by the home Work grid and the project page hero (components/ProjectPlate.astro). */
+.plate {
+  --tint: color-mix(in oklab, var(--hue) 9%, var(--bg));
+  --stroke: color-mix(in oklab, var(--hue) 62%, var(--bg));
+  --deep: color-mix(in oklab, var(--hue) 55%, var(--shade));
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  container-type: inline-size;
+  isolation: isolate;
+  background: var(--tint);
+  border: 1px solid color-mix(in oklab, var(--hue) 18%, var(--line));
+}
+[data-theme='dark'] .plate {
+  --tint: color-mix(in oklab, var(--hue) 16%, var(--bg));
+  --stroke: color-mix(in oklab, var(--hue) 70%, var(--ink));
+}
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.art .bold {
+  stroke-width: 2.6;
+}
+.art .gr {
+  stroke-opacity: 0.35;
+  stroke-dasharray: 2 8;
+}
+.art .fl {
+  stroke: var(--stroke);
+  stroke-opacity: 0.4;
+}
+.art pattern path {
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+}
+/* SVG user units: scales with the 1600-wide viewBox, not with page text */
+.art .tx {
+  fill: var(--stroke);
+  stroke: none;
+  font: 500 15px/1 var(--mono); /* lint-allow:px-font */
+  letter-spacing: 0.12em;
+}
+.art .ds {
+  stroke-dasharray: 0.006 0.012;
+}
+
+.screens {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+/* Device mockup colours stay literal: they imitate real hardware, not the theme. */
+.shot {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  background: #fff; /* lint-allow:hex */
+  box-shadow:
+    0 1.2cqw 3.2cqw -0.8cqw color-mix(in oklab, var(--deep) 45%, transparent),
+    0 0.2cqw 0.5cqw color-mix(in oklab, var(--deep) 18%, transparent);
+  transition:
+    translate 900ms var(--ease-out),
+    rotate 900ms var(--ease-out);
+}
+.shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Phones: three handsets, the main one raised in the middle */
+.plate-phones .shot {
+  top: 50%;
+  height: 80%;
+  aspect-ratio: 9 / 19.5;
+  border: 0.45cqw solid #161512; /* lint-allow:hex */
+  border-radius: 2.6cqw;
+}
+.plate-phones .shot-1 {
+  left: 50%;
+  translate: -50% -52%;
+  z-index: 2;
+}
+.plate-phones .shot-0 {
+  left: 50%;
+  translate: -158% -46%;
+  rotate: -3deg;
+}
+.plate-phones .shot-2 {
+  left: 50%;
+  translate: 58% -46%;
+  rotate: 3deg;
+}
+
+/* Browser: the main page and one detail page laid over its corner */
+.plate-browser .shot {
+  border-radius: 0.7cqw;
+  padding-top: 1.7cqw;
+  aspect-ratio: 16 / 10.6;
+  background: #fbfaf7; /* lint-allow:hex */
+}
+.plate-browser .shot::before {
+  content: '';
+  position: absolute;
+  left: 1.1cqw;
+  top: 0.6cqw;
+  width: 18%;
+  height: 0.5cqw;
+  border-radius: 1cqw;
+  background: color-mix(in oklab, var(--hue) 22%, #e9e6df); /* lint-allow:hex */
+}
+.plate-browser .shot img {
+  border-top: 1px solid #e6e2da; /* lint-allow:hex */
+}
+.plate-browser .shot-0 {
+  left: 9%;
+  top: 9%;
+  width: 66%;
+}
+.plate-browser .shot-1 {
+  right: 6%;
+  bottom: 7%;
+  width: 38%;
+  z-index: 2;
+}

@@ -1,0 +1,274 @@
+---
+/**
+ * Project page body on the foundation. A hero (title, summary, the project's plate, facts,
+ * links) followed by numbered sections: overview (the markdown), screens with a lightbox,
+ * challenges, what I learned, outcome, related writing, and the neighbouring projects.
+ * The plate carries the view-transition name that links it to its card on the home page.
+ */
+import '../styles/project.css';
+import { getImage, Picture } from 'astro:assets';
+import type { NavItem } from '../layouts/FoundationLayout.astro';
+import { postUrl, projectUrl, type Post, type Project } from '../utils/posts';
+import ProjectPlate from './ProjectPlate.astro';
+import Section from './foundation/Section.astro';
+
+interface Props {
+  project: Project;
+  related: Post[];
+  prev?: Project;
+  next?: Project;
+  sections: readonly NavItem[];
+}
+
+const { project, related, prev, next, sections } = Astro.props;
+const d = project.data;
+const year = d.date.getUTCFullYear();
+
+const n = (id: string) => String(sections.findIndex((s) => s.id === id) + 1).padStart(2, '0');
+const label = (id: string) => sections.find((s) => s.id === id)!.label;
+
+const words = d.title.split(' ');
+const facts = [
+  { k: 'Status', v: d.status },
+  { k: 'Role', v: d.role },
+  { k: 'Duration', v: d.duration },
+  { k: 'Year', v: String(year) },
+];
+
+const full = await Promise.all(
+  d.screenshots.map((s) => getImage({ src: s.image, width: 1600, format: 'webp', quality: 82 })),
+);
+const videoUrl = d.youtubeId
+  ? `https://www.youtube.com/watch?v=${encodeURIComponent(d.youtubeId)}`
+  : undefined;
+const poster = d.youtubeId
+  ? `https://i.ytimg.com/vi/${encodeURIComponent(d.youtubeId)}/hqdefault.jpg`
+  : undefined;
+---
+
+<article
+  class="pj"
+  data-pagefind-body
+  data-pagefind-filter="category[data-category], type[data-type]"
+  data-category="Project"
+  data-type="Project"
+>
+  <header class="pj-hero" data-reveal id="project">
+    <a class="pj-back" href="/#work" data-pagefind-ignore>
+      <span class="pj-back-arrow" aria-hidden="true">
+        ←
+      </span>{' '}
+      All work
+    </a>
+
+    <div class="pj-head">
+      <p class="pj-kicker">
+        {d.status} · {year}
+      </p>
+      <h1 class="pj-title" data-pagefind-meta="title">
+        {words.map((w, i) => (
+          <>
+            <span class="pj-w">
+              <span style={`--w:${i}`}>{w}</span>
+            </span>
+            {i < words.length - 1 ? ' ' : ''}
+          </>
+        ))}
+      </h1>
+      <p class="pj-sum">{d.summary}</p>
+    </div>
+
+    <div class="pj-stage" data-pagefind-ignore>
+      <ProjectPlate project={project} eager />
+    </div>
+
+    <dl class="pj-facts" data-pagefind-ignore>
+      {facts.map((f) => (
+        <div>
+          <dt>{f.k}</dt>
+          <dd>{f.v}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="pj-foot" data-pagefind-ignore>
+      <ul class="pj-stack" aria-label="Tech stack">
+        {d.techStack.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+      {(d.liveUrl || d.repoUrl) && (
+        <p class="pj-links">
+          {d.liveUrl && (
+            <a class="btn" href={d.liveUrl} target="_blank" rel="noopener noreferrer">
+              Live demo
+              <span class="sr">(opens in a new tab)</span>
+            </a>
+          )}
+          {d.repoUrl && (
+            <a class="btn btn-line" href={d.repoUrl} target="_blank" rel="noopener noreferrer">
+              Source on GitHub
+              <span class="sr">(opens in a new tab)</span>
+            </a>
+          )}
+        </p>
+      )}
+    </div>
+  </header>
+
+  <Section id="overview" n={n('overview')} title={label('overview')} class="pj-sec">
+    <div class="pj-prose reveal">
+      <slot />
+    </div>
+  </Section>
+
+  <Section id="screens" n={n('screens')} title={label('screens')} class="pj-sec">
+    <ul class="pj-shots" data-lightbox-root data-pagefind-ignore>
+      {d.screenshots.map((s, i) => (
+        <li class="reveal" style={`--i:${i % 2}`}>
+          <figure>
+            <a
+              class="pj-shot"
+              href={full[i]!.src}
+              data-lightbox
+              data-alt={s.alt}
+              data-caption={s.caption ?? ''}
+              data-cursor
+              aria-label={`Open larger view: ${s.alt}`}
+            >
+              <Picture
+                src={s.image}
+                alt={s.alt}
+                formats={['avif', 'webp']}
+                widths={[480, 728, 1100, 1456]}
+                sizes="(min-width: 64rem) 52rem, 100vw"
+                loading="lazy"
+              />
+            </a>
+            {s.caption && <figcaption class="small">{s.caption}</figcaption>}
+          </figure>
+        </li>
+      ))}
+    </ul>
+
+    {videoUrl && (
+      <div class="pj-video reveal" data-pagefind-ignore>
+        <a
+          href={videoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-video={d.youtubeId}
+          data-video-title={`${d.title}, video walkthrough`}
+          aria-label={`Play video: ${d.title}, video walkthrough`}
+        >
+          <img src={poster} alt="" width="480" height="360" loading="lazy" decoding="async" />
+          <span class="pj-play">Play</span>
+        </a>
+      </div>
+    )}
+
+    <dialog class="pj-dialog" data-lightbox-dialog aria-label="Screenshot viewer">
+      <div class="pj-dialog-bar">
+        <p class="pj-count tnum" data-lightbox-counter aria-live="polite"></p>
+        <button type="button" class="pj-x" data-lightbox-close>
+          Close
+        </button>
+      </div>
+      <div class="pj-dialog-body">
+        <button type="button" class="pj-x" data-lightbox-prev aria-label="Previous screenshot">
+          <span aria-hidden="true">←</span>
+        </button>
+        <figure data-lightbox-figure></figure>
+        <button type="button" class="pj-x" data-lightbox-next aria-label="Next screenshot">
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </dialog>
+  </Section>
+
+  <Section id="challenges" n={n('challenges')} title={label('challenges')} class="pj-sec">
+    <ol class="pj-rows">
+      {d.challenges.map((c, i) => (
+        <li class="pj-row pj-challenge reveal">
+          <span class="pj-no tnum">{String(i + 1).padStart(2, '0')}</span>
+          <p class="pj-q">{c.challenge}</p>
+          <p class="pj-a">
+            <span class="pj-tag">Solution</span>
+            {c.solution}
+          </p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section id="learned" n={n('learned')} title={label('learned')} class="pj-sec">
+    <ol class="pj-rows">
+      {d.learned.map((item, i) => (
+        <li class="pj-row pj-learned reveal">
+          <span class="pj-no tnum">{String(i + 1).padStart(2, '0')}</span>
+          <p>{item}</p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  {d.outcome && (
+    <Section id="outcome" n={n('outcome')} title={label('outcome')} class="pj-sec">
+      <p class="pj-outcome reveal">{d.outcome}</p>
+    </Section>
+  )}
+
+  {related.length > 0 && (
+    <Section id="related" n={n('related')} title={label('related')} class="pj-sec">
+      <ul class="pj-rows" data-pagefind-ignore>
+        {related.map((post) => (
+          <li class="pj-row pj-post reveal">
+            <a href={postUrl(post)}>
+              <span class="pj-tag">{post.data.category}</span>
+              <span class="pj-post-t">{post.data.title}</span>
+              <span class="pj-post-a" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  )}
+</article>
+
+{(prev || next) && (
+  <Section id="more" title="More projects" class="pj-sec pj-more" headless>
+    <h2 id="more-h" class="sr">
+      More projects
+    </h2>
+    <nav class="pj-pager" aria-label="More projects" data-pagefind-ignore>
+      {prev ? (
+        <a class="pj-pn reveal" href={projectUrl(prev)} rel="prev" data-cursor>
+          <span class="pj-tag">← Previous</span>
+          <span class="pj-pn-t">{prev.data.title}</span>
+          <span class="pj-pn-s small">{prev.data.summary}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {next && (
+        <a
+          class="pj-pn pj-pn-next reveal"
+          style="--i:1"
+          href={projectUrl(next)}
+          rel="next"
+          data-cursor
+        >
+          <span class="pj-tag">Next →</span>
+          <span class="pj-pn-t">{next.data.title}</span>
+          <span class="pj-pn-s small">{next.data.summary}</span>
+        </a>
+      )}
+    </nav>
+  </Section>
+)}
+
+<script>
+  import '../scripts/project';
+</script>

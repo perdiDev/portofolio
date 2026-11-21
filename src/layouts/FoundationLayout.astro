@@ -9,6 +9,7 @@ import '../styles/foundation/base.css';
 import '../styles/foundation/shell.css';
 import '../styles/foundation/section.css';
 import '../styles/foundation/motion.css';
+import '../styles/foundation/transitions.css';
 import { Font, getImage } from 'astro:assets';
 import photo from '../assets/photo.jpeg';
 import Analytics from '../components/Analytics.astro';
@@ -27,6 +28,8 @@ export interface Props {
   description: string;
   /** Text of the page's single, visually hidden `h1`. Defaults to `title`. */
   heading?: string;
+  /** The page renders its own visible `h1`: skip the hidden one. */
+  ownHeading?: boolean;
   /** Section anchors for the rail, in reading order. */
   nav?: readonly NavItem[];
   noindex?: boolean;
@@ -34,7 +37,15 @@ export interface Props {
   seo?: Omit<SeoProps, 'title' | 'description' | 'noindex'>;
 }
 
-const { title, description, heading = title, nav = [], noindex = false, seo = {} } = Astro.props;
+const {
+  title,
+  description,
+  heading = title,
+  ownHeading = false,
+  nav = [],
+  noindex = false,
+  seo = {},
+} = Astro.props;
 
 // Browser UI colour per theme. Keep in sync with --bg in styles/foundation/tokens.css.
 const THEME_COLOR = { light: '#f4f1ea', dark: '#141311' };
@@ -212,7 +223,7 @@ const siteLinks = [
 
       <div class="col">
         <main id="main" class="main" tabindex="-1">
-          <h1 class="sr">{heading}</h1>
+          {!ownHeading && <h1 class="sr">{heading}</h1>}
           <slot />
         </main>
 
