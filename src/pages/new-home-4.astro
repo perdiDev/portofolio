@@ -28,6 +28,8 @@ const projects = await Promise.all(
     summary: p.data.summary,
     status: p.data.status,
     year: p.data.date.getUTCFullYear(),
+    stack: p.data.techStack.slice(0, 5),
+    more: Math.max(0, p.data.techStack.length - 5),
     href: projectUrl(p),
     plate: await (async () => {
       const pl = PLATES[p.id] ?? { hue: '#8a4a30', kind: 'browser' as const, art: '', shots: [{ src: p.data.thumbnail.image, alt: p.data.thumbnail.alt }] };
@@ -169,6 +171,12 @@ const year = new Date().getFullYear();
                         </span>
                       ))}
                     </span>
+                    {p.stack.length > 0 && (
+                      <span class="dock" aria-label={`Stack: ${[...p.stack].join(', ')}${p.more ? ` and ${p.more} more` : ''}`}>
+                        {p.stack.map((t, k) => <span class="dock-i" style={`--k:${k}`}>{t}</span>)}
+                        {p.more > 0 && <span class="dock-i dock-more tnum" style={`--k:${p.stack.length}`}>{p.more}+</span>}
+                      </span>
+                    )}
                   </span>
                 </a>
               </li>
@@ -554,6 +562,23 @@ const year = new Date().getFullYear();
   .plate-browser .shot-0 { left: 9%; top: 9%; width: 66%; }
   .plate-browser .shot-1 { right: 6%; bottom: 7%; width: 38%; z-index: 2; }
 
+  /* Stack dock: a small bordered grid that rises over the bottom of the plate, like the macOS dock */
+  .dock { position: absolute; z-index: 5; left: 50%; bottom: 1.25cqw; display: flex; max-width: calc(100% - 4cqw); overflow: hidden;
+    background: color-mix(in oklab, var(--bg) 78%, transparent); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid var(--line); border-radius: 0; box-shadow: 0 0.8rem 2rem -0.8rem color-mix(in oklab, var(--deep) 60%, transparent);
+    opacity: 0; pointer-events: none; transform: translate(-50%, 140%) scale(0.92); transform-origin: 50% 100%;
+    transition: transform 520ms cubic-bezier(0.34, 1.45, 0.64, 1), opacity 220ms ease; }
+  .dock-i { padding: 0.5rem 0.8rem; font: 500 0.6875rem/1 var(--mono); letter-spacing: 0.02em; color: var(--ink); white-space: nowrap; border-left: 1px solid var(--line);
+    opacity: 0; transform: translateY(0.6rem) scale(0.85); transition: opacity 200ms ease, transform 200ms ease; }
+  .dock-i:first-child { border-left: 0; }
+  .dock-more { color: var(--accent); }
+  @media (hover: hover) and (pointer: fine) {
+    .card-link:is(:hover, :focus-visible) .dock { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    .card-link:is(:hover, :focus-visible) .dock-i { opacity: 1; transform: none;
+      transition: opacity 320ms ease calc(160ms + var(--k) * 45ms), transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1) calc(160ms + var(--k) * 45ms); }
+  }
+  @media (max-width: 48rem) { .dock { display: none; } }
+
   .card-sum { color: var(--muted); font-size: 1rem; text-wrap: pretty; align-self: center; padding: clamp(1.25rem, 2.5vw, 2rem); }
 
   .cursor { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; display: grid; place-items: center; width: 5.25rem; height: 5.25rem; border-radius: 50%; background: var(--accent); color: #1d1b18; font: 500 0.75rem/1 var(--sans); letter-spacing: 0.04em; opacity: 0; transition: opacity 200ms ease; will-change: transform; }
@@ -688,6 +713,8 @@ const year = new Date().getFullYear();
     .js .card .art .ds { stroke-dasharray: 0.006 0.012; }
     .js .card .shot { transform: none; transition: opacity 300ms ease; }
     .shot { transition: none !important; }
+    .dock, .dock-i { transition: opacity 200ms ease !important; transform: translate(-50%, 0) !important; }
+    .dock-i { transform: none !important; }
     .progress { display: none; }
     .exp-panel, .exp-icon::before, .exp-icon::after, .toc a, .toc-l::after, .theme svg { transition: none !important; }
   }
