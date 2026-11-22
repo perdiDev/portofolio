@@ -1,0 +1,14 @@
+/* Fisheye on scroll. Items carry `--fe` (0 edge, 1 centre) from scripts/foundation/fisheye.ts.
+   Scaled from the row's centre so both sides pull in evenly. */
+.js .fe-on [data-fi] {
+  transform-origin: 50% 50%;
+  transform: scale(calc(0.8 + 0.2 * var(--fe, 1)));
+  opacity: calc(0.22 + 0.78 * var(--fe, 1));
+  will-change: transform, opacity;
+}
+
+@media (max-width: 48rem) {
+  .js .fe-on [data-fi] {
+    transform: scale(calc(0.88 + 0.12 * var(--fe, 1)));
+  }
+}

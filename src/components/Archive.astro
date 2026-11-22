@@ -1,0 +1,61 @@
+---
+/**
+ * Archive: every post as one plain line (day, title), grouped under its year.
+ * The header reuses the Diary header styles; rows swell toward the middle of the screen.
+ */
+import '../styles/diary.css';
+import '../styles/foundation/fisheye.css';
+import '../styles/archive.css';
+import Section from './foundation/Section.astro';
+import { formatShortDate, isoDate, pluralize } from '../utils/format';
+import { groupByYear, postUrl, type Post } from '../utils/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+const groups = groupByYear(posts);
+---
+
+<Section id="archive" title="Archive" headless class="dy ar">
+  <header class="dy-head">
+    <a class="dy-kicker ulink" href="/blog/">
+      <span aria-hidden="true">←</span> Diary
+    </a>
+    <h1 id="archive-h" class="dy-title">
+      <em>Archive</em>
+    </h1>
+    <p class="dy-intro">{pluralize(posts.length, 'entry', 'entries')}, newest first.</p>
+  </header>
+
+  <div class="ar-body" data-reveal data-fisheye>
+    {groups.map(({ year, posts: items }) => (
+      <section class="ar-year" aria-labelledby={`ar-${year}`}>
+        <h2 class="ar-yr tnum" id={`ar-${year}`}>
+          <em>{year}</em>
+          <span class="sr">, {pluralize(items.length, 'entry', 'entries')}</span>
+        </h2>
+        <ol class="ar-list">
+          {items.map((post, i) => (
+            <li class="ar-row" data-fi style={`--i:${Math.min(i, 8)}`}>
+              <a class="ar-link" href={postUrl(post)}>
+                <time class="ar-date tnum" datetime={isoDate(post.data.pubDate)}>
+                  {formatShortDate(post.data.pubDate)}
+                </time>
+                <span class="ar-title">{post.data.title}</span>
+                <span class="ar-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+</Section>
+
+<script>
+  import '../scripts/foundation/fisheye';
+</script>

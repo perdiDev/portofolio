@@ -1,23 +1,23 @@
 ---
-import ListingLayout from '../layouts/ListingLayout.astro';
+import FoundationLayout from '../layouts/FoundationLayout.astro';
+import Archive from '../components/Archive.astro';
 import { pluralize } from '../utils/format';
-import { paginate } from '../utils/paginate';
+import { breadcrumbJsonLd } from '../utils/jsonld';
 import { getPosts } from '../utils/posts';
 
 const posts = await getPosts();
-const page = paginate(posts, 1, '/archive/', Math.max(posts.length, 1));
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Archive', href: '/archive/' },
+];
 ---
 
-<ListingLayout
+<FoundationLayout
+  title="Archive"
+  description={`Every article on the blog in one list, grouped by year. ${pluralize(posts.length, 'post')} so far.`}
   heading="Archive"
-  label="Archive"
-  intro={`${pluralize(posts.length, 'entry', 'entries')}, newest first.`}
-  description={`Every article on the blog in one list, newest first. ${pluralize(posts.length, 'post')} so far.`}
-  breadcrumbs={[
-    { name: 'Home', href: '/' },
-    { name: 'Archive', href: '/archive/' },
-  ]}
-  base="/archive/"
-  page={page}
-  kicker={{ label: 'Diary', href: '/blog/' }}
-/>
+  ownHeading
+  seo={{ jsonLd: [breadcrumbJsonLd(Astro.site!, crumbs)] }}
+>
+  <Archive posts={posts} />
+</FoundationLayout>

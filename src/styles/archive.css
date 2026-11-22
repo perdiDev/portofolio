@@ -1,0 +1,113 @@
+/* Archive: year groups, one plain line per post. Header styles come from diary.css. */
+.ar-year {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1.5rem;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+.ar-yr {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  font: italic 400 clamp(2rem, 3.4vw, 2.75rem) / 1 var(--serif);
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+.ar-row {
+  position: relative;
+}
+.ar-row::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+.ar-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.ar-link {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 2rem;
+  align-items: baseline;
+  gap: 1.25rem;
+  min-height: 2.75rem;
+  padding: 1rem 0;
+}
+.ar-date {
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ar-title {
+  font: 400 clamp(1.1rem, 1.7vw, 1.4rem) / 1.3 var(--serif);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.ar-arrow {
+  justify-self: end;
+  font: 400 1.25rem/1 var(--serif);
+  color: var(--accent);
+}
+
+.js .ar-row::before {
+  transform: scaleX(0);
+  transition: transform 1200ms var(--ease-out) calc(var(--i) * 70ms);
+}
+.js .ar-body.in .ar-row::before {
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ar-row::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 700ms var(--ease-out);
+  }
+  .ar-row:hover::after {
+    transform: scaleX(1);
+  }
+  .ar-title,
+  .ar-arrow {
+    transition: transform 500ms var(--ease-out);
+  }
+  .ar-row:hover .ar-title {
+    transform: translateX(8px);
+  }
+  .ar-row:hover .ar-arrow {
+    transform: translateX(4px);
+  }
+}
+
+@media (max-width: 48rem) {
+  .ar-year {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+  .ar-yr {
+    position: static;
+  }
+  .ar-link {
+    grid-template-columns: 3.75rem minmax(0, 1fr) 1.5rem;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .ar-row::before {
+    transition: none !important;
+    transform: none;
+  }
+  .ar-row::after,
+  .ar-title,
+  .ar-arrow {
+    transition: none !important;
+  }
+}
