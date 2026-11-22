@@ -133,7 +133,7 @@ a.dy-kicker {
   color: var(--accent);
   vertical-align: middle;
 }
-.dy-row h3 {
+.dy-row h2 {
   font-size: clamp(1.25rem, 2vw, 1.65rem);
   line-height: 1.25;
 }
@@ -266,10 +266,10 @@ a.dy-kicker {
   .dy-row:hover::after {
     transform: scaleX(1);
   }
-  .dy-row h3 {
+  .dy-row h2 {
     transition: transform 500ms var(--ease-out);
   }
-  .dy-row:hover h3 {
+  .dy-row:hover h2 {
     transform: translateX(8px);
   }
   .dy-list:hover .dy-row:not(:hover) .dy-link {
@@ -326,7 +326,7 @@ a.dy-kicker {
   .dy-row::after,
   .dy-link::before,
   .dy-day,
-  .dy-row h3 {
+  .dy-row h2 {
     transition: none !important;
   }
 }
