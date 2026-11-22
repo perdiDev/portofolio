@@ -18,7 +18,7 @@ src/
   scripts/                             one module per section (work.ts, contact.ts, ...)
   utils/                               posts.ts, timeline.ts (data shaping, no markup)
   pages/                               routes; compose only
-  content/, config.ts                  data
+  content/, config/                    data (site.ts, experience.ts, achievements.ts)
 scripts/design-lint.mjs, scripts/hooks/ enforcement
 .kiro/                                 steering, hooks, skills, agents, specs, MCP
 DESIGN.md                              the design reference

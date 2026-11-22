@@ -48,15 +48,14 @@ pnpm preview             # serves dist/client at http://localhost:4321 (see note
 
 ## Scripts
 
-| Script             | What it does                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `pnpm dev`         | Dev server. Drafts are visible. No Pagefind index of its own (see [Search](#search)).                        |
-| `pnpm build`       | Production build to `dist/` + `.vercel/output`, sitemap, Pagefind index.                                     |
-| `pnpm preview`     | Serve the last build locally (`scripts/preview.mjs`).                                                        |
-| `pnpm check`       | `astro check` (TypeScript + Astro diagnostics). Must report 0 errors, 0 warnings, 0 hints.                   |
-| `pnpm format`      | Prettier (with the Astro and Tailwind plugins).                                                              |
-| `pnpm assets`      | Regenerates placeholder icons, avatar, project screenshots, and blog images (`scripts/generate-assets.mjs`). |
-| `pnpm audit:build` | Audits the built HTML: titles, descriptions, headings, canonicals, JSON-LD, images, internal links.          |
+| Script             | What it does                                                                                        |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| `pnpm dev`         | Dev server. Drafts are visible. No Pagefind index of its own (see [Search](#search)).               |
+| `pnpm build`       | Production build to `dist/` + `.vercel/output`, sitemap, Pagefind index.                            |
+| `pnpm preview`     | Serve the last build locally (`scripts/preview.mjs`).                                               |
+| `pnpm check`       | `astro check` (TypeScript + Astro diagnostics). Must report 0 errors, 0 warnings, 0 hints.          |
+| `pnpm format`      | Prettier (with the Astro and Tailwind plugins).                                                     |
+| `pnpm audit:build` | Audits the built HTML: titles, descriptions, headings, canonicals, JSON-LD, images, internal links. |
 
 ## Project structure
 

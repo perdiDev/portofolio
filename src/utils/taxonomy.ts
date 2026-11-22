@@ -14,7 +14,7 @@ export interface Term {
 export const categoryUrl = (category: string) => `/categories/${slugify(category)}/`;
 export const tagUrl = (tag: string) => `/tags/${slugify(tag)}/`;
 
-/** Categories that have at least one visible post, in the order declared in `config.ts`. */
+/** Categories that have at least one visible post, in the order declared in `src/config/site.ts`. */
 export function getCategories(posts: Post[]): Term[] {
   return CATEGORIES.map((name: Category) => {
     const inCategory = posts.filter((post) => post.data.category === name);

@@ -5,7 +5,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseFrontmatter } from '@astrojs/markdown-remark';
 import { slugify } from '../src/utils/slug.ts';
-import { BLOG, CATEGORIES } from '../src/config.ts';
+import { BLOG, CATEGORIES } from '../src/config/index.ts';
 
 const root = new URL('../src/content/', import.meta.url).pathname;
 

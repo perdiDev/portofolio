@@ -1,4 +1,4 @@
-/** Shapes EXPERIENCE from config.ts into rows for the timeline accordion. No markup. */
+/** Shapes EXPERIENCE from src/config/experience.ts into rows for the timeline accordion. No markup. */
 import type { ExperienceEntry } from '../config';
 
 type Entry = ExperienceEntry;

@@ -14,7 +14,6 @@
     "verify": "node scripts/design-lint.mjs && astro check && astro build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "assets": "node scripts/generate-assets.mjs",
     "audit:build": "python3 scripts/audit-build.py"
   },
   "engines": {
