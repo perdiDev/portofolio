@@ -8,12 +8,14 @@ description: Create abstract line illustrations as code-generated SVG, themed by
 House style from the home page (`/`). Use it for any new abstract illustration on any page. Copy the method, not the project-specific drawings.
 
 Reference files:
+
 - `src/components/plates.ts`: helpers and 7 finished drawings.
 - `src/styles/plate.css`: plate and art CSS (search `.plate`, `.art`, `.ln`). `src/components/ProjectPlate.astro`: the markup (`set:html`), used by the Work grid and the project page.
 - `.tools/pw/plates.mjs`: screenshots each plate after its animation finishes.
 - `helpers.md` (this folder): copy-ready helper functions and recipes.
 
 ## Core idea
+
 One illustration is a drawing of the subject's own world, in one stroke weight and one hue, placed around the real product screenshots. "Abstract" means schematic and diagrammatic, not decorative blobs.
 
 1. **Pick the metaphor from the project's real data.** Ask what the thing measures, moves, stores or prints. Used so far:
@@ -35,23 +37,36 @@ One illustration is a drawing of the subject's own world, in one stroke weight a
 **Generation:** one TypeScript function per drawing (`artSomething()`) that returns an SVG string. Reset the counter `k = 0` at its start. Inject with `set:html`. Never hardcode colours in the SVG.
 
 **Class vocabulary** (styled once in CSS; drawings only use these):
-| class | meaning |
-|---|---|
-| `ln` | main stroke. Needs `pathLength="1"` and `style="--k:N"` (stagger order) |
-| `ln bold` | emphasis stroke, about 2x weight. Use once or twice |
-| `ln ds` | dashed secondary stroke (route, track, ruler) |
-| `gr` | faint dotted grid line, not animated |
-| `fl` | fill area, normally a hatch pattern clipped to a shape |
-| `tx` | mono uppercase label. Uses `fill`, not `stroke` |
+
+| class     | meaning                                                                 |
+| --------- | ----------------------------------------------------------------------- |
+| `ln`      | main stroke. Needs `pathLength="1"` and `style="--k:N"` (stagger order) |
+| `ln bold` | emphasis stroke, about 2x weight. Use once or twice                     |
+| `ln ds`   | dashed secondary stroke (route, track, ruler)                           |
+| `gr`      | faint dotted grid line, not animated                                    |
+| `fl`      | fill area, normally a hatch pattern clipped to a shape                  |
+| `tx`      | mono uppercase label. Uses `fill`, not `stroke`                         |
 
 **Colour:** one `--hue` per drawing on its container. Everything derives from it:
+
 ```css
-.plate { --tint: color-mix(in oklab, var(--hue) 9%, var(--bg));
-         --stroke: color-mix(in oklab, var(--hue) 62%, var(--bg)); }
-[data-theme='dark'] .plate { --tint: color-mix(in oklab, var(--hue) 16%, var(--bg));
-                             --stroke: color-mix(in oklab, var(--hue) 70%, var(--ink)); }
-.art { fill:none; stroke:var(--stroke); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+.plate {
+  --tint: color-mix(in oklab, var(--hue) 9%, var(--bg));
+  --stroke: color-mix(in oklab, var(--hue) 62%, var(--bg));
+}
+[data-theme='dark'] .plate {
+  --tint: color-mix(in oklab, var(--hue) 16%, var(--bg));
+  --stroke: color-mix(in oklab, var(--hue) 70%, var(--ink));
+}
+.art {
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 ```
+
 Use mid-saturation hues (`#2e7d8f`, `#5b8a66`, `#7652b0`). Give each project a distinct hue. Check light and dark themes.
 
 **Draw-on animation:** `ln` paths use `stroke-dasharray:1; stroke-dashoffset:1` (works because of `pathLength="1"`) and transition to `0` when the card gets `.in`. Stagger with `calc(400ms + min(var(--k), 14) * 45ms)`. Dashed, label and fill layers fade in later (900 to 1300ms). Gate everything behind `.js` so no-JS users see the finished drawing. Add a `prefers-reduced-motion` block that removes dasharray and transitions. Copy the exact rules next to `.js .card .art .ln` in `src/styles/work.css` (home) or `.js .pj-hero .art .ln` in `src/styles/project.css` (project page).
@@ -59,6 +74,7 @@ Use mid-saturation hues (`#2e7d8f`, `#5b8a66`, `#7652b0`). Give each project a d
 **Dashed paths:** `ds` cannot also use the draw-on dash. It fades in with opacity and keeps `stroke-dasharray: 0.006 0.012`.
 
 ## Building blocks (code in helpers.md)
+
 - `ln`, `circ`, `txt`: emit elements with auto `--k`.
 - `ring(cx,cy,r,seed,sx,sy)`: wobbly closed contour. Layer 5 to 6 rings with growing radius and changing seed.
 - `ridge`, `terrace`: polylines sampled every 40 units from sines. Stack 2 to 4 layers.
@@ -68,6 +84,7 @@ Use mid-saturation hues (`#2e7d8f`, `#5b8a66`, `#7652b0`). Give each project a d
 Add a new helper only when two drawings would use it.
 
 ## Workflow
+
 1. Read the project's data and screenshots. Write one sentence: "This is about ___, so the drawing shows ___."
 2. Sketch on the 1600x900 grid: where screenshots sit, which corners get drawing, where labels go.
 3. Write `artX()` in `plates.ts` and register it in `PLATES` with `hue`, `kind` (`phones` or `browser`) and `art: artX()`.
@@ -75,6 +92,7 @@ Add a new helper only when two drawings would use it.
 5. Fix overlap with screenshots, shapes near edges, label collisions, density, and dark-mode contrast.
 
 ## Do not
+
 - No gradients, shadows, glows, blur or filled colour blocks. Only strokes, one hatch fill and mono text.
 - No icon packs or emoji. Draw from primitives.
 - One hue per drawing. No hex values inside the SVG.
@@ -84,4 +102,5 @@ Add a new helper only when two drawings would use it.
 - Unique `id`s for patterns and clipPaths per drawing (`hatch-hy`, `clip-hy`), since all plates share one document.
 
 ## Beyond plates
+
 The method also fits hero backdrops, section dividers, empty states and 404 pages. Keep the class vocabulary and hue-derived colours, and change only the container and layout. For small spots (dividers, icons) use a smaller viewBox, fewer paths and no labels.

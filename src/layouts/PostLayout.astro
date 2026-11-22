@@ -63,9 +63,10 @@ const jsonLd = [
 
 // The rail lists the h2 headings when there are enough of them, like the old table of contents.
 const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug, label: h.text }));
-const nav = headings.filter((h) => h.depth === 2 || h.depth === 3).length >= BLOG.tocMinHeadings
-  ? sections
-  : [];
+const nav =
+  headings.filter((h) => h.depth === 2 || h.depth === 3).length >= BLOG.tocMinHeadings
+    ? sections
+    : [];
 ---
 
 <FoundationLayout

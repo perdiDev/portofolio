@@ -41,11 +41,11 @@ Use typed props and semantic structure:
 ```astro
 ---
 interface Props {
-  title: string
-  variant?: 'primary' | 'secondary'
+  title: string;
+  variant?: 'primary' | 'secondary';
 }
 
-const { title, variant = 'primary' } = Astro.props
+const { title, variant = 'primary' } = Astro.props;
 ---
 
 <section class:list={['card', variant]}>
@@ -80,7 +80,7 @@ Example:
 
 ```astro
 ---
-import SearchBox from './SearchBox.tsx'
+import SearchBox from './SearchBox.tsx';
 ---
 
 <SearchBox client:visible />

@@ -12,6 +12,10 @@ const SAFE = [
   /^npx astro check$/,
 ];
 if (cmd && !/[;&|`$<>\n]/.test(cmd) && SAFE.some((r) => r.test(cmd))) {
-  console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PermissionRequest', decision: { behavior: 'allow' } } }));
+  console.log(
+    JSON.stringify({
+      hookSpecificOutput: { hookEventName: 'PermissionRequest', decision: { behavior: 'allow' } },
+    }),
+  );
 }
 process.exit(0);

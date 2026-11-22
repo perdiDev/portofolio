@@ -4,7 +4,8 @@ From `src/components/plates.ts`. Canvas is `0 0 1600 900`.
 
 ```ts
 let k = 0; // reset to 0 at the start of every artX()
-const ln = (d: string, extra = '') => `<path class="ln" style="--k:${k++}" pathLength="1" d="${d}" ${extra}/>`;
+const ln = (d: string, extra = '') =>
+  `<path class="ln" style="--k:${k++}" pathLength="1" d="${d}" ${extra}/>`;
 const circ = (cx: number, cy: number, r: number) =>
   `<circle class="ln" style="--k:${k++}" pathLength="1" cx="${cx}" cy="${cy}" r="${r}"/>`;
 const txt = (x: number, y: number, s: string, anchor = 'middle') =>
@@ -16,7 +17,11 @@ function ring(cx: number, cy: number, r: number, seed: number, sx = 1.5, sy = 1)
   const pts: string[] = [];
   for (let i = 0; i <= 96; i++) {
     const t = (i / 96) * Math.PI * 2;
-    const w = 1 + 0.09 * Math.sin(3 * t + seed) + 0.05 * Math.sin(5 * t + seed * 2.1) + 0.03 * Math.cos(7 * t + seed);
+    const w =
+      1 +
+      0.09 * Math.sin(3 * t + seed) +
+      0.05 * Math.sin(5 * t + seed * 2.1) +
+      0.03 * Math.cos(7 * t + seed);
     pts.push(`${r1(cx + Math.cos(t) * r * w * sx)} ${r1(cy + Math.sin(t) * r * w * sy)}`);
   }
   return `M${pts.join('L')}Z`;
@@ -26,7 +31,9 @@ function ring(cx: number, cy: number, r: number, seed: number, sx = 1.5, sy = 1)
 const ridge = (y: number, amp: number, seed: number) => {
   const pts: string[] = [];
   for (let x = -20; x <= 1620; x += 40)
-    pts.push(`${x} ${r1(y - amp * (0.6 + 0.4 * Math.sin(x / 210 + seed)) * Math.abs(Math.sin(x / 330 + seed)))}`);
+    pts.push(
+      `${x} ${r1(y - amp * (0.6 + 0.4 * Math.sin(x / 210 + seed)) * Math.abs(Math.sin(x / 330 + seed)))}`,
+    );
   return ln(`M${pts.join('L')}`);
 };
 
@@ -39,14 +46,17 @@ const terrace = (y: number, amp: number, seed: number) => {
 
 /** Leaf from the origin along +x, rotated by a degrees and moved to x,y. l is length. */
 const leaf = (x: number, y: number, a: number, l: number) =>
-  ln(`M0 0Q${l * 0.45} ${-l * 0.32} ${l} 0Q${l * 0.45} ${l * 0.32} 0 0M0 0L${l * 0.8} 0`, `transform="translate(${x} ${y}) rotate(${a})"`);
+  ln(
+    `M0 0Q${l * 0.45} ${-l * 0.32} ${l} 0Q${l * 0.45} ${l * 0.32} 0 0M0 0L${l * 0.8} 0`,
+    `transform="translate(${x} ${y}) rotate(${a})"`,
+  );
 
 /** Spiral, a rose seen from above. */
 function rose(cx: number, cy: number, size: number) {
   const pts: string[] = [];
   for (let i = 0; i <= 160; i++) {
     const t = (i / 160) * Math.PI * 7;
-    const r = (size * (0.06 + t / (Math.PI * 7))) * (1 + 0.08 * Math.sin(5 * t));
+    const r = size * (0.06 + t / (Math.PI * 7)) * (1 + 0.08 * Math.sin(5 * t));
     pts.push(`${r1(cx + Math.cos(t) * r)} ${r1(cy + Math.sin(t) * r)}`);
   }
   return ln(`M${pts.join('L')}`);
@@ -64,16 +74,19 @@ const pin = (x: number, y: number) =>
 ```
 
 ## Hatch fill clipped to a shape (the `fl` layer)
+
 ```ts
 `<defs>
   <pattern id="hatch-ID" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V16"/></pattern>
   <clipPath id="clip-ID"><path d="${shapePath}Z"/></clipPath>
 </defs>
-<rect class="fl" x="0" y="0" width="1600" height="900" fill="url(#hatch-ID)" clip-path="url(#clip-ID)"/>`
+<rect class="fl" x="0" y="0" width="1600" height="900" fill="url(#hatch-ID)" clip-path="url(#clip-ID)"/>`;
 ```
+
 Use a unique `ID` per drawing, since all plates share one HTML document.
 
 ## Registering
+
 ```ts
 export const PLATES: Record<string, Plate> = {
   'project-id': { hue: '#2e7d8f', kind: 'phones' /* or 'browser' */, shots: [...], art: artProject() },
@@ -81,6 +94,7 @@ export const PLATES: Record<string, Plate> = {
 ```
 
 ## Pattern recipes
+
 - **Chart axis:** baseline `H`, ticks every hour (`v8`, longer `v16` every 6th), mono labels under it, 3 to 4 faint `gr` lines above.
 - **Contours:** 5 to 6 `ring()` with radii like 70, 125, 180, 240, 305 and seed `base + i*0.35`. Two clusters in opposite corners.
 - **Target / live marker:** three concentric `circ` (16, 46, 84) plus a `+` cross.

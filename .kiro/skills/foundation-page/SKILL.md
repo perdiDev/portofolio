@@ -8,6 +8,7 @@ description: Build or rewrite a page of the portfolio on the design foundation (
 Reference: the home page `/` (`src/pages/index.astro`, sections in `src/components/`), `DESIGN.md`, `.kiro/steering/design-system.md`. Also use `impeccable` or `design-taste-frontend` for layout and typography judgement, `emil-design-eng` for interaction polish, and `abstract-illustration` for line drawings.
 
 ## Steps
+
 1. **Brief.** State the page's job in one sentence and list its sections with name, number, data source. Ask the user only if the purpose is unclear.
 2. **Reuse.** Look in `src/components/foundation/` and the section components in `src/components/` (Work, Experience, Education, Recognition, Contact). `Section` covers heading, rule and reveal. Prefer composing existing parts.
 3. **New section** (only if nothing fits). Create three files with the same stem:
@@ -25,6 +26,7 @@ Reference: the home page `/` (`src/pages/index.astro`, sections in `src/componen
 7. **Migrating an existing route.** Keep the URL and SEO tags (canonical, OG, JSON-LD from the old layout: `src/components/SEO.astro`). Add them to the layout through an optional prop rather than copying markup. Remove `noindex` only when the user confirms the page replaces the old one.
 
 ## Do not
+
 - Add inline `<script>` with `define:vars`, `<style is:global>` in pages, `transition: all`, raw hex, `px` font sizes, `100vh`.
 - Add a framework island for something CSS or a 20-line module can do.
 - Change the foundation's look while building a page. If the foundation needs a change, make it as a separate step and re-run the pixel comparison on `/` (`.tools/pw/nh4-regress.mjs`).

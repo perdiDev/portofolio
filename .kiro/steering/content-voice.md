@@ -3,6 +3,7 @@ inclusion: auto
 name: content-voice
 description: Writing site copy, headings, summaries, button labels, alt text or microcopy for the portfolio. Use when any visible text is written or edited.
 ---
+
 # Copy voice
 
 - First person where it is Perdi talking, otherwise plain statements. Concrete over abstract: "Planner that sizes solar and diesel for island grids" beats "innovative energy solution".

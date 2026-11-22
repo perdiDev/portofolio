@@ -1,6 +1,7 @@
 ---
 inclusion: always
 ---
+
 # Design system rules (short form; details in DESIGN.md)
 
 1. Colour only through tokens in `src/styles/foundation/tokens.css`. No hex, rgb or named colours elsewhere. Project colour is `--hue` + `color-mix`.

@@ -1,6 +1,7 @@
 ---
 inclusion: always
 ---
+
 # Tech
 
 - Astro 7, TypeScript strict, plain CSS files for the foundation, pnpm, Node 22.12+. Deployed on Vercel (`@astrojs/vercel`).

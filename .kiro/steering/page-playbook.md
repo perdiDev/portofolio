@@ -1,6 +1,7 @@
 ---
 inclusion: manual
 ---
+
 # Playbook: rewriting a page on the foundation
 
 Invoke with `#page-playbook`. Steps:

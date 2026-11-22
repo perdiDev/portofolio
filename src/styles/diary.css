@@ -20,6 +20,16 @@ a.dy-kicker {
   font-size: clamp(2.75rem, 7vw, 5.5rem);
   line-height: 1.02;
 }
+.dy-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding: 0.06em 0.1em 0.14em 0;
+  margin-bottom: -0.2em;
+}
+.dy-w > * {
+  display: inline-block;
+}
 .dy-page {
   display: block;
   margin-top: 0.9rem;
@@ -88,10 +98,10 @@ a.dy-kicker {
 }
 .dy-link {
   display: grid;
-  grid-template-columns: 9rem minmax(0, 1fr) 2rem;
+  grid-template-columns: 9rem minmax(0, 1fr);
   align-items: start;
   gap: 1.5rem;
-  padding: 1.75rem 0;
+  padding: 1.5rem 0;
 }
 .dy-when {
   display: block;
@@ -115,16 +125,13 @@ a.dy-kicker {
 .dy-body {
   min-width: 0;
 }
-.dy-meta {
-  margin-bottom: 0.5rem;
-  font: 500 0.6875rem/1.4 var(--mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
 .dy-draft {
   margin-left: 0.75rem;
+  font: 500 0.6875rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--accent);
+  vertical-align: middle;
 }
 .dy-row h3 {
   font-size: clamp(1.25rem, 2vw, 1.65rem);
@@ -133,12 +140,6 @@ a.dy-kicker {
 .dy-body .small {
   max-width: 40rem;
   margin-top: 0.5rem;
-}
-.dy-arrow {
-  justify-self: end;
-  padding-top: 0.2rem;
-  font: 400 1.25rem/1 var(--serif);
-  color: var(--accent);
 }
 .dy-empty {
   color: var(--muted);
@@ -158,7 +159,7 @@ a.dy-kicker {
   color: var(--muted);
 }
 
-/* Entrance: each rule draws, the date rises out of a mask, text eases up out of a blur */
+/* Entrance: the title rises word by word out of a mask, each rule draws, the date rises out of a mask, text eases up out of a blur */
 .js .dy-row::before {
   transform: scaleX(0);
   transition: transform 1200ms var(--ease-out) calc(var(--i) * 110ms);
@@ -187,7 +188,14 @@ a.dy-kicker {
   translate: 0;
   filter: none;
 }
-.js .dy-head > * {
+.js .dy-w > * {
+  transform: translateY(115%);
+  transition: transform 1100ms var(--ease-out) calc(120ms + var(--w) * 140ms);
+}
+.js .dy.in .dy-w > * {
+  transform: none;
+}
+.js .dy-head > :not(.dy-title) {
   opacity: 0;
   translate: 0 14px;
   transition:
@@ -203,12 +211,46 @@ a.dy-kicker {
 .js .dy-head > :nth-child(4) {
   --h: 3;
 }
-.js .dy.in .dy-head > * {
+.js .dy.in .dy-head > :not(.dy-title) {
   opacity: 1;
   translate: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .dy-row {
+    --mx: 50%;
+    --my: 50%;
+  }
+  .dy-row::before {
+    z-index: 1;
+  }
+  .dy-link {
+    position: relative;
+  }
+  .dy-link::before {
+    content: '';
+    position: absolute;
+    inset: 0 -1.5rem;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms ease;
+    background: radial-gradient(
+      26rem circle at var(--mx) var(--my),
+      color-mix(in oklab, var(--accent) 11%, transparent),
+      transparent 70%
+    );
+  }
+  .dy-row:hover .dy-link::before {
+    opacity: 1;
+  }
+  .dy-day {
+    display: inline-block;
+    transition: transform 500ms var(--ease-out);
+  }
+  .dy-row:hover .dy-day {
+    transform: translateX(6px) skewX(-6deg);
+  }
   .dy-row::after {
     content: '';
     position: absolute;
@@ -224,15 +266,11 @@ a.dy-kicker {
   .dy-row:hover::after {
     transform: scaleX(1);
   }
-  .dy-row h3,
-  .dy-arrow {
+  .dy-row h3 {
     transition: transform 500ms var(--ease-out);
   }
   .dy-row:hover h3 {
     transform: translateX(8px);
-  }
-  .dy-row:hover .dy-arrow {
-    transform: translateX(4px);
   }
   .dy-list:hover .dy-row:not(:hover) .dy-link {
     opacity: 0.5;
@@ -250,13 +288,13 @@ a.dy-kicker {
 
 @media (max-width: 64rem) {
   .dy-link {
-    grid-template-columns: 7rem minmax(0, 1fr) 1.5rem;
+    grid-template-columns: 7rem minmax(0, 1fr);
   }
 }
 
 @media (max-width: 48rem) {
   .dy-link {
-    grid-template-columns: minmax(0, 1fr) 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.6rem 1rem;
   }
   .dy-when {
@@ -277,6 +315,7 @@ a.dy-kicker {
   .js .dy-row::before,
   .js .dy-when > span,
   .js .dy-body,
+  .js .dy-w > *,
   .js .dy-head > * {
     transition: none !important;
     transform: none;
@@ -285,8 +324,9 @@ a.dy-kicker {
     opacity: 1;
   }
   .dy-row::after,
-  .dy-row h3,
-  .dy-arrow {
+  .dy-link::before,
+  .dy-day,
+  .dy-row h3 {
     transition: none !important;
   }
 }

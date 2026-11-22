@@ -12,10 +12,35 @@
   ],
   "permissions": {
     "rules": [
-      { "capability": "fs_write", "match": ["src/**", "scripts/**", "public/**", "DESIGN.md", ".kiro/**", "package.json"], "effect": "allow" },
-      { "capability": "fs_write", "match": [".env", ".env.*", "dist/**", ".vercel/**", ".astro/**"], "effect": "deny", "exclude": [".env.example"] },
-      { "capability": "shell", "match": ["pnpm *", "node scripts/*", "npx prettier *", "npx astro *", "git status*", "git diff*", "git log*"], "effect": "allow" },
-      { "capability": "shell", "match": ["git push*", "git reset --hard*", "rm -rf *", "sudo *"], "effect": "deny" }
+      {
+        "capability": "fs_write",
+        "match": ["src/**", "scripts/**", "public/**", "DESIGN.md", ".kiro/**", "package.json"],
+        "effect": "allow"
+      },
+      {
+        "capability": "fs_write",
+        "match": [".env", ".env.*", "dist/**", ".vercel/**", ".astro/**"],
+        "effect": "deny",
+        "exclude": [".env.example"]
+      },
+      {
+        "capability": "shell",
+        "match": [
+          "pnpm *",
+          "node scripts/*",
+          "npx prettier *",
+          "npx astro *",
+          "git status*",
+          "git diff*",
+          "git log*"
+        ],
+        "effect": "allow"
+      },
+      {
+        "capability": "shell",
+        "match": ["git push*", "git reset --hard*", "rm -rf *", "sudo *"],
+        "effect": "deny"
+      }
     ]
   },
   "hooks": [

@@ -1,7 +1,8 @@
 ---
 inclusion: fileMatch
-fileMatchPattern: ["src/**/*.css", "src/**/*.astro", "src/scripts/**/*.ts"]
+fileMatchPattern: ['src/**/*.css', 'src/**/*.astro', 'src/scripts/**/*.ts']
 ---
+
 # When touching styles, markup or scripts
 
 - Entrance pattern: base state under `.js .thing`, final state under `.js .section.in .thing`, delays from `--i`, `--k`, `--w` custom properties set in markup. See `src/styles/contact.css` for a full example.

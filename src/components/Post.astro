@@ -55,11 +55,7 @@ const neighbours = [
 ].filter((n): n is NonNullable<typeof n> => Boolean(n));
 ---
 
-<article
-  class="ps"
-  data-category={category}
-  data-type="Post"
->
+<article class="ps" data-category={category} data-type="Post">
   <header class="ps-head" data-reveal>
     <a class="ps-back ulink" href="/blog/">
       <span aria-hidden="true">←</span> Diary
@@ -89,7 +85,10 @@ const neighbours = [
     <p class="ps-lead">{description}</p>
     {project && (
       <p class="ps-project">
-        Part of <a class="ulink" href={projectUrl(project)}>{project.data.title}</a>
+        Part of{' '}
+        <a class="ulink" href={projectUrl(project)}>
+          {project.data.title}
+        </a>
       </p>
     )}
   </header>
@@ -121,7 +120,9 @@ const neighbours = [
 
 <Section id="end" title="More" bare class="ps-end">
   <div class="ps-share" data-share data-share-url={url}>
-    <h2 class="ps-label" id="share-h">Share</h2>
+    <h2 class="ps-label" id="share-h">
+      Share
+    </h2>
     <ul aria-labelledby="share-h">
       {targets.map((target) => (
         <li>
@@ -137,7 +138,9 @@ const neighbours = [
         </li>
       ))}
       <li>
-        <button type="button" class="ps-copy ulink" data-copy-link>Copy link</button>
+        <button type="button" class="ps-copy ulink" data-copy-link>
+          Copy link
+        </button>
       </li>
     </ul>
     <p class="sr" role="status" aria-live="polite" data-share-status></p>
@@ -150,12 +153,13 @@ const neighbours = [
       method="post"
       target="_blank"
       {...{ rel: 'noopener noreferrer' }}
-     
     >
       <h2 class="ps-label">{NEWSLETTER.heading}</h2>
       <p class="small">{NEWSLETTER.text}</p>
       <div class="ps-news-row">
-        <label class="sr" for="post-email">Email address</label>
+        <label class="sr" for="post-email">
+          Email address
+        </label>
         <input
           id="post-email"
           type="email"
@@ -165,7 +169,9 @@ const neighbours = [
           placeholder="you@example.com"
         />
         <input type="hidden" name="embed" value="1" />
-        <button class="btn" type="submit">Subscribe</button>
+        <button class="btn" type="submit">
+          Subscribe
+        </button>
       </div>
       <p class="small">{NEWSLETTER.privacy}</p>
     </form>
@@ -184,14 +190,18 @@ const neighbours = [
 
   {related.length > 0 && (
     <section class="ps-rel" aria-labelledby="related-h">
-      <h2 class="ps-label" id="related-h">Related</h2>
+      <h2 class="ps-label" id="related-h">
+        Related
+      </h2>
       <ul>
         {related.map((r) => (
           <li>
             <a href={postUrl(r)}>
               <span class="ps-rel-c">{r.data.category}</span>
               <span class="ps-rel-t">{r.data.title}</span>
-              <span class="ps-rel-a" aria-hidden="true">→</span>
+              <span class="ps-rel-a" aria-hidden="true">
+                →
+              </span>
             </a>
           </li>
         ))}

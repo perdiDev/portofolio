@@ -13,8 +13,25 @@
   ],
   "permissions": {
     "rules": [
-      { "capability": "fs_write", "match": ["**"], "effect": "deny", "exclude": [".tools/shots/**"] },
-      { "capability": "shell", "match": ["node scripts/design-lint.mjs*", "pnpm check", "pnpm build", "git status*", "git diff*", "git log*", "node .tools/pw/*"], "effect": "allow" }
+      {
+        "capability": "fs_write",
+        "match": ["**"],
+        "effect": "deny",
+        "exclude": [".tools/shots/**"]
+      },
+      {
+        "capability": "shell",
+        "match": [
+          "node scripts/design-lint.mjs*",
+          "pnpm check",
+          "pnpm build",
+          "git status*",
+          "git diff*",
+          "git log*",
+          "node .tools/pw/*"
+        ],
+        "effect": "allow"
+      }
     ]
   },
   "welcomeMessage": "design-reviewer ready. Give me a path or URL to review."

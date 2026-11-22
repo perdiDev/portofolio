@@ -1,6 +1,7 @@
 ---
 inclusion: always
 ---
+
 # Product
 
 Personal portfolio and developer blog of Perdi (software engineer, Makassar, Indonesia). Goal of the redesign: one coherent, editorial design applied to every page, with the home page `/` as the source of truth.

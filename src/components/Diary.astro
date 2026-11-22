@@ -8,7 +8,7 @@ import '../styles/diary.css';
 import Section from './foundation/Section.astro';
 import { formatShortDate, isoDate } from '../utils/format';
 import { pageUrl, type Page } from '../utils/paginate';
-import { postUrl, readingTimeOf, type Post } from '../utils/posts';
+import { postUrl, type Post } from '../utils/posts';
 import { categoryUrl, type Term } from '../utils/taxonomy';
 
 interface Props {
@@ -28,8 +28,6 @@ const { heading, intro, kicker, page, base, categories = [], current } = Astro.p
 
 const words = heading.split(' ');
 const last = words.pop()!;
-const lead = words.join(' ');
-const total = page.totalItems;
 ---
 
 <Section id="diary" title="Diary" headless class="dy">
@@ -38,14 +36,18 @@ const total = page.totalItems;
       <a class="dy-kicker ulink" href={kicker.href}>
         <span aria-hidden="true">←</span> {kicker.label}
       </a>
-    ) : (
-      <p class="dy-kicker">
-        {total} {total === 1 ? 'entry' : 'entries'}
-      </p>
-    )}
+    ) : null}
     <h1 id="diary-h" class="dy-title">
-      {lead && <>{lead} </>}
-      <em>{last}</em>
+      {words.map((w, i) => (
+        <>
+          <span class="dy-w">
+            <span style={`--w:${i}`}>{w}</span>
+          </span>{' '}
+        </>
+      ))}
+      <span class="dy-w">
+        <em style={`--w:${words.length}`}>{last}</em>
+      </span>
       {page.page > 1 && <span class="dy-page tnum">Page {page.page}</span>}
     </h1>
     {intro && <p class="dy-intro">{intro}</p>}
@@ -84,7 +86,6 @@ const total = page.totalItems;
     <ol class="dy-list" data-reveal>
       {page.items.map((post, i) => {
         const d = post.data.pubDate;
-        const reading = readingTimeOf(post);
         return (
           <li class="dy-row" style={`--i:${i}`}>
             <a class="dy-link" href={postUrl(post)}>
@@ -93,18 +94,12 @@ const total = page.totalItems;
                 <span class="dy-year tnum">{d.getUTCFullYear()}</span>
               </time>
               <div class="dy-body">
-                <p class="dy-meta">
-                  {post.data.category}
-                  <span aria-hidden="true"> · </span>
-                  {reading.text}
+                <h3>
+                  {post.data.title}
                   {post.data.draft && <span class="dy-draft">Draft</span>}
-                </p>
-                <h3>{post.data.title}</h3>
+                </h3>
                 <p class="small">{post.data.description}</p>
               </div>
-              <span class="dy-arrow" aria-hidden="true">
-                →
-              </span>
             </a>
           </li>
         );
@@ -136,3 +131,7 @@ const total = page.totalItems;
     </nav>
   )}
 </Section>
+
+<script>
+  import '../scripts/diary';
+</script>

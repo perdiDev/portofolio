@@ -1,6 +1,7 @@
 ---
 inclusion: always
 ---
+
 # Structure
 
 ```
@@ -22,6 +23,7 @@ DESIGN.md                              the design reference
 ```
 
 Rules:
+
 - A page file composes layout and sections. Logic that shapes data goes in `utils/` or the section component frontmatter.
 - One section = one component + one CSS file + (optionally) one script module, all with the same name.
 - No per-page folders: section files sit directly in `components/`, `styles/` and `scripts/`, named after the section (`Contact.astro`, `contact.css`, `contact.ts`). Only shell-level generic pieces go in `foundation/`.

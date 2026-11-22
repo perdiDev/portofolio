@@ -36,23 +36,24 @@ Use the current Content Layer API. For build-time collections:
 Example:
 
 ```ts
-import { defineCollection, reference } from 'astro:content'
-import { glob } from 'astro/loaders'
-import { z } from 'astro/zod'
+import { defineCollection, reference } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    publishDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    author: reference('authors'),
-    cover: image().optional(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
-  }),
-})
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      publishDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      author: reference('authors'),
+      cover: image().optional(),
+      tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
+    }),
+});
 
 const authors = defineCollection({
   loader: glob({ base: './src/data/authors', pattern: '**/*.json' }),
@@ -61,9 +62,9 @@ const authors = defineCollection({
     email: z.email().optional(),
     avatar: z.url().optional(),
   }),
-})
+});
 
-export const collections = { blog, authors }
+export const collections = { blog, authors };
 ```
 
 Useful patterns:
@@ -99,9 +100,9 @@ Example:
 
 ```astro
 ---
-import { getCollection } from 'astro:content'
+import { getCollection } from 'astro:content';
 
-const posts = await getCollection('blog', ({ data }) => !data.draft)
+const posts = await getCollection('blog', ({ data }) => !data.draft);
 ---
 ```
 
@@ -119,18 +120,18 @@ Example:
 
 ```astro
 ---
-import { getCollection, render } from 'astro:content'
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog')
+  const posts = await getCollection('blog');
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
-  }))
+  }));
 }
 
-const { post } = Astro.props
-const { Content } = await render(post)
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
 <article>

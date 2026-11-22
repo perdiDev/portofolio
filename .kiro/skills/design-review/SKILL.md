@@ -8,6 +8,7 @@ description: Review a page or component against the portfolio design foundation:
 Output a short report: **Blocking**, **Should fix**, **Nice to have**. Each item names file and line and the fix. Do not edit files unless asked.
 
 ## Checks
+
 1. **Lint.** `node scripts/design-lint.mjs [files]`. Every finding is blocking.
 2. **Types and build.** `pnpm check`. Content errors in the output count even if the build passes.
 3. **Tokens and type.** No colour literals outside `tokens.css`; fonts follow serif/sans/mono roles; sizes in rem.
