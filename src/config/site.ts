@@ -23,8 +23,14 @@ export type Category = (typeof CATEGORIES)[number];
 
 export const AUTHOR = {
   name: 'Perdi',
+  /** Handle used on GitHub, Instagram and email; helps search engines connect the profiles. */
+  alternateName: 'perdidev',
   email: 'perdidev@gmail.com',
   jobTitle: 'Software Engineer',
+  /** Where Perdi is based (Person JSON-LD `address`). */
+  location: { city: 'Makassar', region: 'South Sulawesi', country: 'ID' },
+  /** Topics for Person JSON-LD `knowsAbout`, taken from the work history and the diary. */
+  knowsAbout: ['Software engineering', 'Go', 'Laravel', 'Flutter', 'PostgreSQL', 'Linux'],
   /** TODO: replace with your real bio (shown in Person JSON-LD). */
   bio: 'Informatics Engineering graduate specializing in Software Engineering, with hands-on experience for almost 4+ years.',
 } as const;
@@ -53,7 +59,10 @@ export const SOCIALS: readonly SocialLink[] = [
 export const SITE = {
   name: 'Perdi',
   /** Distinct <title> for the home page (<= 60 chars). */
-  homeTitle: 'Perdi — Software engineer writing about code and Linux',
+  homeTitle: 'Perdi (perdidev) — Software Engineer in Makassar',
+  /** Home page meta description (<= 160 chars). `description` below stays the diary/RSS blurb. */
+  homeDescription:
+    'Perdi (perdidev) is a software engineer in Makassar, Indonesia. Projects, work history and a diary on Go, Laravel, Flutter and Linux.',
   description:
     'A developer blog by Perdi: practical articles on programming, Linux, and software engineering, plus a few projects.',
   language: 'en',

@@ -1,4 +1,4 @@
-import { AUTHOR, SITE, SOCIALS } from '../config';
+import { AUTHOR, EDUCATION, SITE, SOCIALS } from '../config';
 import { absoluteUrl } from './seo';
 
 /** A schema.org node. Every builder below returns this shape. */
@@ -34,14 +34,42 @@ const personId = (site: Site) => absoluteUrl('/#person', site);
 const websiteId = (site: Site) => absoluteUrl('/#website', site);
 const personRef = (site: Site) => ({ '@type': 'Person', '@id': personId(site), name: AUTHOR.name });
 
-export function personJsonLd(site: Site): JsonLd {
+export function personJsonLd(site: Site, image?: string): JsonLd {
   return node('Person', {
     '@id': personId(site),
     name: AUTHOR.name,
+    alternateName: AUTHOR.alternateName,
     url: absoluteUrl('/', site),
+    ...(image ? { image: absoluteUrl(image, site) } : {}),
+    email: AUTHOR.email,
     jobTitle: AUTHOR.jobTitle,
     description: AUTHOR.bio,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: AUTHOR.location.city,
+      addressRegion: AUTHOR.location.region,
+      addressCountry: AUTHOR.location.country,
+    },
+    alumniOf: { '@type': 'CollegeOrUniversity', name: EDUCATION.school },
+    knowsAbout: AUTHOR.knowsAbout,
     sameAs: SOCIALS.map((social) => social.url),
+  });
+}
+
+/**
+ * Home page as a Google "ProfilePage": the page is about one person.
+ * The Person node is embedded as `mainEntity`, so it is not emitted separately.
+ */
+export function profilePageJsonLd(site: Site, image?: string): JsonLd {
+  const { '@context': _context, ...person } = personJsonLd(site, image);
+  return node('ProfilePage', {
+    '@id': absoluteUrl('/#profile', site),
+    url: absoluteUrl('/', site),
+    name: SITE.homeTitle,
+    description: SITE.homeDescription,
+    inLanguage: SITE.language,
+    isPartOf: { '@id': websiteId(site) },
+    mainEntity: person,
   });
 }
 
@@ -50,7 +78,8 @@ export function websiteJsonLd(site: Site): JsonLd {
     '@id': websiteId(site),
     url: absoluteUrl('/', site),
     name: SITE.name,
-    description: SITE.description,
+    alternateName: AUTHOR.alternateName,
+    description: SITE.homeDescription,
     inLanguage: SITE.language,
     publisher: { '@id': personId(site) },
   });

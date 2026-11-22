@@ -11,7 +11,7 @@ export const getStaticPaths = (async () => {
   const entries: { params: { slug: string }; props: OgOptions }[] = [
     {
       params: { slug: 'default' },
-      props: { title: SITE.homeTitle, eyebrow: 'Developer blog' },
+      props: { title: SITE.homeTitle, eyebrow: 'Portfolio and diary' },
     },
     ...posts.map((post) => ({
       params: { slug: `blog/${post.id}` },

@@ -1,14 +1,18 @@
 ---
+import { getImage } from 'astro:assets';
 import FoundationLayout, { type NavItem } from '../layouts/FoundationLayout.astro';
 import Work from '../components/sections/Work.astro';
 import Experience from '../components/sections/Experience.astro';
 import Education from '../components/sections/Education.astro';
 import Recognition from '../components/sections/Recognition.astro';
 import Contact from '../components/sections/Contact.astro';
+import photo from '../assets/photo.jpeg';
 import { AUTHOR, SITE } from '../config';
-import { personJsonLd, websiteJsonLd } from '../utils/jsonld';
+import { profilePageJsonLd, websiteJsonLd } from '../utils/jsonld';
 
 const site = Astro.site!;
+// Same transform as the rail portrait, so the URL is shared and the file is built once.
+const portrait = await getImage({ src: photo, width: 400, format: 'webp' });
 
 const nav = [
   { id: 'work', label: 'Craft' },
@@ -25,10 +29,13 @@ const label = (id: (typeof nav)[number]['id']) => nav.find((item) => item.id ===
 
 <FoundationLayout
   title="Home"
-  description={SITE.description}
-  heading={`${AUTHOR.name}, ${AUTHOR.jobTitle}`}
+  description={SITE.homeDescription}
+  heading={`${AUTHOR.name}, ${AUTHOR.jobTitle} in ${AUTHOR.location.city}`}
   nav={nav}
-  seo={{ fullTitle: SITE.homeTitle, jsonLd: [websiteJsonLd(site), personJsonLd(site)] }}
+  seo={{
+    fullTitle: SITE.homeTitle,
+    jsonLd: [websiteJsonLd(site), profilePageJsonLd(site, portrait.src)],
+  }}
 >
   <Work id="work" title={label('work')} />
   <Experience id="experience" n={n('experience')} title={label('experience')} />
