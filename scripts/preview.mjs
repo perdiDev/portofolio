@@ -72,7 +72,7 @@ const server = createServer((req, res) => {
     return;
   }
 
-  // trailingSlash: redirect "/blog" -> "/blog/" (files with an extension are left alone).
+  // trailingSlash: redirect "/diary" -> "/diary/" (files with an extension are left alone).
   if (!pathname.endsWith('/') && !extname(pathname)) {
     res.writeHead(308, { Location: `${pathname}/${url.search}` });
     res.end();

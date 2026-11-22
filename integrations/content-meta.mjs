@@ -53,13 +53,13 @@ export function collectContentMeta({ includeDrafts = false } = {}) {
 
   const latestPost = newest(posts.map((p) => p.date));
   set('/', newest([latestPost, ...projects.map((p) => p.date)]));
-  set('/blog/', latestPost);
+  set('/diary/', latestPost);
   set('/archive/', latestPost);
   set('/categories/', latestPost);
   set('/tags/', latestPost);
   set('/projects/', newest(projects.map((p) => p.date)));
 
-  for (const post of posts) set(`/blog/${post.slug}/`, post.date);
+  for (const post of posts) set(`/diary/${post.slug}/`, post.date);
   for (const project of projects) set(`/projects/${project.slug}/`, project.date);
 
   for (const category of CATEGORIES) {

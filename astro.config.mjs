@@ -62,6 +62,7 @@ export default defineConfig({
   output: 'static',
   adapter: vercel(),
   trailingSlash: 'always',
+  redirects: { '/blog': '/diary', '/blog/page/[page]': '/diary/page/[page]', '/blog/[slug]': '/diary/[slug]' },
   // One small stylesheet: inlining it removes the render-blocking request.
   build: { format: 'directory', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },

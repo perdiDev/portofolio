@@ -99,7 +99,7 @@ To add a **category**, add it to `CATEGORIES`; it becomes valid in frontmatter a
 
 ## Writing and publishing a post
 
-1. Create `src/content/blog/my-post-slug.md`. The **filename is the slug**: `/blog/my-post-slug/`. Use lowercase kebab-case.
+1. Create `src/content/blog/my-post-slug.md`. The **filename is the slug**: `/diary/my-post-slug/`. Use lowercase kebab-case.
 2. Add the frontmatter (below) and write the body in Markdown. **Never use `#`**: the page title is the `<h1>`. Start at `##`. Use `###` for sub-sections; do not skip levels.
 3. Put images in `src/assets/blog/` and reference them relatively: `![Descriptive alt text](../../assets/blog/diagram.png)`. They are optimized automatically.
 4. Code blocks use [Expressive Code](https://expressive-code.com/): ` ```ts title="src/user.ts" {2,4-5} `, ` ```diff `, ` ```ts ins={3} del={2} `. `bash`/`sh` blocks get a terminal frame. Every block gets a copy button.
@@ -271,7 +271,7 @@ The repository ships with realistic sample content so every feature can be teste
 4. **Icons**: `public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-*.png` are monogram placeholders. Replace them with your own artwork (keep the file names and sizes: 180, 192, 512, and a maskable 512). `pnpm assets` regenerates the placeholders, so do not run it after replacing them.
 5. **Copy**: `AUTHOR`, `ABOUT`, and `SITE` in `src/config.ts`. Search the repository for `TODO` to find every placeholder (project URLs, the sample YouTube ID, and so on).
 6. Contact details and social URLs live in `src/config.ts` as well.
-7. If you delete all content, the build still works, but `/blog/` and `/projects/` will be empty.
+7. If you delete all content, the build still works, but `/diary/` and `/projects/` will be empty.
 
 Quick way to find sample data: `grep -rn "TODO" src astro.config.mjs` and `ls src/content/*`.
 
@@ -287,10 +287,10 @@ Lighthouse (mobile is the default emulation) against the preview server, one run
 
 ```bash
 pnpm dlx lighthouse http://localhost:4321/ --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new" --view
-# repeat for /blog/, /blog/typescript-generics-in-practice/, /projects/, /projects/budget-tracker/
+# repeat for /diary/, /diary/typescript-generics-in-practice/, /projects/, /projects/budget-tracker/
 ```
 
-Or with Lighthouse CI: `pnpm dlx @lhci/cli collect --url=http://localhost:4321/ --url=http://localhost:4321/blog/ --url=http://localhost:4321/projects/`.
+Or with Lighthouse CI: `pnpm dlx @lhci/cli collect --url=http://localhost:4321/ --url=http://localhost:4321/diary/ --url=http://localhost:4321/projects/`.
 
 ## Assumptions and decisions
 
@@ -302,7 +302,7 @@ Decisions made without asking, in no particular order:
 - **Fonts**: variable WOFF2 files from the installed `@fontsource-variable/*` packages through Astro's Fonts API (local provider), so there is no network access at build or run time. Only Lora (regular) and Inter are preloaded. Metric-adjusted fallbacks are hand-written in `src/styles/fonts.css` with several `local()` names per OS: Astro's generated fallback lists a single name that does not match on Linux, which showed up as layout shift in testing.
 - **`<title>`** is `Page | Perdi` and never exceeds 60 characters: if the suffix does not fit, the page title is used on its own, and if even that is too long it is trimmed with an ellipsis. Descriptions are clamped to 160.
 - **`og:title` / `twitter:title`** use the page title without the site suffix.
-- **Pagination** is custom (page 1 only at `/blog/`; `/blog/page/N/` from 2) instead of Astro's `paginate()`, to get exactly the required URLs. Category and tag pages paginate the same way.
+- **Pagination** is custom (page 1 only at `/diary/`; `/diary/page/N/` from 2) instead of Astro's `paginate()`, to get exactly the required URLs. Category and tag pages paginate the same way.
 - **Header persistence**: the header uses `transition:persist`, so a small script refreshes `aria-current` and closes the mobile menu on every `astro:page-load`. All scripts initialise on `astro:page-load` and clean up on `astro:before-swap`.
 - **Newsletter**: the form posts to Buttondown's embed endpoint and opens the confirmation page in a **new tab** (Buttondown's snippet uses a popup window, which the brief rules out). `data-astro-reload` keeps the router from intercepting the cross-origin POST.
 - **Social images**: satori reads the static `.woff` files from `@fontsource/lora` and `@fontsource/inter` (`node_modules`) at build time. These are used for rendering only.

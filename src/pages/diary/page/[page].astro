@@ -11,7 +11,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const posts = await getPosts();
-const page = paginate(posts, Number(Astro.params.page), '/blog/');
+const page = paginate(posts, Number(Astro.params.page), '/diary/');
 const categories = getCategories(posts);
 ---
 
@@ -22,9 +22,9 @@ const categories = getCategories(posts);
   description="Diary of Perdi: articles on programming, Linux, and software engineering by Perdi: practical, example-driven writing for developers."
   breadcrumbs={[
     { name: 'Home', href: '/' },
-    { name: 'Diary', href: '/blog/' },
+    { name: 'Diary', href: '/diary/' },
   ]}
-  base="/blog/"
+  base="/diary/"
   page={page}
   categories={categories}
 />

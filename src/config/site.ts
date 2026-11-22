@@ -68,7 +68,7 @@ export const SITE = {
 } as const;
 
 export const BLOG = {
-  /** Posts per page on /blog/, category pages, and tag pages. */
+  /** Posts per page on /diary/, category pages, and tag pages. */
   postsPerPage: 6,
   relatedCount: 3,
   wordsPerMinute: 220,

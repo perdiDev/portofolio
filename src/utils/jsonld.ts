@@ -10,7 +10,7 @@ export interface JsonLd {
 
 export interface BreadcrumbItem {
   name: string;
-  /** Site path (e.g. "/blog/"). The last item is the current page. */
+  /** Site path (e.g. "/diary/"). The last item is the current page. */
   href: string;
 }
 

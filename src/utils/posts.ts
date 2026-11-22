@@ -24,7 +24,7 @@ export async function getProjects(): Promise<Project[]> {
   );
 }
 
-export const postUrl = (post: Pick<Post, 'id'>) => `/blog/${post.id}/`;
+export const postUrl = (post: Pick<Post, 'id'>) => `/diary/${post.id}/`;
 export const projectUrl = (project: Pick<Project, 'id'>) => `/projects/${project.id}/`;
 
 export function readingTimeOf(post: Post): ReadingTime {

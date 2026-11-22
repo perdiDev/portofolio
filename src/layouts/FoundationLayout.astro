@@ -54,11 +54,11 @@ const portrait = await getImage({ src: photo, width: 400, format: 'webp' });
 const isHome = Astro.url.pathname === '/';
 // "Back" goes up one level: an entry returns to the diary list, every other page to home.
 const path = Astro.url.pathname;
-const backHref = /^\/blog\/(?!page\/)[^/]+/.test(path) ? '/blog/' : '/';
+const backHref = /^\/diary\/(?!page\/)[^/]+/.test(path) ? '/diary/' : '/';
 const year = new Date().getFullYear();
 const siteLinks = [
   { href: '/', label: 'Prologue' },
-  { href: '/blog/', label: 'Diary' },
+  { href: '/diary/', label: 'Diary' },
   { href: '/rss.xml', label: 'RSS' },
 ];
 ---
@@ -173,7 +173,7 @@ const siteLinks = [
           </svg>
           <div class="rail-foot">
             {isHome ? (
-              <a class="hand-link" href="/blog/">
+              <a class="hand-link" href="/diary/">
                 <span>Open diary</span>
                 <svg
                   viewBox="0 0 24 12"

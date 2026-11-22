@@ -28,10 +28,10 @@ const page = paginate(posts, Number(Astro.params.page), base);
   description={`Articles in the ${name} category by Perdi: ${pluralize(posts.length, 'post')} on ${name.toLowerCase()} for developers.`}
   breadcrumbs={[
     { name: 'Home', href: '/' },
-    { name: 'Blog', href: '/blog/' },
+    { name: 'Blog', href: '/diary/' },
     { name, href: base },
   ]}
   base={base}
   page={page}
-  kicker={{ label: 'Diary', href: '/blog/' }}
+  kicker={{ label: 'Diary', href: '/diary/' }}
 />

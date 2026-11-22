@@ -5,7 +5,7 @@ import { getPosts } from '../../utils/posts';
 import { getCategories } from '../../utils/taxonomy';
 
 const posts = await getPosts();
-const page = paginate(posts, 1, '/blog/');
+const page = paginate(posts, 1, '/diary/');
 const categories = getCategories(posts);
 ---
 
@@ -16,9 +16,9 @@ const categories = getCategories(posts);
   description="Diary of Perdi: articles on programming, Linux, and software engineering by Perdi: practical, example-driven writing for developers."
   breadcrumbs={[
     { name: 'Home', href: '/' },
-    { name: 'Diary', href: '/blog/' },
+    { name: 'Diary', href: '/diary/' },
   ]}
-  base="/blog/"
+  base="/diary/"
   page={page}
   categories={categories}
 />
