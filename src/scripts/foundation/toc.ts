@@ -17,5 +17,5 @@ if (links.length) {
     },
     { rootMargin: '-40% 0px -55% 0px' },
   );
-  for (const s of $$('main section[id]')) if (byId.has(s.id)) io.observe(s);
+  for (const s of $$('main [id]')) if (byId.has(s.id)) io.observe(s);
 }

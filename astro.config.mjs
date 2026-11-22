@@ -34,20 +34,20 @@ const { lastmod, noindex } = collectContentMeta();
 // Palette shared with src/styles/global.css (kept literal: Expressive Code needs real values).
 const ui = {
   light: {
-    bg: '#fafaf9',
-    surface: '#f4f4f2',
-    border: '#e4e4e7',
-    text: '#18181b',
-    muted: '#52525b',
-    accent: '#047857',
+    bg: '#f4f1ea',
+    surface: '#ece8df',
+    border: '#d9d4c8',
+    text: '#1d1b18',
+    muted: '#6f6b63',
+    accent: '#8a4a30',
   },
   dark: {
-    bg: '#0c0c0d',
-    surface: '#141416',
-    border: '#27272a',
-    text: '#e4e4e7',
-    muted: '#a1a1aa',
-    accent: '#6ee7b7',
+    bg: '#141311',
+    surface: '#1c1a17',
+    border: '#2d2a25',
+    text: '#ece7dd',
+    muted: '#9a958a',
+    accent: '#dba685',
   },
 };
 /** Resolves a style override to the light/dark value matching the active Expressive Code theme.
@@ -203,9 +203,9 @@ export default defineConfig({
       // `[data-theme='<theme-name>']`, so it follows the same toggle as the rest of the site.
       themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
       styleOverrides: {
-        borderRadius: '0.5rem',
+        borderRadius: '0',
         borderColor: pick('border'),
-        codeBackground: ({ theme }) => (theme.type === 'dark' ? '#101012' : ui.light.surface),
+        codeBackground: ({ theme }) => (theme.type === 'dark' ? ui.dark.surface : ui.light.surface),
         codeFontFamily: 'var(--font-jetbrains-mono)',
         codeFontSize: '0.875rem',
         codeLineHeight: '1.65',
@@ -215,23 +215,23 @@ export default defineConfig({
         frames: {
           shadowColor: 'transparent',
           frameBoxShadowCssValue: 'none',
-          editorBackground: ({ theme }) => (theme.type === 'dark' ? '#101012' : ui.light.surface),
+          editorBackground: ({ theme }) => (theme.type === 'dark' ? ui.dark.surface : ui.light.surface),
           editorTabBarBackground: pick('surface'),
           editorTabBarBorderBottomColor: pick('border'),
           editorActiveTabBackground: ({ theme }) =>
-            theme.type === 'dark' ? '#101012' : ui.light.surface,
+            theme.type === 'dark' ? ui.dark.surface : ui.light.surface,
           editorActiveTabForeground: pick('text'),
           editorActiveTabIndicatorTopColor: pick('accent'),
           editorActiveTabIndicatorBottomColor: 'transparent',
-          terminalBackground: ({ theme }) => (theme.type === 'dark' ? '#101012' : ui.light.surface),
+          terminalBackground: ({ theme }) => (theme.type === 'dark' ? ui.dark.surface : ui.light.surface),
           terminalTitlebarBackground: pick('surface'),
           terminalTitlebarBorderBottomColor: pick('border'),
           terminalTitlebarForeground: pick('muted'),
           terminalTitlebarDotsForeground: pick('muted'),
           terminalTitlebarDotsOpacity: '0.5',
           inlineButtonForeground: pick('muted'),
-          tooltipSuccessBackground: ({ theme }) => (theme.type === 'dark' ? '#134e3a' : '#d1fae5'),
-          tooltipSuccessForeground: ({ theme }) => (theme.type === 'dark' ? '#d1fae5' : '#065f46'),
+          tooltipSuccessBackground: ({ theme }) => (theme.type === 'dark' ? '#3a2a20' : '#f0dfd2'),
+          tooltipSuccessForeground: ({ theme }) => (theme.type === 'dark' ? '#f0dfd2' : '#5a2f1d'),
         },
         textMarkers: {
           lineDiffIndicatorMarginLeft: '0.4rem',

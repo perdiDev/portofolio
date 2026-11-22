@@ -1,0 +1,207 @@
+---
+/**
+ * Diary entry on the foundation: back link, meta line, serif title and lead, optional cover,
+ * the markdown body (styles/post.css), tags, then share links, neighbours and related entries.
+ * The rail lists the entry's h2 headings (passed to FoundationLayout by PostLayout).
+ */
+import '../styles/post.css';
+import { Picture } from 'astro:assets';
+import { PUBLIC_BUTTONDOWN_USERNAME } from 'astro:env/client';
+import {
+  KV_REST_API_TOKEN,
+  KV_REST_API_URL,
+  UPSTASH_REDIS_REST_TOKEN,
+  UPSTASH_REDIS_REST_URL,
+} from 'astro:env/server';
+import { NEWSLETTER } from '../config';
+import { formatDate, isoDate } from '../utils/format';
+import { postUrl, projectUrl, readingTimeOf, type Post, type Project } from '../utils/posts';
+import { categoryUrl, tagUrl } from '../utils/taxonomy';
+import Section from './foundation/Section.astro';
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+  related: Post[];
+  project?: Project;
+  /** Absolute canonical URL, used by the share links. */
+  url: string;
+}
+
+const { post, prev, next, related, project, url } = Astro.props;
+const { title, description, pubDate, updatedDate, category, tags, cover, coverAlt } = post.data;
+const reading = readingTimeOf(post);
+
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+const targets = [
+  { label: 'X', href: `https://twitter.com/intent/tweet?url=${u}&text=${t}` },
+  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { label: 'Reddit', href: `https://www.reddit.com/submit?url=${u}&title=${t}` },
+  { label: 'Hacker News', href: `https://news.ycombinator.com/submitlink?u=${u}&t=${t}` },
+  { label: 'WhatsApp', href: `https://wa.me/?text=${t}%20${u}` },
+];
+
+const views =
+  import.meta.env.PROD &&
+  Boolean(
+    (UPSTASH_REDIS_REST_URL || KV_REST_API_URL) && (UPSTASH_REDIS_REST_TOKEN || KV_REST_API_TOKEN),
+  );
+const username = PUBLIC_BUTTONDOWN_USERNAME?.trim();
+const neighbours = [
+  next && { dir: 'Newer', rel: 'next', post: next },
+  prev && { dir: 'Older', rel: 'prev', post: prev },
+].filter((n): n is NonNullable<typeof n> => Boolean(n));
+---
+
+<article
+  class="ps"
+  data-pagefind-body
+  data-pagefind-filter="category[data-category], type[data-type]"
+  data-category={category}
+  data-type="Post"
+>
+  <header class="ps-head" data-reveal>
+    <a class="ps-back ulink" href="/blog/" data-pagefind-ignore>
+      <span aria-hidden="true">←</span> Diary
+    </a>
+    <p class="ps-meta" data-pagefind-ignore>
+      <a href={categoryUrl(category)}>{category}</a>
+      <span aria-hidden="true">·</span>
+      <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+      {updatedDate && (
+        <>
+          <span aria-hidden="true">·</span>
+          <time datetime={isoDate(updatedDate)}>Updated {formatDate(updatedDate)}</time>
+        </>
+      )}
+      <span aria-hidden="true">·</span>
+      <span>{reading.text}</span>
+      {views && (
+        <span data-views={post.id}>
+          <span aria-hidden="true">·</span>
+          <span data-views-count class="tnum" aria-live="polite">
+            — views
+          </span>
+        </span>
+      )}
+    </p>
+    <h1 class="ps-title" data-pagefind-meta="title">{title}</h1>
+    <p class="ps-lead">{description}</p>
+    {project && (
+      <p class="ps-project" data-pagefind-ignore>
+        Part of <a class="ulink" href={projectUrl(project)}>{project.data.title}</a>
+      </p>
+    )}
+  </header>
+
+  {cover && (
+    <Picture
+      src={cover}
+      alt={coverAlt ?? ''}
+      formats={['avif', 'webp']}
+      widths={[480, 728, 1100]}
+      sizes="(min-width: 1100px) 48rem, 100vw"
+      priority
+      class="ps-cover"
+    />
+  )}
+
+  <div class="ps-prose">
+    <slot />
+  </div>
+
+  <ul class="ps-tags" aria-label="Tags" data-pagefind-ignore>
+    {tags.map((tag) => (
+      <li>
+        <a href={tagUrl(tag)}>#{tag}</a>
+      </li>
+    ))}
+  </ul>
+</article>
+
+<Section id="end" title="More" bare class="ps-end">
+  <div class="ps-share" data-share data-share-url={url} data-pagefind-ignore>
+    <h2 class="ps-label" id="share-h">Share</h2>
+    <ul aria-labelledby="share-h">
+      {targets.map((target) => (
+        <li>
+          <a
+            class="ulink"
+            href={target.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Share on ${target.label} (opens in a new tab)`}
+          >
+            {target.label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <button type="button" class="ps-copy ulink" data-copy-link>Copy link</button>
+      </li>
+    </ul>
+    <p class="sr" role="status" aria-live="polite" data-share-status></p>
+  </div>
+
+  {username && (
+    <form
+      class="ps-news"
+      action={`https://buttondown.com/api/emails/embed-subscribe/${encodeURIComponent(username)}`}
+      method="post"
+      target="_blank"
+      {...{ rel: 'noopener noreferrer' }}
+      data-pagefind-ignore
+    >
+      <h2 class="ps-label">{NEWSLETTER.heading}</h2>
+      <p class="small">{NEWSLETTER.text}</p>
+      <div class="ps-news-row">
+        <label class="sr" for="post-email">Email address</label>
+        <input
+          id="post-email"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="you@example.com"
+        />
+        <input type="hidden" name="embed" value="1" />
+        <button class="btn" type="submit">Subscribe</button>
+      </div>
+      <p class="small">{NEWSLETTER.privacy}</p>
+    </form>
+  )}
+
+  {neighbours.length > 0 && (
+    <nav class="ps-next" aria-label="More entries" data-pagefind-ignore>
+      {neighbours.map((n) => (
+        <a rel={n.rel} href={postUrl(n.post)}>
+          <span class="ps-label">{n.dir}</span>
+          <span class="ps-next-t">{n.post.data.title}</span>
+        </a>
+      ))}
+    </nav>
+  )}
+
+  {related.length > 0 && (
+    <section class="ps-rel" aria-labelledby="related-h" data-pagefind-ignore>
+      <h2 class="ps-label" id="related-h">Related</h2>
+      <ul>
+        {related.map((r) => (
+          <li>
+            <a href={postUrl(r)}>
+              <span class="ps-rel-c">{r.data.category}</span>
+              <span class="ps-rel-t">{r.data.title}</span>
+              <span class="ps-rel-a" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Section>
+
+<script>
+  import '../scripts/post';
+</script>
