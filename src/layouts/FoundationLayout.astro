@@ -57,6 +57,7 @@ const path = Astro.url.pathname;
 const backHref = /^\/blog\/(?!page\/)[^/]+/.test(path) ? '/blog/' : '/';
 const year = new Date().getFullYear();
 const siteLinks = [
+  { href: '/', label: 'Prologue' },
   { href: '/blog/', label: 'Diary' },
   { href: '/rss.xml', label: 'RSS' },
 ];
