@@ -4,6 +4,7 @@
   --serif: var(--font-lora);
   --sans: var(--font-inter);
   --mono: var(--font-jetbrains-mono);
+  --hand: var(--font-caveat);
   --rail: 17rem;
   --gutter: clamp(1.5rem, 4.5vw, 5rem);
   /* Near-black used to tint shadows under device mockups. Same in both themes. */

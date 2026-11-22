@@ -158,6 +158,25 @@ export default defineConfig({
       },
     },
     {
+      // Handwriting, used only for the rail's diary link.
+      provider: fontProviders.local(),
+      name: 'Caveat',
+      cssVariable: '--font-caveat',
+      optimizedFallbacks: false,
+      fallbacks: ['cursive'],
+      options: {
+        variants: [
+          {
+            weight: '400 700',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource-variable/caveat/files/caveat-latin-wght-normal.woff2',
+            ],
+          },
+        ],
+      },
+    },
+    {
       provider: fontProviders.local(),
       name: 'JetBrains Mono',
       cssVariable: '--font-jetbrains-mono',
@@ -215,7 +234,8 @@ export default defineConfig({
         frames: {
           shadowColor: 'transparent',
           frameBoxShadowCssValue: 'none',
-          editorBackground: ({ theme }) => (theme.type === 'dark' ? ui.dark.surface : ui.light.surface),
+          editorBackground: ({ theme }) =>
+            theme.type === 'dark' ? ui.dark.surface : ui.light.surface,
           editorTabBarBackground: pick('surface'),
           editorTabBarBorderBottomColor: pick('border'),
           editorActiveTabBackground: ({ theme }) =>
@@ -223,7 +243,8 @@ export default defineConfig({
           editorActiveTabForeground: pick('text'),
           editorActiveTabIndicatorTopColor: pick('accent'),
           editorActiveTabIndicatorBottomColor: 'transparent',
-          terminalBackground: ({ theme }) => (theme.type === 'dark' ? ui.dark.surface : ui.light.surface),
+          terminalBackground: ({ theme }) =>
+            theme.type === 'dark' ? ui.dark.surface : ui.light.surface,
           terminalTitlebarBackground: pick('surface'),
           terminalTitlebarBorderBottomColor: pick('border'),
           terminalTitlebarForeground: pick('muted'),

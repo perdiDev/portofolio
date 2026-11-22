@@ -70,6 +70,50 @@
   }
 }
 
+/* Handwritten link above the clock: "Open diary" on home, "Back" everywhere else */
+.hand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  min-height: 2.75rem;
+  margin-bottom: 0.5rem;
+  font: 600 1.625rem/1 var(--hand);
+  color: var(--accent);
+  rotate: -2deg;
+  transform-origin: left center;
+}
+.hand-link svg {
+  width: 1.5rem;
+  height: auto;
+  flex: none;
+}
+.hand-link:active {
+  transform: scale(0.97);
+  transition: transform 160ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hand-link svg {
+    transition: translate 300ms var(--ease-out);
+  }
+  .hand-link:hover svg {
+    translate: 0.3rem 0;
+  }
+  .hand-link:has(svg:first-child):hover svg {
+    translate: -0.3rem 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hand-link:active,
+  .hand-link svg {
+    transition: none;
+    transform: none;
+  }
+  .hand-link:hover svg {
+    translate: none;
+  }
+}
+
 .avatar {
   margin: 0 0 1.5rem;
   width: 6.5rem;
@@ -344,6 +388,15 @@
   .avatar,
   .scrawl {
     display: none;
+  }
+  .rail-bottom {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hand-link {
+    margin: 0;
+    align-self: center;
   }
   .rail-top {
     display: flex;
