@@ -1,38 +1,24 @@
 ---
-import PostList from '../components/PostList.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getPosts } from '../utils/posts';
-
-const latest = (await getPosts()).slice(0, 3);
+import '../styles/diary.css';
+import Section from '../components/foundation/Section.astro';
+import FoundationLayout from '../layouts/FoundationLayout.astro';
 ---
 
-<BaseLayout
+<FoundationLayout
   title="Page not found"
-  description="That page does not exist or has moved. Read one of the latest articles instead."
+  description="That page does not exist or has moved."
+  heading="Page not found"
+  ownHeading
   noindex
 >
-  <div class="page page-top">
-    <header class="mb-12">
-      <p class="eyebrow mb-3">Error 404</p>
-      <h1 class="text-4xl sm:text-5xl">This page could not be found</h1>
-      <p class="mt-4 max-w-[56ch] text-lg text-muted">
-        The link may be broken, or the page may have moved. Head back home, or pick up with one of the latest articles below.
+  <Section id="not-found" title="Page not found" headless class="dy">
+    <header class="dy-head">
+      <p class="dy-kicker">404</p>
+      <h1 id="not-found-h" class="dy-title">Page not <em>found</em></h1>
+      <p class="dy-intro">
+        The link may be broken, or the page may have moved.
       </p>
-      <p class="mt-6 flex flex-wrap gap-3">
-        <a href="/" class="btn btn-primary">
-          Back to home
-        </a>
-        <a href="/blog/" class="btn">
-          Read the diary
-        </a>
-      </p>
+      <p class="dy-intro"><a class="ulink" href="/">Back to the prologue</a></p>
     </header>
-
-    <section aria-labelledby="latest-heading">
-      <h2 id="latest-heading" class="mb-6 text-2xl">
-        Latest writing
-      </h2>
-      <PostList posts={latest} as="h3" />
-    </section>
-  </div>
-</BaseLayout>
+  </Section>
+</FoundationLayout>

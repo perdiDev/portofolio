@@ -1,0 +1,50 @@
+---
+/**
+ * Tags: every tag as a ruled row (name, count, arrow). The header reuses the Diary header styles.
+ */
+import '../styles/diary.css';
+import '../styles/tags.css';
+import Section from './foundation/Section.astro';
+import { pluralize } from '../utils/format';
+import { tagUrl, type Term } from '../utils/taxonomy';
+
+interface Props {
+  tags: Term[];
+}
+
+const { tags } = Astro.props;
+---
+
+<Section id="tags" title="Tags" headless class="dy tg">
+  <header class="dy-head">
+    <a class="dy-kicker ulink" href="/blog/">
+      <span aria-hidden="true">←</span> Diary
+    </a>
+    <h1 id="tags-h" class="dy-title">
+      <em>Tags</em>
+    </h1>
+    <p class="dy-intro">
+      Finer topics than categories. The number is how many entries carry the tag.
+    </p>
+  </header>
+
+  <ul class="tg-list" data-reveal>
+    {tags.map((tag, i) => (
+      <li class="tg-row" style={`--i:${i}`}>
+        <a class="tg-link" href={tagUrl(tag.name)}>
+          <span class="tg-name">
+            <span aria-hidden="true">#</span>
+            {tag.name}
+          </span>
+          <span class="tg-count tnum">
+            <span aria-hidden="true">{tag.count}</span>
+            <span class="sr">{pluralize(tag.count, 'entry', 'entries')}</span>
+          </span>
+          <span class="tg-arrow" aria-hidden="true">
+            →
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Section>

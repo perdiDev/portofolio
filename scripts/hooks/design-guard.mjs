@@ -32,7 +32,7 @@ if (/^(dist|\.vercel|\.astro|node_modules)\//.test(path))
   deny(`${path} is generated output. Change the source instead.`);
 
 // Foundation code: generic parts, client scripts, the layout, section components (they render the
-// foundation Section) and plain CSS in src/styles except the legacy Tailwind sheet.
+// foundation Section) and plain CSS in src/styles.
 const inScope =
   /^src\/(styles\/foundation|components\/foundation|scripts)\//.test(path) ||
   path === 'src/layouts/FoundationLayout.astro' ||

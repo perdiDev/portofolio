@@ -3,7 +3,7 @@ inclusion: always
 ---
 # Tech
 
-- Astro 7, TypeScript strict, Tailwind 4 (legacy pages only), plain CSS files for the foundation, pnpm, Node 22.12+. Deployed on Vercel (`@astrojs/vercel`).
+- Astro 7, TypeScript strict, plain CSS files for the foundation, pnpm, Node 22.12+. Deployed on Vercel (`@astrojs/vercel`).
 - Content collections with schemas in `src/content.config.ts`. Images through `astro:assets` (`getImage`), always with width and height.
 - Code blocks: `astro-expressive-code`. Fonts: `@fontsource-variable` (Inter, Lora, JetBrains Mono).
 - Commands: `pnpm dev`, `pnpm verify` (design lint + astro check + build), `pnpm design:lint`, `pnpm format`.

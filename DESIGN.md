@@ -1,6 +1,6 @@
 # Design system: Foundation
 
-Every redesigned page is built from this. The home page `/` (`src/pages/index.astro`) is the reference implementation: it only composes `FoundationLayout` and section components, and it was pixel-checked against the `/new-home-4` draft it replaced (`/new-home-4` now redirects to `/`).
+Every redesigned page is built from this. The home page `/` (`src/pages/index.astro`) is the reference implementation: it only composes `FoundationLayout` and section components,.
 
 ## Character
 Editorial and quiet. Warm paper, ink, one accent. A serif for voice, a sans for reading, a mono for metadata. Hairline rules instead of boxes and shadows. Motion explains structure (a line draws, a title rises out of a mask) and never decorates.

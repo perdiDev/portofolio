@@ -28,7 +28,7 @@ const rel = (p) => relative(ROOT, p);
 const read = (r) => readFileSync(join(ROOT, r), 'utf8');
 
 /*
- * Section components and pages live next to legacy files (src/components, src/pages), so they
+ * Section components and pages live next to generic files (src/components, src/pages), so they
  * are found by content: a page that renders FoundationLayout, or a component that renders the
  * foundation Section. CSS is in scope when an in-scope file imports it (e.g. src/styles/work.css).
  */

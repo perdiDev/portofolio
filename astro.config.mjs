@@ -3,7 +3,6 @@ import { defineConfig, envField, fontProviders } from 'astro/config';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 import astroExpressiveCode from 'astro-expressive-code';
-import tailwindcss from '@tailwindcss/vite';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -30,7 +29,7 @@ function resolveSite() {
 
 const { lastmod, noindex } = collectContentMeta();
 
-// Palette shared with src/styles/global.css (kept literal: Expressive Code needs real values).
+// Palette shared with src/styles/foundation/tokens.css (kept literal: Expressive Code needs real values).
 const ui = {
   light: {
     bg: '#f4f1ea',
@@ -67,14 +66,6 @@ export default defineConfig({
   build: { format: 'directory', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   devToolbar: { enabled: false },
-  // Old home drafts. The last one (/new-home-4) became the home page; the others are removed.
-  redirects: {
-    '/new-home': '/',
-    '/new-home-2': '/',
-    '/new-home-3': '/',
-    '/new-home-4': '/',
-  },
-
   env: {
     schema: {
       PUBLIC_UMAMI_WEBSITE_ID: envField.string({
@@ -275,8 +266,4 @@ export default defineConfig({
       },
     }),
   ],
-
-  vite: {
-    plugins: [tailwindcss()],
-  },
 });
