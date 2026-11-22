@@ -21,7 +21,7 @@
   justify-content: center;
   text-align: center;
 }
-/* Bottom row: abstract handwriting fills the gap above the clock and theme toggle */
+/* Bottom row: abstract handwriting fills the gap above the diary link and theme toggle */
 .rail-bottom {
   display: flex;
   flex-direction: column;
@@ -70,14 +70,12 @@
   }
 }
 
-/* Handwritten link above the clock: "Open diary" on home, "Back" everywhere else */
+/* Handwritten link beside the theme toggle: "Open diary" on home, "Back" everywhere else */
 .hand-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  align-self: flex-start;
   min-height: 2.75rem;
-  margin-bottom: 0.5rem;
   font: 600 1.625rem/1 var(--hand);
   color: var(--accent);
   rotate: -2deg;
@@ -226,16 +224,6 @@
   justify-content: space-between;
   gap: 1rem;
 }
-.clock {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  font: 400 0.6875rem/1.4 var(--mono);
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
 .theme {
   position: relative;
   display: grid;
@@ -383,7 +371,6 @@
     border-bottom: 1px solid var(--line);
   }
   .toc,
-  .clock,
   .role-line,
   .avatar,
   .scrawl {

@@ -14,7 +14,7 @@ import { Font, getImage } from 'astro:assets';
 import photo from '../assets/photo.jpeg';
 import Analytics from '../components/Analytics.astro';
 import SEO, { type Props as SeoProps } from '../components/SEO.astro';
-import { AUTHOR, LOCAL_TIME, SITE } from '../config';
+import { AUTHOR, SITE } from '../config';
 
 export interface NavItem {
   /** Id of a `<section>` on the page. */
@@ -171,50 +171,38 @@ const siteLinks = [
               d="M138 24 C 146 18, 156 20, 152 28 C 148 34, 140 32, 146 26 C 152 20, 166 20, 172 26"
             ></path>
           </svg>
-          {isHome ? (
-            <a class="hand-link" href="/blog/">
-              <span>Open diary</span>
-              <svg
-                viewBox="0 0 24 12"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M1 7 C 8 3, 15 9, 22 5 M17 1 L22 5 L17 10"></path>
-              </svg>
-            </a>
-          ) : (
-            <a class="hand-link" href={backHref}>
-              <svg
-                viewBox="0 0 24 12"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M23 7 C 16 3, 9 9, 2 5 M7 1 L2 5 L7 10"></path>
-              </svg>
-              <span>{backHref === '/' ? 'Prologue' : 'Back'}</span>
-            </a>
-          )}
           <div class="rail-foot">
-            <p class="clock">
-              <span class="dot" aria-hidden="true"></span>
-              {LOCAL_TIME.city}
-              <time
-                id="clock"
-                class="tnum"
-                data-tz={LOCAL_TIME.timeZone}
-                data-tz-label={LOCAL_TIME.label}
-              >
-                --:--
-              </time>
-            </p>
+            {isHome ? (
+              <a class="hand-link" href="/blog/">
+                <span>Open diary</span>
+                <svg
+                  viewBox="0 0 24 12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M1 7 C 8 3, 15 9, 22 5 M17 1 L22 5 L17 10"></path>
+                </svg>
+              </a>
+            ) : (
+              <a class="hand-link" href={backHref}>
+                <svg
+                  viewBox="0 0 24 12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M23 7 C 16 3, 9 9, 2 5 M7 1 L2 5 L7 10"></path>
+                </svg>
+                <span>{backHref === '/' ? 'Prologue' : 'Back'}</span>
+              </a>
+            )}
             <button
               id="theme"
               class="theme"
@@ -283,7 +271,6 @@ const siteLinks = [
 
     <script>
       import '../scripts/foundation/theme';
-      import '../scripts/foundation/clock';
       import '../scripts/foundation/toc';
       import '../scripts/foundation/reveal';
       import '../scripts/foundation/progress';

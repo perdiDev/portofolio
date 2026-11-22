@@ -11,7 +11,7 @@ src/
                                       Contact), plates.ts (project drawings)
   styles/foundation/                   tokens, base, shell, section, motion (imported by the layout)
   styles/                              one CSS file per section (work.css, contact.css, ...);
-  scripts/foundation/                  shell behavior: theme, clock, toc, reveal, progress, cursor
+  scripts/foundation/                  shell behavior: theme, toc, reveal, progress, cursor
   scripts/                             one module per section (work.ts, contact.ts, ...)
   utils/                               posts.ts, timeline.ts (data shaping, no markup)
   pages/                               routes; compose only
