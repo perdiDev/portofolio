@@ -5,14 +5,14 @@ description: Build or rewrite a page of the portfolio on the design foundation (
 
 # Build a page on the foundation
 
-Reference: the home page `/` (`src/pages/index.astro`, sections in `src/components/`), `DESIGN.md`, `.kiro/steering/design-system.md`. Also use `impeccable` or `design-taste-frontend` for layout and typography judgement, `emil-design-eng` for interaction polish, and `abstract-illustration` for line drawings.
+Reference: the home page `/` (`src/pages/index.astro`, sections in `src/components/sections/`), `DESIGN.md`, `.kiro/steering/design-system.md`. Also use `impeccable` or `design-taste-frontend` for layout and typography judgement, `emil-design-eng` for interaction polish, and `abstract-illustration` for line drawings.
 
 ## Steps
 
 1. **Brief.** State the page's job in one sentence and list its sections with name, number, data source. Ask the user only if the purpose is unclear.
-2. **Reuse.** Look in `src/components/foundation/` and the section components in `src/components/` (Work, Experience, Education, Recognition, Contact). `Section` covers heading, rule and reveal. Prefer composing existing parts.
+2. **Reuse.** Look in `src/components/foundation/` and the section components in `src/components/sections/` (Work, Experience, Education, Recognition, Contact). `Section` covers heading, rule and reveal. Prefer composing existing parts.
 3. **New section** (only if nothing fits). Create three files with the same stem:
-   - `src/components/Name.astro`: imports `../styles/name.css`, wraps content in `<Section id n title>` from `./foundation/Section.astro`, loads its data in the frontmatter, ends with `<script>import '../scripts/name';</script>` when it needs behavior.
+   - `src/components/sections/Name.astro` (or `views/` for a full-page body): imports `../../styles/name.css`, wraps content in `<Section id n title>` from `../foundation/Section.astro`, loads its data in the frontmatter, ends with `<script>import '../../scripts/name';</script>` when it needs behavior.
    - `src/styles/name.css`: base styles, entrance under `.js .name.in`, hover inside `@media (hover: hover) and (pointer: fine)`, responsive, then a `prefers-reduced-motion` block at the end.
    - `src/scripts/name.ts`: guarded by `if (!el) return`, uses `src/scripts/foundation/dom.ts` helpers. Pass server data with `data-*` attributes.
    - No folder per page, and no lint config to update: lint finds the component because it renders `Section`, and the CSS because the component imports it.
@@ -23,7 +23,7 @@ Reference: the home page `/` (`src/pages/index.astro`, sections in `src/componen
    - Screenshots at 1280 and 390 wide, light and dark, with `reducedMotion: 'reduce'` for deterministic output (`.tools/pw/nh4-regress.mjs <out-prefix> <path>`, `BASE=` selects a server). View them.
    - Behavior smoke test `.tools/pw/nh4-behavior.mjs` adapted to the page. No console errors.
    - Keyboard: tab through, focus ring visible, accordions work with Enter/Space.
-7. **Migrating an existing route.** Keep the URL and SEO tags (canonical, OG, JSON-LD from the old layout: `src/components/SEO.astro`). Add them to the layout through an optional prop rather than copying markup. Remove `noindex` only when the user confirms the page replaces the old one.
+7. **Migrating an existing route.** Keep the URL and SEO tags (canonical, OG, JSON-LD from the old layout: `src/components/foundation/SEO.astro`). Add them to the layout through an optional prop rather than copying markup. Remove `noindex` only when the user confirms the page replaces the old one.
 
 ## Do not
 

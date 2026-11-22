@@ -3,10 +3,10 @@
  * Contact: a masked, rising question, the email as the main link, a copy button,
  * an envelope plate whose letter rises on entry, and social links as ruled cells.
  */
-import '../styles/contact.css';
-import Section from './foundation/Section.astro';
-import Icon from './Icon.astro';
-import { AUTHOR, SOCIALS } from '../config';
+import '../../styles/contact.css';
+import Section from '../foundation/Section.astro';
+import Icon from '../foundation/Icon.astro';
+import { AUTHOR, SOCIALS } from '../../config';
 
 interface Props {
   id: string;
@@ -181,5 +181,5 @@ const socials = SOCIALS.map((so) => ({
 </Section>
 
 <script>
-  import '../scripts/contact';
+  import '../../scripts/contact';
 </script>

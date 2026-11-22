@@ -1,6 +1,6 @@
 # Copy-ready helpers
 
-From `src/components/plates.ts`. Canvas is `0 0 1600 900`.
+From `src/components/sections/plates.ts`. Canvas is `0 0 1600 900`.
 
 ```ts
 let k = 0; // reset to 0 at the start of every artX()

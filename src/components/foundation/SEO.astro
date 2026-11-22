@@ -1,8 +1,8 @@
 ---
-import { AUTHOR, OG, SITE } from '../config';
+import { AUTHOR, OG, SITE } from '../../config';
 import { PUBLIC_BING_VERIFICATION, PUBLIC_GSC_VERIFICATION } from 'astro:env/client';
-import { serializeJsonLd, type JsonLd } from '../utils/jsonld';
-import { absoluteUrl, buildDescription, buildTitle } from '../utils/seo';
+import { serializeJsonLd, type JsonLd } from '../../utils/jsonld';
+import { absoluteUrl, buildDescription, buildTitle } from '../../utils/seo';
 
 export interface SeoImage {
   /** Absolute or site-relative URL. */

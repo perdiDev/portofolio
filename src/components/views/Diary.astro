@@ -4,12 +4,12 @@
  * ruled entry rows (date, title and note, an arrow) and a quiet pager.
  * Used for the main list, category pages and tag pages through ListingLayout.
  */
-import '../styles/diary.css';
-import Section from './foundation/Section.astro';
-import { formatShortDate, isoDate } from '../utils/format';
-import { pageUrl, type Page } from '../utils/paginate';
-import { postUrl, type Post } from '../utils/posts';
-import { categoryUrl, type Term } from '../utils/taxonomy';
+import '../../styles/diary.css';
+import Section from '../foundation/Section.astro';
+import { formatShortDate, isoDate } from '../../utils/format';
+import { pageUrl, type Page } from '../../utils/paginate';
+import { postUrl, type Post } from '../../utils/posts';
+import { categoryUrl, type Term } from '../../utils/taxonomy';
 
 interface Props {
   heading: string;
@@ -133,5 +133,5 @@ const last = words.pop()!;
 </Section>
 
 <script>
-  import '../scripts/diary';
+  import '../../scripts/diary';
 </script>

@@ -5,12 +5,12 @@
  * challenges, what I learned, outcome, related writing, and the neighbouring projects.
  * The plate carries the view-transition name that links it to its card on the home page.
  */
-import '../styles/project.css';
+import '../../styles/project.css';
 import { getImage, Picture } from 'astro:assets';
-import type { NavItem } from '../layouts/FoundationLayout.astro';
-import { postUrl, projectUrl, type Post, type Project } from '../utils/posts';
-import ProjectPlate from './ProjectPlate.astro';
-import Section from './foundation/Section.astro';
+import type { NavItem } from '../../layouts/FoundationLayout.astro';
+import { postUrl, projectUrl, type Post, type Project } from '../../utils/posts';
+import ProjectPlate from '../sections/ProjectPlate.astro';
+import Section from '../foundation/Section.astro';
 
 interface Props {
   project: Project;
@@ -264,5 +264,5 @@ const poster = d.youtubeId
 )}
 
 <script>
-  import '../scripts/project';
+  import '../../scripts/project';
 </script>

@@ -3,9 +3,9 @@
  * Recognition: ruled rows (year, title and note, a drawn seal with the rank).
  * The list reveals as one; on fine pointers a soft light follows the pointer across a row.
  */
-import '../styles/recognition.css';
-import Section from './foundation/Section.astro';
-import { ACHIEVEMENTS } from '../config';
+import '../../styles/recognition.css';
+import Section from '../foundation/Section.astro';
+import { ACHIEVEMENTS } from '../../config';
 
 interface Props {
   id: string;
@@ -53,5 +53,5 @@ const { id, n, title } = Astro.props;
 </Section>
 
 <script>
-  import '../scripts/recognition';
+  import '../../scripts/recognition';
 </script>

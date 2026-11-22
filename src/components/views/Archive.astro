@@ -3,12 +3,12 @@
  * Archive: every post as one plain line (day, title), grouped under its year.
  * The header reuses the Diary header styles; rows swell toward the middle of the screen.
  */
-import '../styles/diary.css';
-import '../styles/foundation/fisheye.css';
-import '../styles/archive.css';
-import Section from './foundation/Section.astro';
-import { formatShortDate, isoDate, pluralize } from '../utils/format';
-import { groupByYear, postUrl, type Post } from '../utils/posts';
+import '../../styles/diary.css';
+import '../../styles/foundation/fisheye.css';
+import '../../styles/archive.css';
+import Section from '../foundation/Section.astro';
+import { formatShortDate, isoDate, pluralize } from '../../utils/format';
+import { groupByYear, postUrl, type Post } from '../../utils/posts';
 
 interface Props {
   posts: Post[];
@@ -57,5 +57,5 @@ const groups = groupByYear(posts);
 </Section>
 
 <script>
-  import '../scripts/foundation/fisheye';
+  import '../../scripts/foundation/fisheye';
 </script>

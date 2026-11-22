@@ -2,12 +2,12 @@
 /**
  * Tags: every tag as a ruled row (name, count, arrow). The header reuses the Diary header styles.
  */
-import '../styles/diary.css';
-import '../styles/foundation/fisheye.css';
-import '../styles/tags.css';
-import Section from './foundation/Section.astro';
-import { pluralize } from '../utils/format';
-import { tagUrl, type Term } from '../utils/taxonomy';
+import '../../styles/diary.css';
+import '../../styles/foundation/fisheye.css';
+import '../../styles/tags.css';
+import Section from '../foundation/Section.astro';
+import { pluralize } from '../../utils/format';
+import { tagUrl, type Term } from '../../utils/taxonomy';
 
 interface Props {
   tags: Term[];
@@ -51,5 +51,5 @@ const { tags } = Astro.props;
 </Section>
 
 <script>
-  import '../scripts/foundation/fisheye';
+  import '../../scripts/foundation/fisheye';
 </script>

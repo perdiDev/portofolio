@@ -5,10 +5,10 @@
  * Each card is one link, named by its own content; the stack dock is decorative and read
  * from a visually hidden sentence instead.
  */
-import '../styles/work.css';
-import Section from './foundation/Section.astro';
+import '../../styles/work.css';
+import Section from '../foundation/Section.astro';
 import ProjectPlate from './ProjectPlate.astro';
-import { getProjects, projectUrl } from '../utils/posts';
+import { getProjects, projectUrl } from '../../utils/posts';
 
 interface Props {
   id: string;
@@ -63,5 +63,5 @@ const projects = (await getProjects()).slice(0, limit).map((p, i) => {
 </Section>
 
 <script>
-  import '../scripts/work';
+  import '../../scripts/work';
 </script>

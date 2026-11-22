@@ -15,7 +15,7 @@ Section files sit directly in `components/`, `styles/`, `scripts/` (no per-page 
 
 `FoundationLayout` today covers head, theme bootstrap, rail, footer. Add, in this order and each as its own verified step:
 
-1. `seo` prop: pass-through to `src/components/SEO.astro` (title, description, canonical, image, type, dates, JSON-LD).
+1. `seo` prop: pass-through to `src/components/foundation/SEO.astro` (title, description, canonical, image, type, dates, JSON-LD).
 2. `rail` variants: the rail nav is section anchors on the home page. On other pages it shows site links (Home, Work, Writing, About) with `aria-current="page"`. Implement as `nav` items with `href` instead of `#id`, plus a `mode` of `anchors` or `pages`.
 3. `Analytics`, `Cursor` removal check, `ViewCounter` slot for posts.
    Home keeps pixel parity at each step (regression script).

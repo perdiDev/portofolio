@@ -9,23 +9,23 @@
  */
 import type { ImageMetadata } from 'astro';
 
-import hyHome from '../assets/projects/hyskysfc/home.jpeg';
-import hyPlts from '../assets/projects/hyskysfc/plts.jpeg';
-import hyPltd from '../assets/projects/hyskysfc/pltd.jpeg';
-import boatMap from '../assets/projects/boat-safe-system/screenshot-1.png';
-import boatDevice from '../assets/projects/boat-safe-system/screenshot-4.png';
-import ccHome from '../assets/projects/child-care/beranda.jpg';
-import ccCommunity from '../assets/projects/child-care/komunitas.jpg';
-import ccTips from '../assets/projects/child-care/tips.jpg';
-import tsHome from '../assets/projects/tukar-senyum/screenshot-1.png';
-import tsCatalog from '../assets/projects/tukar-senyum/screenshot-2.png';
-import wkHome from '../assets/projects/wisataki/phone-1.jpg';
-import wkScan from '../assets/projects/wisataki/phone-2.jpg';
-import wkConfirm from '../assets/projects/wisataki/phone-3.jpg';
-import pdDashboard from '../assets/projects/pokidulu/screenshot-2.png';
-import pdOrders from '../assets/projects/pokidulu/screenshot-4.png';
-import sdLogin from '../assets/projects/sapadesa/login.png';
-import sdLetter from '../assets/projects/sapadesa/pembuatan-surat.png';
+import hyHome from '../../assets/projects/hyskysfc/home.jpeg';
+import hyPlts from '../../assets/projects/hyskysfc/plts.jpeg';
+import hyPltd from '../../assets/projects/hyskysfc/pltd.jpeg';
+import boatMap from '../../assets/projects/boat-safe-system/screenshot-1.png';
+import boatDevice from '../../assets/projects/boat-safe-system/screenshot-4.png';
+import ccHome from '../../assets/projects/child-care/beranda.jpg';
+import ccCommunity from '../../assets/projects/child-care/komunitas.jpg';
+import ccTips from '../../assets/projects/child-care/tips.jpg';
+import tsHome from '../../assets/projects/tukar-senyum/screenshot-1.png';
+import tsCatalog from '../../assets/projects/tukar-senyum/screenshot-2.png';
+import wkHome from '../../assets/projects/wisataki/phone-1.jpg';
+import wkScan from '../../assets/projects/wisataki/phone-2.jpg';
+import wkConfirm from '../../assets/projects/wisataki/phone-3.jpg';
+import pdDashboard from '../../assets/projects/pokidulu/screenshot-2.png';
+import pdOrders from '../../assets/projects/pokidulu/screenshot-4.png';
+import sdLogin from '../../assets/projects/sapadesa/login.png';
+import sdLetter from '../../assets/projects/sapadesa/pembuatan-surat.png';
 
 export type Plate = {
   hue: string;

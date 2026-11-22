@@ -3,9 +3,9 @@
  * Foundations: the degree as a masked, rising title beside a drawn seal (arches + a small graph).
  * Data from EDUCATION in config.ts. The last word of the degree is the emphasis.
  */
-import '../styles/education.css';
-import Section from './foundation/Section.astro';
-import { EDUCATION } from '../config';
+import '../../styles/education.css';
+import Section from '../foundation/Section.astro';
+import { EDUCATION } from '../../config';
 
 interface Props {
   id: string;
@@ -103,5 +103,5 @@ const ringId = `${id}-ring`;
 </Section>
 
 <script>
-  import '../scripts/education';
+  import '../../scripts/education';
 </script>

@@ -1,6 +1,6 @@
 ---
 name: abstract-illustration
-description: Create abstract line illustrations as code-generated SVG, themed by one hue, drawn from the subject of a project or section, with a stroke-draw entrance animation. Use when asked for abstract art, backdrop illustrations, line drawings, plates, or decorative graphics for a card, hero or section on this portfolio. Reference implementation is the home page Work section (src/components/plates.ts).
+description: Create abstract line illustrations as code-generated SVG, themed by one hue, drawn from the subject of a project or section, with a stroke-draw entrance animation. Use when asked for abstract art, backdrop illustrations, line drawings, plates, or decorative graphics for a card, hero or section on this portfolio. Reference implementation is the home page Work section (src/components/sections/plates.ts).
 ---
 
 # Abstract line illustration
@@ -9,8 +9,8 @@ House style from the home page (`/`). Use it for any new abstract illustration o
 
 Reference files:
 
-- `src/components/plates.ts`: helpers and 7 finished drawings.
-- `src/styles/plate.css`: plate and art CSS (search `.plate`, `.art`, `.ln`). `src/components/ProjectPlate.astro`: the markup (`set:html`), used by the Work grid and the project page.
+- `src/components/sections/plates.ts`: helpers and 7 finished drawings.
+- `src/styles/plate.css`: plate and art CSS (search `.plate`, `.art`, `.ln`). `src/components/sections/ProjectPlate.astro`: the markup (`set:html`), used by the Work grid and the project page.
 - `.tools/pw/plates.mjs`: screenshots each plate after its animation finishes.
 - `helpers.md` (this folder): copy-ready helper functions and recipes.
 

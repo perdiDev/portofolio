@@ -8,7 +8,7 @@ inclusion: always
 2. Fonts: serif for headings and voice, sans for reading, mono for metadata. Sizes in `rem`/`clamp`.
 3. Structure with 1px `--line` rules, grids and space. No shadows on panels, no gradients as decoration, no rounded cards, no emoji or icon packs.
 4. One accent. Emphasis is italic serif in the accent colour, once per heading.
-5. Reuse before creating: check `src/components/foundation/` and `src/components/*/`.
+5. Reuse before creating: check `src/components/foundation/` and `src/components/sections/` and `src/components/views/`.
 6. Every animated rule is under `.js` and has a `prefers-reduced-motion` counterpart. Hover and pointer effects sit inside `@media (hover: hover) and (pointer: fine)`.
 7. Animate `transform`, `opacity`, `clip-path`, `translate` only. Never `transition: all`. Easing is `var(--ease-out)`.
 8. Behavior lives in `src/scripts/`, not inline. Server data goes to the client through `data-*` attributes, not `define:vars`.

@@ -4,7 +4,7 @@
  * Produces unique titles/descriptions ("Diary — Page 2"), self-canonicals,
  * rel prev/next and the matching breadcrumb JSON-LD. The visible page is the Diary section.
  */
-import Diary from '../components/Diary.astro';
+import Diary from '../components/views/Diary.astro';
 import { breadcrumbJsonLd, type BreadcrumbItem } from '../utils/jsonld';
 import { clamp } from '../utils/format';
 import { pageUrl, type Page } from '../utils/paginate';

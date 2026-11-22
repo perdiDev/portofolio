@@ -3,10 +3,10 @@
  * Journey: an accordion timeline. Dates on the left, a spine that fills as the page is read,
  * one row per company; the first row starts open.
  */
-import '../styles/experience.css';
-import Section from './foundation/Section.astro';
-import { EXPERIENCE } from '../config';
-import { toTimeline } from '../utils/timeline';
+import '../../styles/experience.css';
+import Section from '../foundation/Section.astro';
+import { EXPERIENCE } from '../../config';
+import { toTimeline } from '../../utils/timeline';
 
 interface Props {
   id: string;
@@ -89,5 +89,5 @@ const rows = toTimeline(EXPERIENCE.slice(0, limit), `${id}-row`);
 </Section>
 
 <script>
-  import '../scripts/experience';
+  import '../../scripts/experience';
 </script>

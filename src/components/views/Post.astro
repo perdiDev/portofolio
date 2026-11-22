@@ -4,7 +4,7 @@
  * the markdown body (styles/post.css), tags, then share links, neighbours and related entries.
  * The rail lists the entry's h2 headings (passed to FoundationLayout by PostLayout).
  */
-import '../styles/post.css';
+import '../../styles/post.css';
 import { Picture } from 'astro:assets';
 import { PUBLIC_BUTTONDOWN_USERNAME } from 'astro:env/client';
 import {
@@ -13,11 +13,11 @@ import {
   UPSTASH_REDIS_REST_TOKEN,
   UPSTASH_REDIS_REST_URL,
 } from 'astro:env/server';
-import { NEWSLETTER } from '../config';
-import { formatDate, isoDate } from '../utils/format';
-import { postUrl, projectUrl, readingTimeOf, type Post, type Project } from '../utils/posts';
-import { categoryUrl, tagUrl } from '../utils/taxonomy';
-import Section from './foundation/Section.astro';
+import { NEWSLETTER } from '../../config';
+import { formatDate, isoDate } from '../../utils/format';
+import { postUrl, projectUrl, readingTimeOf, type Post, type Project } from '../../utils/posts';
+import { categoryUrl, tagUrl } from '../../utils/taxonomy';
+import Section from '../foundation/Section.astro';
 
 interface Props {
   post: Post;
@@ -211,5 +211,5 @@ const neighbours = [
 </Section>
 
 <script>
-  import '../scripts/post';
+  import '../../scripts/post';
 </script>
