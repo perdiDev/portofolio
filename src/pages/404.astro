@@ -1,7 +1,6 @@
 ---
-import '../styles/diary.css';
-import Section from '../components/foundation/Section.astro';
 import FoundationLayout from '../layouts/FoundationLayout.astro';
+import NotFound from '../components/NotFound.astro';
 ---
 
 <FoundationLayout
@@ -11,14 +10,5 @@ import FoundationLayout from '../layouts/FoundationLayout.astro';
   ownHeading
   noindex
 >
-  <Section id="not-found" title="Page not found" headless class="dy">
-    <header class="dy-head">
-      <p class="dy-kicker">404</p>
-      <h1 id="not-found-h" class="dy-title">Page not <em>found</em></h1>
-      <p class="dy-intro">
-        The link may be broken, or the page may have moved.
-      </p>
-      <p class="dy-intro"><a class="ulink" href="/">Back to the prologue</a></p>
-    </header>
-  </Section>
+  <NotFound />
 </FoundationLayout>

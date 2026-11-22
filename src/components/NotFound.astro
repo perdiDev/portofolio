@@ -1,0 +1,117 @@
+---
+/**
+ * 404: a masked, rising title over a ghost numeral, and a map plate. A route draws itself,
+ * a marker walks it, and the trail ends at a ringed cross where the page should be.
+ */
+import '../styles/notfound.css';
+import Section from './foundation/Section.astro';
+
+const route = 'M30 310 C90 310 100 230 160 238 S250 336 300 258 S338 160 280 138 S196 112 236 62';
+---
+
+<Section id="not-found" title="Page not found" headless class="nf">
+  <div class="nf-grid">
+    <div class="nf-copy">
+      <p class="nf-ghost" aria-hidden="true">
+        404
+      </p>
+      <p class="sec-n">Error 404</p>
+      <h1 id="not-found-h">
+        <span class="cw">
+          <span style="--w:0">This</span>
+        </span>
+        <span class="cw">
+          <span style="--w:1">page</span>
+        </span>
+        <span class="cw">
+          <span style="--w:2">wandered</span>
+        </span>
+        <span class="cw">
+          <em style="--w:3">off.</em>
+        </span>
+      </h1>
+      <p class="nf-lede">
+        The link may be broken, or the page may have moved. The rest of the site is where you left
+        it.
+      </p>
+      <div class="nf-actions">
+        <a class="btn" href="/">
+          Back to the prologue
+        </a>
+        <a class="ulink" href="/#contact">
+          Say hello
+        </a>
+      </div>
+    </div>
+
+    <figure class="nf-plate" aria-hidden="true">
+      <svg
+        viewBox="0 0 480 360"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        data-nf-svg
+      >
+        <g class="nf-far" data-depth="0.4">
+          <ellipse
+            class="ln"
+            pathLength="1"
+            cx="392"
+            cy="86"
+            rx="92"
+            ry="64"
+            style="--k:0"
+          ></ellipse>
+          <ellipse
+            class="ln"
+            pathLength="1"
+            cx="392"
+            cy="86"
+            rx="62"
+            ry="42"
+            style="--k:1"
+          ></ellipse>
+          <ellipse
+            class="ln"
+            pathLength="1"
+            cx="392"
+            cy="86"
+            rx="32"
+            ry="21"
+            style="--k:2"
+          ></ellipse>
+          <path
+            class="ln"
+            pathLength="1"
+            d="M20 340 H460"
+            style="--k:0"
+            stroke-dasharray="2 7"
+            opacity="0.5"
+          ></path>
+        </g>
+        <g class="nf-near" data-depth="1">
+          <path class="ln nf-route" pathLength="1" d={route} style="--k:3"></path>
+          <path class="nf-gap" d="M236 62 L384 80" stroke-dasharray="1 8"></path>
+          <circle class="nf-start" cx="30" cy="310" r="4"></circle>
+          <circle
+            class="nf-walker"
+            cx="0"
+            cy="0"
+            r="5"
+            style={`offset-path:path('${route}')`}
+          ></circle>
+          <g class="nf-x">
+            <path d="M382 76 L402 96 M402 76 L382 96"></path>
+            <circle class="nf-ping" cx="392" cy="86" r="12"></circle>
+          </g>
+        </g>
+      </svg>
+    </figure>
+  </div>
+</Section>
+
+<script>
+  import '../scripts/notfound';
+</script>

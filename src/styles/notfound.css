@@ -1,0 +1,231 @@
+/* 404: masked title, ghost numeral, drawn route plate. */
+.nf {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  align-items: center;
+}
+.nf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+.nf-copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.nf-ghost {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: -0.04em;
+  margin: 0;
+  translate: 0 -62%;
+  font: 400 clamp(9rem, 24vw, 19rem)/1 var(--serif);
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  user-select: none;
+  pointer-events: none;
+}
+.nf h1 {
+  margin: 0;
+  font-size: clamp(2.25rem, 4.6vw, 3.75rem);
+  max-width: 16ch;
+  line-height: 1.08;
+}
+.nf .cw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.06em 0.08em 0.16em 0;
+  margin: 0 0.22em -0.16em 0;
+}
+.nf .cw > * {
+  display: block;
+}
+.nf-lede {
+  margin: 2rem 0 0;
+  max-width: 34ch;
+  color: var(--muted);
+}
+.nf-actions {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+}
+.nf-actions .ulink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+.nf-plate {
+  margin: 0;
+  color: var(--ink);
+}
+.nf-plate svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.nf-far,
+.nf-near {
+  translate: var(--px, 0) var(--py, 0);
+  transition: translate 500ms var(--ease-out);
+}
+.nf-far {
+  color: var(--line);
+}
+.nf-route {
+  color: var(--ink);
+}
+.nf-gap,
+.nf-x {
+  color: var(--accent);
+}
+.nf-start {
+  fill: var(--ink);
+  stroke: none;
+}
+.nf-walker {
+  fill: var(--accent);
+  stroke: none;
+  offset-rotate: 0deg;
+  offset-distance: 100%;
+}
+.nf-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+/* Entrance */
+.js .nf .cw > * {
+  transform: translateY(112%);
+  transition: transform 1000ms var(--ease-out) calc(120ms + var(--w) * 110ms);
+}
+.js .nf.in .cw > * {
+  transform: none;
+}
+.js .nf .sec-n,
+.js .nf-lede,
+.js .nf-actions {
+  opacity: 0;
+  translate: 0 14px;
+  transition:
+    opacity 800ms var(--ease-out) 700ms,
+    translate 900ms var(--ease-out) 700ms;
+}
+.js .nf-actions {
+  transition-delay: 850ms;
+}
+.js .nf.in .sec-n,
+.js .nf.in .nf-lede,
+.js .nf.in .nf-actions {
+  opacity: 1;
+  translate: 0 0;
+}
+.js .nf-ghost {
+  opacity: 0;
+  transition: opacity 1600ms var(--ease-out) 200ms;
+}
+.js .nf.in .nf-ghost {
+  opacity: 1;
+}
+.js .nf .ln {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1600ms cubic-bezier(0.45, 0, 0.2, 1) calc(150ms + var(--k) * 160ms);
+}
+.js .nf.in .ln {
+  stroke-dashoffset: 0;
+}
+.js .nf .nf-route {
+  transition-duration: 2600ms;
+}
+.js .nf .nf-gap,
+.js .nf .nf-x path:first-child,
+.js .nf .nf-start {
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out) 2600ms;
+}
+.js .nf.in .nf-gap,
+.js .nf.in .nf-x path:first-child,
+.js .nf.in .nf-start {
+  opacity: 1;
+}
+.js .nf .nf-walker {
+  offset-distance: 0%;
+  opacity: 0;
+}
+.js .nf.in .nf-walker {
+  opacity: 1;
+  offset-distance: 100%;
+  transition:
+    offset-distance 2600ms cubic-bezier(0.45, 0, 0.2, 1) 310ms,
+    opacity 300ms ease 310ms;
+}
+.js .nf.in .nf-ping {
+  animation: nf-ping 2800ms var(--ease-out) 3000ms infinite;
+}
+@keyframes nf-ping {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.4);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nf-actions .ulink:hover {
+    background-size: 100% 1px;
+  }
+}
+
+@media (max-width: 48rem) {
+  .nf {
+    min-height: 0;
+  }
+  .nf-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .nf-plate {
+    max-width: 26rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .nf .cw > *,
+  .js .nf .sec-n,
+  .js .nf-lede,
+  .js .nf-actions,
+  .js .nf-ghost,
+  .js .nf .ln,
+  .js .nf .nf-gap,
+  .js .nf .nf-x path:first-child,
+  .js .nf .nf-start,
+  .js .nf .nf-walker,
+  .nf-far,
+  .nf-near {
+    transition: none !important;
+    transform: none;
+    translate: 0 0;
+    opacity: 1;
+    stroke-dashoffset: 0;
+    offset-distance: 100%;
+  }
+  .js .nf-ping {
+    animation: none;
+  }
+}
