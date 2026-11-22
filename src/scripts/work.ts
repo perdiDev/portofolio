@@ -15,3 +15,22 @@ for (const grid of $$('[data-work]')) {
   );
   for (const c of cards) io.observe(c);
 }
+
+// Snap only while the list covers the viewport, so other sections scroll freely.
+const root = document.documentElement;
+const grids = $$('[data-work]');
+if (grids.length) {
+  const visible = new Set<Element>();
+  const snapIo = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) visible.add(e.target);
+        else visible.delete(e.target);
+      }
+      root.toggleAttribute('data-snap', visible.size > 0);
+    },
+    { rootMargin: '-20% 0px -20% 0px' },
+  );
+  for (const g of grids) snapIo.observe(g);
+  document.addEventListener('astro:before-swap', () => root.removeAttribute('data-snap'));
+}

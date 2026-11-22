@@ -294,3 +294,14 @@
     transform: none !important;
   }
 }
+
+/* Snap: while the project list is on screen, the page settles on a card (set by work.ts). */
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  html[data-snap] {
+    scroll-snap-type: y proximity;
+  }
+  html[data-snap] .card {
+    scroll-snap-align: start;
+    scroll-margin-top: 0;
+  }
+}
