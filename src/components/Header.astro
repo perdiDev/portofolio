@@ -20,7 +20,6 @@ const state = (href: string) => {
 };
 
 const iconLinks = [
-  { href: '/search/', label: 'Search', icon: 'search' },
   { href: '/rss.xml', label: 'RSS feed', icon: 'rss' },
 ] as const;
 
@@ -62,7 +61,6 @@ const navLinkClass =
               class={iconLinkClass}
               aria-label={link.label}
               data-nav-link
-              {...(link.href === '/search/' ? state(link.href) : {})}
             >
               <Icon name={link.icon} />
             </a>
@@ -89,7 +87,6 @@ const navLinkClass =
             class={iconLinkClass}
             aria-label={link.label}
             data-nav-link
-            {...(link.href === '/search/' ? state(link.href) : {})}
           >
             <Icon name={link.icon} />
           </a>
@@ -155,7 +152,7 @@ const navLinkClass =
       const section = !exact && (sections[href] ?? [href]).some((p) => pathname.startsWith(p));
       if (exact) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
-      if (section && href !== '/search/' && href !== '/rss.xml') link.dataset.section = '';
+      if (section && href !== '/rss.xml') link.dataset.section = '';
       else delete link.dataset.section;
     });
 

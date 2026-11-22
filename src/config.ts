@@ -273,4 +273,3 @@ export const OG = {
   height: 630,
 } as const;
 
-export const PAGEFIND_BUNDLE = '/pagefind/';

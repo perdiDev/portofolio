@@ -2,7 +2,6 @@
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
-import pagefind from 'astro-pagefind';
 import astroExpressiveCode from 'astro-expressive-code';
 import tailwindcss from '@tailwindcss/vite';
 import { unified } from '@astrojs/markdown-remark';
@@ -275,7 +274,6 @@ export default defineConfig({
         return item;
       },
     }),
-    pagefind(),
   ],
 
   vite: {

@@ -41,7 +41,6 @@ const types = {
   '.pf_fragment': 'application/octet-stream',
   '.pf_index': 'application/octet-stream',
   '.pf_meta': 'application/octet-stream',
-  '.pagefind': 'application/octet-stream',
 };
 const compressible = /^(text\/|application\/(json|xml|javascript)|image\/svg)/;
 

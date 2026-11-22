@@ -48,13 +48,11 @@ const poster = d.youtubeId
 
 <article
   class="pj"
-  data-pagefind-body
-  data-pagefind-filter="category[data-category], type[data-type]"
   data-category="Project"
   data-type="Project"
 >
   <header class="pj-hero" data-reveal id="project">
-    <a class="pj-back" href="/#work" data-pagefind-ignore>
+    <a class="pj-back" href="/#work">
       <span class="pj-back-arrow" aria-hidden="true">
         ←
       </span>{' '}
@@ -65,7 +63,7 @@ const poster = d.youtubeId
       <p class="pj-kicker">
         {d.status} · {year}
       </p>
-      <h1 class="pj-title" data-pagefind-meta="title">
+      <h1 class="pj-title">
         {words.map((w, i) => (
           <>
             <span class="pj-w">
@@ -78,11 +76,11 @@ const poster = d.youtubeId
       <p class="pj-sum">{d.summary}</p>
     </div>
 
-    <div class="pj-stage" data-pagefind-ignore>
+    <div class="pj-stage">
       <ProjectPlate project={project} eager />
     </div>
 
-    <dl class="pj-facts" data-pagefind-ignore>
+    <dl class="pj-facts">
       {facts.map((f) => (
         <div>
           <dt>{f.k}</dt>
@@ -91,7 +89,7 @@ const poster = d.youtubeId
       ))}
     </dl>
 
-    <div class="pj-foot" data-pagefind-ignore>
+    <div class="pj-foot">
       <ul class="pj-stack" aria-label="Tech stack">
         {d.techStack.map((t) => (
           <li>{t}</li>
@@ -123,7 +121,7 @@ const poster = d.youtubeId
   </Section>
 
   <Section id="screens" n={n('screens')} title={label('screens')} class="pj-sec">
-    <ul class="pj-shots" data-lightbox-root data-pagefind-ignore>
+    <ul class="pj-shots" data-lightbox-root>
       {d.screenshots.map((s, i) => (
         <li class="reveal" style={`--i:${i % 2}`}>
           <figure>
@@ -152,7 +150,7 @@ const poster = d.youtubeId
     </ul>
 
     {videoUrl && (
-      <div class="pj-video reveal" data-pagefind-ignore>
+      <div class="pj-video reveal">
         <a
           href={videoUrl}
           target="_blank"
@@ -220,7 +218,7 @@ const poster = d.youtubeId
 
   {related.length > 0 && (
     <Section id="related" n={n('related')} title={label('related')} class="pj-sec">
-      <ul class="pj-rows" data-pagefind-ignore>
+      <ul class="pj-rows">
         {related.map((post) => (
           <li class="pj-row pj-post reveal">
             <a href={postUrl(post)}>
@@ -242,7 +240,7 @@ const poster = d.youtubeId
     <h2 id="more-h" class="sr">
       More projects
     </h2>
-    <nav class="pj-pager" aria-label="More projects" data-pagefind-ignore>
+    <nav class="pj-pager" aria-label="More projects">
       {prev ? (
         <a class="pj-pn reveal" href={projectUrl(prev)} rel="prev" data-cursor>
           <span class="pj-tag">← Previous</span>

@@ -57,16 +57,14 @@ const neighbours = [
 
 <article
   class="ps"
-  data-pagefind-body
-  data-pagefind-filter="category[data-category], type[data-type]"
   data-category={category}
   data-type="Post"
 >
   <header class="ps-head" data-reveal>
-    <a class="ps-back ulink" href="/blog/" data-pagefind-ignore>
+    <a class="ps-back ulink" href="/blog/">
       <span aria-hidden="true">←</span> Diary
     </a>
-    <p class="ps-meta" data-pagefind-ignore>
+    <p class="ps-meta">
       <a href={categoryUrl(category)}>{category}</a>
       <span aria-hidden="true">·</span>
       <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
@@ -87,10 +85,10 @@ const neighbours = [
         </span>
       )}
     </p>
-    <h1 class="ps-title" data-pagefind-meta="title">{title}</h1>
+    <h1 class="ps-title">{title}</h1>
     <p class="ps-lead">{description}</p>
     {project && (
-      <p class="ps-project" data-pagefind-ignore>
+      <p class="ps-project">
         Part of <a class="ulink" href={projectUrl(project)}>{project.data.title}</a>
       </p>
     )}
@@ -112,7 +110,7 @@ const neighbours = [
     <slot />
   </div>
 
-  <ul class="ps-tags" aria-label="Tags" data-pagefind-ignore>
+  <ul class="ps-tags" aria-label="Tags">
     {tags.map((tag) => (
       <li>
         <a href={tagUrl(tag)}>#{tag}</a>
@@ -122,7 +120,7 @@ const neighbours = [
 </article>
 
 <Section id="end" title="More" bare class="ps-end">
-  <div class="ps-share" data-share data-share-url={url} data-pagefind-ignore>
+  <div class="ps-share" data-share data-share-url={url}>
     <h2 class="ps-label" id="share-h">Share</h2>
     <ul aria-labelledby="share-h">
       {targets.map((target) => (
@@ -152,7 +150,7 @@ const neighbours = [
       method="post"
       target="_blank"
       {...{ rel: 'noopener noreferrer' }}
-      data-pagefind-ignore
+     
     >
       <h2 class="ps-label">{NEWSLETTER.heading}</h2>
       <p class="small">{NEWSLETTER.text}</p>
@@ -174,7 +172,7 @@ const neighbours = [
   )}
 
   {neighbours.length > 0 && (
-    <nav class="ps-next" aria-label="More entries" data-pagefind-ignore>
+    <nav class="ps-next" aria-label="More entries">
       {neighbours.map((n) => (
         <a rel={n.rel} href={postUrl(n.post)}>
           <span class="ps-label">{n.dir}</span>
@@ -185,7 +183,7 @@ const neighbours = [
   )}
 
   {related.length > 0 && (
-    <section class="ps-rel" aria-labelledby="related-h" data-pagefind-ignore>
+    <section class="ps-rel" aria-labelledby="related-h">
       <h2 class="ps-label" id="related-h">Related</h2>
       <ul>
         {related.map((r) => (
