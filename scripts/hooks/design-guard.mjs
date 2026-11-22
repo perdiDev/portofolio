@@ -28,7 +28,7 @@ const base = path.split('/').pop();
 
 if (/^\.env(\..+)?$/.test(base) && base !== '.env.example')
   deny(`${base} holds secrets. Edit it yourself, or change .env.example.`);
-if (/^(dist|\.vercel|\.astro|node_modules)\//.test(path))
+if (/^(dist|\.wrangler|\.astro|node_modules)\//.test(path))
   deny(`${path} is generated output. Change the source instead.`);
 
 // Foundation code: generic parts, client scripts, the layout, section components (they render the

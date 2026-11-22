@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "node scripts/preview.mjs",
+    "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
     "design:lint": "node scripts/design-lint.mjs",
@@ -20,10 +20,10 @@
     "node": ">=22.12.0"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.4.9",
     "@astrojs/markdown-remark": "^7.3.6",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@astrojs/vercel": "^11.0.20",
     "@fontsource-variable/caveat": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
@@ -47,6 +47,7 @@
     "@types/sanitize-html": "^2.16.2",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^1.1.2",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "wrangler": "^4.166.0"
   }
 }

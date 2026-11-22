@@ -21,7 +21,7 @@ The design rules live in [`DESIGN.md`](DESIGN.md). The home page (`/`) is the re
 8. [Adding a project](#adding-a-project)
 9. [Project frontmatter](#project-frontmatter)
 10. [Environment variables](#environment-variables)
-11. [Deploying to Vercel](#deploying-to-vercel)
+11. [Deploying to Cloudflare](#deploying-to-cloudflare)
 12. [Custom domain and `SITE_URL`](#custom-domain-and-site_url)
 13. [Pre-publish checklist](#pre-publish-checklist)
 14. [Quality checks](#quality-checks)
@@ -40,11 +40,11 @@ pnpm dev                 # http://localhost:4321
 Production build and local preview:
 
 ```bash
-pnpm build               # builds the site to dist/ and .vercel/output
-pnpm preview             # serves dist/client at http://localhost:4321
+pnpm build               # builds the site to dist/ (dist/client assets, dist/server Worker)
+pnpm preview             # runs the build in Cloudflare's workerd runtime (astro preview)
 ```
 
-> `astro preview` is not supported by the Vercel adapter, so `pnpm preview` runs `scripts/preview.mjs`, a small static server that mimics Vercel for this site (trailing-slash redirects, the headers from `vercel.json`, brotli/gzip, the custom 404). The view-counter API is not executed locally; it answers `{ "enabled": false }`, which is what the site does when Redis is not configured.
+> `pnpm preview` serves the build through `workerd`, the Cloudflare runtime, so redirects, `_headers`, trailing slashes and the view-counter API behave as in production. It reads secrets from `.env`.
 
 ## Scripts
 
@@ -104,7 +104,7 @@ integrations/
   content-meta.mjs     Reads frontmatter at config time for sitemap lastmod and noindex rules
 scripts/               design-lint.mjs, preview.mjs, audit-build.py, hooks/
 DESIGN.md              Design reference
-vercel.json  astro.config.mjs  .env.example  .nvmrc
+wrangler.jsonc  astro.config.mjs  .env.example  .nvmrc
 ```
 
 One section is one component, one CSS file and optionally one script module with the same name (`Contact.astro`, `contact.css`, `contact.ts`).
@@ -127,7 +127,7 @@ To add a **category**, add it to `CATEGORIES`. It becomes valid in frontmatter a
 3. Put images in `src/assets/blog/` and reference them relatively: `![Descriptive alt text](../../assets/blog/diagram.png)`.
 4. Code blocks use [Expressive Code](https://expressive-code.com/): ` ```ts title="src/user.ts" {2,4-5} `, ` ```diff `, ` ```ts ins={3} del={2} `.
 5. Set `draft: true` while writing. Drafts are visible in `pnpm dev` only; in production they are excluded from pages, RSS and the sitemap.
-6. Run `pnpm verify` (the build fails on schema violations), commit and push. Vercel deploys.
+6. Run `pnpm verify` (the build fails on schema violations), commit and push. Cloudflare deploys.
 
 Reading time, table of contents (3 or more headings), related posts, previous/next links, OG image, JSON-LD and the sitemap entry are generated.
 
@@ -213,11 +213,11 @@ relatedPosts: [typescript-generics-in-practice] # optional, post slugs
 
 ## Environment variables
 
-Copy `.env.example` to `.env` locally and set the same names in the Vercel dashboard for production. **Every variable is optional**; each feature degrades gracefully when its variables are missing.
+Copy `.env.example` to `.env` locally and set the same names in Cloudflare for production. **Every variable is optional**; each feature degrades gracefully when its variables are missing.
 
 | Variable                                | Purpose                                                                                                                                                |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `SITE_URL`                              | Canonical origin (no trailing slash). Fallback: `https://$VERCEL_PROJECT_PRODUCTION_URL`, then `http://localhost:4321`.                                |
+| `SITE_URL`                              | Canonical origin (no trailing slash). Fallback: `http://localhost:4321`.                                                                               |
 | `PUBLIC_UMAMI_WEBSITE_ID`               | Umami website ID (cookieless analytics, production only). No script when missing.                                                                      |
 | `PUBLIC_UMAMI_SRC`                      | Script URL for self-hosted Umami (default `https://cloud.umami.is/script.js`).                                                                         |
 | `PUBLIC_BUTTONDOWN_USERNAME`            | Buttondown username. The subscribe form at the end of each post (`views/Post.astro`, copy in `NEWSLETTER` in `site.ts`) renders only when this is set. |
@@ -234,20 +234,21 @@ Variables are declared in `astro.config.mjs` (`env.schema`) and read through `as
 
 Post pages stay static. The counter renders only in builds where the Redis variables exist, and a small script fills it in and registers the visit once.
 
-## Deploying to Vercel
+## Deploying to Cloudflare
 
-1. Push the repository and import it in Vercel. The Astro preset is detected; the build command is `pnpm build`.
-2. Node 22+ works. `.nvmrc` pins 22 for local work.
-3. Optional, for the view counter: Vercel dashboard, **Storage** (or **Marketplace**), **Upstash**, **Redis**, create a database and connect it. This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN`. Alternatively create a database at [console.upstash.com](https://console.upstash.com) and set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`. Redeploy afterwards; the counter is included at build time only when the variables exist.
-4. Add any other variables you want, then redeploy.
-5. `vercel.json` sets `trailingSlash: true` and the security and caching headers (`/_astro/*` immutable for one year, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options`).
+The site is deployed as a Cloudflare Worker with static assets. Full steps, including the domain move, are in [doc/deployment.md](doc/deployment.md).
+
+1. Cloudflare dashboard, **Workers & Pages**, **Create application**, import the Git repository.
+2. Build command `pnpm build`, deploy command `npx wrangler deploy`. Set the build variable `NODE_VERSION=22`.
+3. Add the variables from `.env.example` under **Settings, Variables and secrets** (runtime) and **Settings, Build, Variables** (build). `SITE_URL` and `PUBLIC_*` are build variables.
+4. `public/_headers` sets the security and caching headers. `wrangler.jsonc` holds the Worker config.
 
 ## Custom domain and `SITE_URL`
 
-Until `SITE_URL` is set, the site URL is `https://$VERCEL_PROJECT_PRODUCTION_URL`. Canonicals, Open Graph URLs, JSON-LD, the sitemap, RSS and `robots.txt` derive from it.
+Canonicals, Open Graph URLs, JSON-LD, the sitemap, RSS and `robots.txt` derive from `SITE_URL`. Without it they point at `http://localhost:4321`.
 
-1. Vercel, **Settings, Domains**: add the domain and follow the DNS instructions.
-2. Set `SITE_URL=https://www.example.com` (no trailing slash) for Production.
+1. Worker, **Settings, Domains & Routes**: add the custom domain (the domain's DNS must be on Cloudflare).
+2. Set `SITE_URL=https://www.example.com` (no trailing slash) as a build variable.
 3. Redeploy. The URL is baked in at build time.
 4. Pick one canonical host (with or without `www`) and redirect the other.
 

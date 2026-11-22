@@ -4,20 +4,13 @@ Each post shows a view count in its meta line. Post pages stay static. A small s
 
 ## Activate
 
-You need a Redis database with a REST URL and token. Pick one path.
+You need a Redis database with a REST URL and token.
 
-### Path A: Vercel marketplace (easiest)
+### Create the database
 
-1. Vercel dashboard, your project, **Storage** (or **Marketplace**), **Upstash**, **Redis**.
-2. Create a database and connect it to the project.
-3. Vercel adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically. The code accepts these names.
-4. Redeploy.
-
-### Path B: Upstash directly
-
-1. Create a Redis database at [console.upstash.com](https://console.upstash.com). Choose a region near your Vercel region.
+1. Create a Redis database at [console.upstash.com](https://console.upstash.com). Choose a region near your users.
 2. On the database page, copy the **REST** URL and token (not the `redis://` URL).
-3. Add to Vercel **Environment Variables** (and `.env` for local):
+3. Add to Cloudflare (**Build, Variables**, plus **Variables and secrets** as secrets) and to `.env` for local:
 
    ```bash
    UPSTASH_REDIS_REST_URL=https://<name>.upstash.io

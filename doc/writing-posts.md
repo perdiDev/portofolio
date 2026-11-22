@@ -15,7 +15,7 @@ Posts are Markdown files in `src/content/blog/`. The collection is named `blog`,
 
 5. Keep `draft: true` while writing. Drafts show in `pnpm dev` only.
 6. Run `pnpm verify`. The build fails on schema errors.
-7. Commit and push. Vercel deploys.
+7. Commit and push. Cloudflare deploys.
 
 Generated for you: reading time, table of contents (3 or more headings), related posts, previous and next links, OG image, JSON-LD, sitemap entry, RSS entry.
 

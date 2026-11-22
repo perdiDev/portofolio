@@ -2,7 +2,7 @@
 
 ## The newsletter form does not show
 
-- `PUBLIC_BUTTONDOWN_USERNAME` is empty or not set in the environment of the build. Set it in Vercel and **redeploy**.
+- `PUBLIC_BUTTONDOWN_USERNAME` is empty or not set in the environment of the build. Set it as a Cloudflare build variable and **redeploy**.
 - You are looking at a page that is not a post. The form is only at the end of posts.
 
 ## The views counter does not show

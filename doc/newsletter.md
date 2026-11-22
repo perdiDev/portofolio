@@ -14,7 +14,7 @@ Code: `src/components/views/Post.astro`. Copy (heading, text, privacy line): `NE
    PUBLIC_BUTTONDOWN_USERNAME=your-username
    ```
 
-   Locally in `.env`, and in Vercel **Environment Variables** for production.
+   Locally in `.env`, and in the Cloudflare **Build, Variables** for production.
 
 4. Redeploy. The form appears on every post page.
 

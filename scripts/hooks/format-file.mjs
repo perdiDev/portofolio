@@ -9,7 +9,7 @@ const prettier = 'node_modules/.bin/prettier';
 if (
   !path ||
   !/\.(astro|css|ts|mjs|json)$/.test(path) ||
-  /^(dist|\.vercel|\.astro|node_modules)\//.test(path) ||
+  /^(dist|\.wrangler|\.astro|node_modules)\//.test(path) ||
   !existsSync(prettier) ||
   !existsSync(path)
 )

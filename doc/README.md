@@ -9,7 +9,7 @@ Task-oriented guides for running and maintaining this site. The root [`README.md
 | [Views counter](views-counter.md)                 | Turn on per-post view counts (Upstash Redis)                      |
 | [Analytics](analytics.md)                         | Turn on cookieless page analytics (Umami)                         |
 | [SEO and search engines](seo.md)                  | Verify Google and Bing, submit the sitemap, check metadata        |
-| [Deployment](deployment.md)                       | Deploy to Vercel, connect a domain, set `SITE_URL`                |
+| [Deployment](deployment.md)                       | Deploy to Cloudflare, connect a domain, set `SITE_URL`            |
 | [Writing a post](writing-posts.md)                | Add, edit, draft or publish a blog post                           |
 | [Adding a project](adding-projects.md)            | Add a project case study and its screenshots                      |
 | [Site content and config](site-config.md)         | Change bio, socials, categories, experience, achievements         |
@@ -27,13 +27,13 @@ Run `pnpm verify` before every commit. It runs the design lint, `astro check` an
 
 ## Which features need setup
 
-| Feature               | Needs                                                        | Without it                   |
-| --------------------- | ------------------------------------------------------------ | ---------------------------- |
-| Newsletter form       | `PUBLIC_BUTTONDOWN_USERNAME`                                 | Form is not rendered         |
-| Views counter         | `UPSTASH_REDIS_REST_URL` + `_TOKEN` (or the `KV_REST_API_*`) | Counter is not rendered      |
-| Analytics             | `PUBLIC_UMAMI_WEBSITE_ID`                                    | No script is loaded          |
-| Search verification   | `PUBLIC_GSC_VERIFICATION`, `PUBLIC_BING_VERIFICATION`        | No meta tags                 |
-| Correct canonical URL | `SITE_URL` (after a custom domain)                           | Falls back to the Vercel URL |
+| Feature               | Needs                                                        | Without it              |
+| --------------------- | ------------------------------------------------------------ | ----------------------- |
+| Newsletter form       | `PUBLIC_BUTTONDOWN_USERNAME`                                 | Form is not rendered    |
+| Views counter         | `UPSTASH_REDIS_REST_URL` + `_TOKEN` (or the `KV_REST_API_*`) | Counter is not rendered |
+| Analytics             | `PUBLIC_UMAMI_WEBSITE_ID`                                    | No script is loaded     |
+| Search verification   | `PUBLIC_GSC_VERIFICATION`, `PUBLIC_BING_VERIFICATION`        | No meta tags            |
+| Correct canonical URL | `SITE_URL` (after a custom domain)                           | Falls back to localhost |
 
 ## Conventions for these docs
 

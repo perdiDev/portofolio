@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from 'astro/config';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 import astroExpressiveCode from 'astro-expressive-code';
 import { unified } from '@astrojs/markdown-remark';
@@ -16,14 +16,12 @@ try {
 }
 
 /**
- * Site URL: SITE_URL -> Vercel production URL -> local dev server.
- * Set SITE_URL once a custom domain is connected (see README).
+ * Site URL: SITE_URL -> local dev server.
+ * Set SITE_URL for every build (Cloudflare build variable, see doc/deployment.md).
  */
 function resolveSite() {
   const explicit = process.env.SITE_URL?.trim();
   if (explicit) return explicit.replace(/\/+$/, '');
-  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
-  if (vercelUrl) return `https://${vercelUrl}`;
   return 'http://localhost:4321';
 }
 
@@ -60,9 +58,16 @@ const pick =
 export default defineConfig({
   site: resolveSite(),
   output: 'static',
-  adapter: vercel(),
+  // Prerender in Node: OG images need native resvg and node:fs. Images are optimised at build time with Sharp.
+  adapter: cloudflare({ imageService: 'compile', prerenderEnvironment: 'node' }),
+  // No sessions are used, so skip the KV binding the adapter would otherwise provision.
+  session: false,
   trailingSlash: 'always',
-  redirects: { '/blog': '/diary', '/blog/page/[page]': '/diary/page/[page]', '/blog/[slug]': '/diary/[slug]' },
+  redirects: {
+    '/blog': '/diary',
+    '/blog/page/[page]': '/diary/page/[page]',
+    '/blog/[slug]': '/diary/[slug]',
+  },
   // One small stylesheet: inlining it removes the render-blocking request.
   build: { format: 'directory', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
@@ -100,7 +105,7 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
-      // Names used by the Upstash integration in the Vercel marketplace.
+      // Alternative names used by the Upstash integration in the Vercel marketplace.
       KV_REST_API_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
       KV_REST_API_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
     },

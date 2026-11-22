@@ -1,47 +1,54 @@
-# Deployment (Vercel)
+# Deployment (Cloudflare Workers)
 
-The site is static, built with Astro 7 and `@astrojs/vercel`. The only on-demand route is the [views API](views-counter.md).
+The site is built with Astro 7 and `@astrojs/cloudflare`. Pages are prerendered to static files and served by Workers Static Assets. The only on-demand route is the [views API](views-counter.md), which runs in the Worker.
+
+## Files
+
+- `wrangler.jsonc`: Worker name, compatibility date and flags.
+- `public/_headers`: security headers on every route, one-year immutable cache on `/_astro/*`.
+- `astro.config.mjs`: `cloudflare({ imageService: 'compile', prerenderEnvironment: 'node' })`. Prerendering runs in Node because the OG images use native `@resvg/resvg-js` and `node:fs`. Images are optimised at build time with Sharp.
+- Redirects from `/blog` to `/diary` come from `astro.config.mjs` and are written to `dist/client/_redirects` at build time. Keep them: old links are still out there.
 
 ## First deploy
 
+### From the dashboard (builds on every push)
+
 1. Push the repository to GitHub.
-2. In Vercel: **Add New, Project**, import the repository. The Astro preset is detected. Build command: `pnpm build`.
-3. Use Node 22 or newer. `.nvmrc` pins 22 for local work. Set it in **Settings, General, Node.js Version** if needed.
-4. Add [environment variables](environment-variables.md) you want, then deploy.
+2. Cloudflare dashboard, **Workers & Pages**, **Create application**, **Import a repository**.
+3. Build command `pnpm build`. Deploy command `npx wrangler deploy`.
+4. Under **Build, Variables** add `NODE_VERSION=22` and the [environment variables](environment-variables.md) you want (`SITE_URL`, `PUBLIC_*`, the Redis names).
+5. Under **Variables and secrets** add `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` as secrets. The views API reads them at runtime.
 
-Every push to `main` deploys to production. Other branches and pull requests get preview URLs.
+Pushes to `main` deploy to production. Other branches get preview URLs.
 
-## What `vercel.json` does
+### From your machine
 
-- `trailingSlash: true`. Every URL ends in `/`.
-- `/_astro/*` is cached for one year (immutable).
-- Security headers on all routes: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options`.
+```bash
+pnpm exec wrangler login
+pnpm build
+pnpm exec wrangler deploy
+pnpm exec wrangler secret put UPSTASH_REDIS_REST_URL
+pnpm exec wrangler secret put UPSTASH_REDIS_REST_TOKEN
+```
 
-## Custom domain and `SITE_URL`
+## Moving the domain from Vercel
 
-Until `SITE_URL` is set, canonicals, OG URLs, JSON-LD, sitemap, RSS and `robots.txt` use `https://$VERCEL_PROJECT_PRODUCTION_URL`.
-
-1. Vercel, **Settings, Domains**: add the domain and follow the DNS instructions.
-2. Pick one canonical host (with or without `www`) and redirect the other one in the Domains screen.
-3. Set for **Production**:
-
-   ```bash
-   SITE_URL=https://www.example.com
-   ```
-
-   No trailing slash.
-
-4. Redeploy. The value is baked in at build time.
+1. Add the domain to Cloudflare (**Domains, Onboard a domain**) and let it import the DNS records. Change the nameservers at your registrar to the ones Cloudflare gives you.
+2. Worker, **Settings, Domains & Routes**, **Add, Custom domain**. Cloudflare creates the DNS record and certificate.
+3. Set `SITE_URL=https://www.example.com` as a build variable and redeploy.
+4. Remove the domain from the Vercel project once the site answers on Cloudflare.
 5. Submit the sitemap: see [SEO](seo.md).
+
+Lower the DNS TTL a day before the switch to shorten the cutover.
 
 ## Preview a build locally
 
 ```bash
 pnpm build
-pnpm preview   # serves dist/client at http://localhost:4321
+pnpm preview   # astro preview, runs the build in workerd
 ```
 
-`astro preview` does not work with the Vercel adapter, so `scripts/preview.mjs` imitates Vercel (redirects, headers, compression, 404). The views API is not run there.
+Secrets come from `.env` (copied to `dist/server/.dev.vars`).
 
 ## Before you push
 
@@ -52,8 +59,4 @@ pnpm audit:build   # optional: audit the built HTML
 
 ## Rollback
 
-Vercel, **Deployments**, pick an older successful deployment, **Promote to Production** (or **Instant Rollback**).
-
-## Redirects
-
-`/blog`, `/blog/page/N` and `/blog/<slug>` redirect to the `/diary/` equivalents (`astro.config.mjs`). Keep them: old links are still out there.
+Worker, **Deployments**, pick an older version, **Rollback**.

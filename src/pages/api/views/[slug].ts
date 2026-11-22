@@ -45,8 +45,10 @@ async function sha256(input: string): Promise<string> {
 }
 
 function visitorAddress(context: APIContext): string {
-  const forwarded = context.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
-  if (forwarded) return forwarded;
+  const { headers } = context.request;
+  const forwarded =
+    headers.get('cf-connecting-ip') ?? headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  if (forwarded) return forwarded.trim();
   try {
     return context.clientAddress;
   } catch {

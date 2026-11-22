@@ -19,7 +19,7 @@
       },
       {
         "capability": "fs_write",
-        "match": [".env", ".env.*", "dist/**", ".vercel/**", ".astro/**"],
+        "match": [".env", ".env.*", "dist/**", ".wrangler/**", ".astro/**"],
         "effect": "deny",
         "exclude": [".env.example"]
       },

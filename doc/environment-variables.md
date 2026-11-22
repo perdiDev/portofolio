@@ -14,7 +14,7 @@ cp .env.example .env
 
 Restart `pnpm dev` after editing `.env`.
 
-**Production:** Vercel dashboard, your project, **Settings**, **Environment Variables**. Add each name for the **Production** environment (and **Preview** if you want it there). Then **redeploy**. Values are read at build time, so a change does nothing until the next build.
+**Production:** Cloudflare dashboard, your Worker, **Settings**. `SITE_URL`, `PUBLIC_*` and the Redis names go under **Build, Variables** because they are read while building. The Redis names also go under **Variables and secrets** (as secrets) because the views API reads them at runtime. Then **redeploy**; build variables do nothing until the next build.
 
 `.env` is git-ignored. Never commit it.
 
@@ -35,7 +35,7 @@ Restart `pnpm dev` after editing `.env`.
 
 - **public**: prefixed `PUBLIC_`, ends up in the browser. Only put non-sensitive values here.
 - **secret**: server only. Never prefix with `PUBLIC_`.
-- `SITE_URL` falls back to `https://$VERCEL_PROJECT_PRODUCTION_URL`, then `http://localhost:4321`.
+- `SITE_URL` falls back to `http://localhost:4321`.
 
 ## Minimal production set
 
