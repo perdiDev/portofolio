@@ -102,15 +102,39 @@
   color: var(--muted);
 }
 
+.toc {
+  min-width: 0;
+}
 .toc ol {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.15rem;
+  /* Five rows tall (row 2.25rem + gap 0.15rem); longer lists scroll inside this window. */
+  max-height: calc(5 * 2.25rem + 4 * 0.15rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  scroll-snap-type: y proximity;
+}
+.toc ol::-webkit-scrollbar {
+  display: none;
+}
+.toc ol[data-edge='start'] {
+  mask-image: linear-gradient(to bottom, var(--ink) 75%, transparent);
+}
+.toc ol[data-edge='end'] {
+  mask-image: linear-gradient(to top, var(--ink) 75%, transparent);
+}
+.toc ol[data-edge='middle'] {
+  mask-image: linear-gradient(to bottom, transparent, var(--ink) 25%, var(--ink) 75%, transparent);
 }
 .toc a {
+  min-width: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.9rem;
-  padding: 0.4rem 0;
+  height: 2.25rem;
+  scroll-snap-align: start;
   color: var(--muted);
   transition:
     color 200ms ease,
@@ -124,13 +148,17 @@
 .toc-l {
   font-size: 0.9375rem;
   position: relative;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .toc-l::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -2px;
+  bottom: 0;
   height: 1px;
   background: var(--accent);
   transform: scaleX(0);
