@@ -10,6 +10,6 @@ export function projectSections(project: Project, relatedCount: number): NavItem
     { id: 'challenges', label: 'Challenges' },
     { id: 'learned', label: 'Learned' },
     ...(d.outcome ? [{ id: 'outcome', label: 'Outcome' }] : []),
-    ...(relatedCount > 0 ? [{ id: 'related', label: 'Writing' }] : []),
+    ...(relatedCount > 0 ? [{ id: 'related', label: 'Diary' }] : []),
   ];
 }

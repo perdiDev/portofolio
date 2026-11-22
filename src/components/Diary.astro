@@ -1,0 +1,138 @@
+---
+/**
+ * Diary: the list of posts on the foundation. A header (kicker, serif title, intro, topic links),
+ * ruled entry rows (date, title and note, an arrow) and a quiet pager.
+ * Used for the main list, category pages and tag pages through ListingLayout.
+ */
+import '../styles/diary.css';
+import Section from './foundation/Section.astro';
+import { formatShortDate, isoDate } from '../utils/format';
+import { pageUrl, type Page } from '../utils/paginate';
+import { postUrl, readingTimeOf, type Post } from '../utils/posts';
+import { categoryUrl, type Term } from '../utils/taxonomy';
+
+interface Props {
+  heading: string;
+  intro?: string;
+  /** Mono line above the title, e.g. the parent listing. */
+  kicker?: { label: string; href: string };
+  page: Page<Post>;
+  /** Path of page 1, ending with "/". */
+  base: string;
+  /** Category links shown under the intro. */
+  categories?: Term[];
+  current?: string;
+}
+
+const { heading, intro, kicker, page, base, categories = [], current } = Astro.props;
+
+const words = heading.split(' ');
+const last = words.pop()!;
+const lead = words.join(' ');
+const total = page.totalItems;
+---
+
+<Section id="diary" title="Diary" headless class="dy">
+  <header class="dy-head">
+    {kicker ? (
+      <a class="dy-kicker ulink" href={kicker.href}>
+        <span aria-hidden="true">←</span> {kicker.label}
+      </a>
+    ) : (
+      <p class="dy-kicker">
+        {total} {total === 1 ? 'entry' : 'entries'}
+      </p>
+    )}
+    <h1 id="diary-h" class="dy-title">
+      {lead && <>{lead} </>}
+      <em>{last}</em>
+      {page.page > 1 && <span class="dy-page tnum">Page {page.page}</span>}
+    </h1>
+    {intro && <p class="dy-intro">{intro}</p>}
+
+    {categories.length > 0 && (
+      <nav class="dy-topics" aria-label="Browse the diary">
+        <ul>
+          <li>
+            <a href="/blog/" aria-current={current === undefined && !kicker ? 'page' : undefined}>
+              All
+            </a>
+          </li>
+          {categories.map((c) => (
+            <li>
+              <a href={categoryUrl(c.name)} aria-current={current === c.name ? 'page' : undefined}>
+                {c.name}
+                <span class="tnum" aria-hidden="true">
+                  {c.count}
+                </span>
+                <span class="sr">({c.count} entries)</span>
+              </a>
+            </li>
+          ))}
+          <li class="dy-more">
+            <a href="/tags/">Tags</a>
+          </li>
+          <li>
+            <a href="/archive/">Archive</a>
+          </li>
+        </ul>
+      </nav>
+    )}
+  </header>
+
+  {page.items.length > 0 ? (
+    <ol class="dy-list" data-reveal>
+      {page.items.map((post, i) => {
+        const d = post.data.pubDate;
+        const reading = readingTimeOf(post);
+        return (
+          <li class="dy-row" style={`--i:${i}`}>
+            <a class="dy-link" href={postUrl(post)}>
+              <time class="dy-when" datetime={isoDate(d)}>
+                <span class="dy-day">{formatShortDate(d)}</span>
+                <span class="dy-year tnum">{d.getUTCFullYear()}</span>
+              </time>
+              <div class="dy-body">
+                <p class="dy-meta">
+                  {post.data.category}
+                  <span aria-hidden="true"> · </span>
+                  {reading.text}
+                  {post.data.draft && <span class="dy-draft">Draft</span>}
+                </p>
+                <h3>{post.data.title}</h3>
+                <p class="small">{post.data.description}</p>
+              </div>
+              <span class="dy-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        );
+      })}
+    </ol>
+  ) : (
+    <p class="dy-empty">Nothing written here yet.</p>
+  )}
+
+  {page.totalPages > 1 && (
+    <nav class="dy-pager" aria-label="Diary pages">
+      {page.page > 1 ? (
+        <a class="ulink" rel="prev" href={pageUrl(base, page.page - 1)}>
+          <span aria-hidden="true">←</span> Newer
+        </a>
+      ) : (
+        <span />
+      )}
+      <p class="dy-count tnum">
+        {page.page} / {page.totalPages}
+      </p>
+      {page.page < page.totalPages ? (
+        <a class="ulink" rel="next" href={pageUrl(base, page.page + 1)}>
+          Older <span aria-hidden="true">→</span>
+        </a>
+      ) : (
+        <span />
+      )}
+    </nav>
+  )}
+</Section>

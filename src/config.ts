@@ -86,7 +86,7 @@ export const BLOG = {
 
 export const NAV = [
   { label: 'Home', href: '/' },
-  { label: 'Blog', href: '/blog/' },
+  { label: 'Diary', href: '/blog/' },
   { label: 'Projects', href: '/projects/' },
   { label: 'Skills', href: '/skills/' },
   { label: 'More', href: '/about/' },

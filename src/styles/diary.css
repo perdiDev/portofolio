@@ -1,0 +1,292 @@
+/* Diary: header, ruled entry rows with a masked date, a drawn rule and a quiet pager. */
+.dy.sec {
+  padding-top: clamp(4rem, 8vw, 6.5rem);
+}
+.dy-head {
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.dy-kicker {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+a.dy-kicker {
+  color: var(--muted);
+}
+.dy-title {
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
+  line-height: 1.02;
+}
+.dy-page {
+  display: block;
+  margin-top: 0.9rem;
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dy-intro {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: 1.0625rem;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.dy-topics {
+  margin-top: 2.5rem;
+}
+.dy-topics ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+}
+.dy-topics li {
+  display: flex;
+}
+.dy-topics .dy-more {
+  margin-left: auto;
+}
+.dy-topics a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding-block: 0.4rem;
+  font: 500 0.6875rem/1.2 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid transparent;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+.dy-topics a[aria-current='page'] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Rows */
+.dy-row {
+  position: relative;
+}
+.dy-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+.dy-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.dy-link {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 2rem;
+  align-items: start;
+  gap: 1.5rem;
+  padding: 1.75rem 0;
+}
+.dy-when {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.15em;
+}
+.dy-when > span {
+  display: block;
+}
+.dy-day {
+  font: italic 400 clamp(1.5rem, 2.4vw, 2rem) / 1.1 var(--serif);
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+.dy-year {
+  margin-top: 0.35rem;
+  font: 400 0.6875rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.dy-body {
+  min-width: 0;
+}
+.dy-meta {
+  margin-bottom: 0.5rem;
+  font: 500 0.6875rem/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dy-draft {
+  margin-left: 0.75rem;
+  color: var(--accent);
+}
+.dy-row h3 {
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.25;
+}
+.dy-body .small {
+  max-width: 40rem;
+  margin-top: 0.5rem;
+}
+.dy-arrow {
+  justify-self: end;
+  padding-top: 0.2rem;
+  font: 400 1.25rem/1 var(--serif);
+  color: var(--accent);
+}
+.dy-empty {
+  color: var(--muted);
+}
+
+/* Pager */
+.dy-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.dy-count {
+  font: 400 0.75rem/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+/* Entrance: each rule draws, the date rises out of a mask, text eases up out of a blur */
+.js .dy-row::before {
+  transform: scaleX(0);
+  transition: transform 1200ms var(--ease-out) calc(var(--i) * 110ms);
+}
+.js .dy-list.in .dy-row::before {
+  transform: none;
+}
+.js .dy-when > span {
+  transform: translateY(115%);
+  transition: transform 1000ms var(--ease-out) calc(200ms + var(--i) * 110ms);
+}
+.js .dy-list.in .dy-when > span {
+  transform: none;
+}
+.js .dy-body {
+  opacity: 0;
+  translate: 0 12px;
+  filter: blur(5px);
+  transition:
+    opacity 800ms var(--ease-out) calc(320ms + var(--i) * 110ms),
+    translate 900ms var(--ease-out) calc(320ms + var(--i) * 110ms),
+    filter 800ms var(--ease-out) calc(320ms + var(--i) * 110ms);
+}
+.js .dy-list.in .dy-body {
+  opacity: 1;
+  translate: 0;
+  filter: none;
+}
+.js .dy-head > * {
+  opacity: 0;
+  translate: 0 14px;
+  transition:
+    opacity 800ms var(--ease-out) calc(var(--h, 0) * 90ms),
+    translate 900ms var(--ease-out) calc(var(--h, 0) * 90ms);
+}
+.js .dy-head > :nth-child(2) {
+  --h: 1;
+}
+.js .dy-head > :nth-child(3) {
+  --h: 2;
+}
+.js .dy-head > :nth-child(4) {
+  --h: 3;
+}
+.js .dy.in .dy-head > * {
+  opacity: 1;
+  translate: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dy-row::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 700ms var(--ease-out);
+  }
+  .dy-row:hover::after {
+    transform: scaleX(1);
+  }
+  .dy-row h3,
+  .dy-arrow {
+    transition: transform 500ms var(--ease-out);
+  }
+  .dy-row:hover h3 {
+    transform: translateX(8px);
+  }
+  .dy-row:hover .dy-arrow {
+    transform: translateX(4px);
+  }
+  .dy-list:hover .dy-row:not(:hover) .dy-link {
+    opacity: 0.5;
+  }
+  .dy-link {
+    transition: opacity 400ms ease;
+  }
+  .dy-topics a:hover {
+    color: var(--ink);
+  }
+  .dy-topics a[aria-current='page']:hover {
+    color: var(--accent);
+  }
+}
+
+@media (max-width: 64rem) {
+  .dy-link {
+    grid-template-columns: 7rem minmax(0, 1fr) 1.5rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .dy-link {
+    grid-template-columns: minmax(0, 1fr) 1.5rem;
+    gap: 0.6rem 1rem;
+  }
+  .dy-when {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .dy-year {
+    margin-top: 0;
+  }
+  .dy-topics .dy-more {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .dy-row::before,
+  .js .dy-when > span,
+  .js .dy-body,
+  .js .dy-head > * {
+    transition: none !important;
+    transform: none;
+    translate: 0;
+    filter: none;
+    opacity: 1;
+  }
+  .dy-row::after,
+  .dy-row h3,
+  .dy-arrow {
+    transition: none !important;
+  }
+}

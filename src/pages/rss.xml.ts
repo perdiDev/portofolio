@@ -85,7 +85,7 @@ export const GET: APIRoute = async ({ site }) => {
   );
 
   return rss({
-    title: `${SITE.name} — Blog`,
+    title: `${SITE.name} — Diary`,
     description: SITE.description,
     site: origin,
     items,

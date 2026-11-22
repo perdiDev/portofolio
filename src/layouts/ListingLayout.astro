@@ -1,23 +1,22 @@
 ---
 /**
- * Shared shell for every paginated list of posts: /blog/, category pages, tag pages.
- * Produces unique titles/descriptions ("Blog — Page 2"), self-canonicals,
- * rel prev/next, a visible breadcrumb trail and the matching JSON-LD.
+ * Shared shell for every paginated list of posts: the diary, category pages, tag pages.
+ * Produces unique titles/descriptions ("Diary — Page 2"), self-canonicals,
+ * rel prev/next and the matching breadcrumb JSON-LD. The visible page is the Diary section.
  */
-import Pagination from '../components/Pagination.astro';
-import PageHeader from '../components/PageHeader.astro';
-import PostList from '../components/PostList.astro';
+import Diary from '../components/Diary.astro';
 import { breadcrumbJsonLd, type BreadcrumbItem } from '../utils/jsonld';
 import { clamp } from '../utils/format';
 import { pageUrl, type Page } from '../utils/paginate';
 import { pageLabel } from '../utils/seo';
 import type { Post } from '../utils/posts';
-import BaseLayout from './BaseLayout.astro';
+import type { Term } from '../utils/taxonomy';
+import FoundationLayout from './FoundationLayout.astro';
 
 interface Props {
-  /** <h1> text. */
+  /** Visible title. */
   heading: string;
-  /** Short name used in <title>: "Blog", "Linux", "Tag: typescript". */
+  /** Short name used in <title>: "Diary", "Linux", "Tag: typescript". */
   label: string;
   intro?: string;
   /** Meta description of the first page. */
@@ -28,9 +27,27 @@ interface Props {
   base: string;
   page: Page<Post>;
   noindex?: boolean;
+  /** Shows the topic links under the intro. */
+  categories?: Term[];
+  /** Name of the active category. */
+  current?: string;
+  /** Link back to the parent listing (category and tag pages). */
+  kicker?: { label: string; href: string };
 }
 
-const { heading, label, intro, description, breadcrumbs, base, page, noindex } = Astro.props;
+const {
+  heading,
+  label,
+  intro,
+  description,
+  breadcrumbs,
+  base,
+  page,
+  noindex,
+  categories,
+  current,
+  kicker,
+} = Astro.props;
 const site = Astro.site!;
 
 const trail: BreadcrumbItem[] =
@@ -44,35 +61,21 @@ const pageDescription =
     : description;
 ---
 
-<BaseLayout
+<FoundationLayout
   title={pageLabel(label, page.page)}
   description={pageDescription}
+  heading={heading}
+  ownHeading
   noindex={noindex}
-  prev={page.prevUrl}
-  next={page.nextUrl}
-  jsonLd={[breadcrumbJsonLd(site, trail)]}
+  seo={{ prev: page.prevUrl, next: page.nextUrl, jsonLd: [breadcrumbJsonLd(site, trail)] }}
 >
-  <div class="page page-top">
-    <PageHeader
-      title={page.page > 1 ? `${heading} — Page ${page.page}` : heading}
-      intro={intro}
-      breadcrumbs={trail}
-    >
-      <slot name="header" />
-    </PageHeader>
-
-    {page.items.length > 0 ? (
-      <PostList posts={page.items} showTags={false} />
-    ) : (
-      <p class="text-muted">Nothing here yet.</p>
-    )}
-
-    <Pagination
-      page={page.page}
-      totalPages={page.totalPages}
-      base={base}
-      label={`${label} pages`}
-    />
-    <slot />
-  </div>
-</BaseLayout>
+  <Diary
+    heading={heading}
+    intro={intro}
+    kicker={kicker}
+    page={page}
+    base={base}
+    categories={categories}
+    current={current}
+  />
+</FoundationLayout>
