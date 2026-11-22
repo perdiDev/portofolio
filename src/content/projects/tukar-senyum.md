@@ -8,7 +8,6 @@ status: Live
 role: Fullstack Web Developer
 duration: 4 months so far
 techStack: [Next.js, Laravel, Filament, Midtrans Payment]
-repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
 thumbnail:
   image: ../../assets/projects/tukar-senyum/screenshot-1.png
   alt: Tukar Senyum home page with the headline Rangkai Cerita Lewat Bunga and a photo of a pink rose bouquet in green wrapping

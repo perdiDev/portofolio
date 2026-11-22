@@ -8,7 +8,6 @@ status: Archived
 role: Fullstack Software Engineer (Mobile)
 duration: 4 months so far
 techStack: [Flutter, Gemini API, Firebase, Figma, Google Authentication]
-repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
 thumbnail:
   image: ../../assets/projects/child-care/screenshot-1.png
   alt: Three phone screens of the ChildCare app showing the home page, the community feed and the tips page

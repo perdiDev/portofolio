@@ -8,7 +8,6 @@ status: Live
 role: Fullstack Software Engineer (Mobile)
 duration: 4 months so far
 techStack: [Flutter, Golang, VPS Cloud, Azure Cloud, Docker]
-repoUrl: https://github.com/perdidev/childcare # TODO: replace with the real repository
 thumbnail:
   image: ../../assets/projects/hyskysfc/screenshot-1.png
   alt: Three phone screens of the HySkySFC app showing the dashboard, the Data PLTS page and the Data PLTD page
