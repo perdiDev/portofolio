@@ -24,7 +24,7 @@ export const AUTHOR = {
   name: 'Perdi',
   email: 'perdidev@gmail.com',
   jobTitle: 'Software Engineer',
-  /** TODO: replace with your real bio (shown on /about/ and in Person JSON-LD). */
+  /** TODO: replace with your real bio (shown in Person JSON-LD). */
   bio: 'Informatics Engineering graduate specializing in Software Engineering, with hands-on experience for almost 4+ years.',
 } as const;
 
@@ -67,7 +67,7 @@ export const SITE = {
   themeColor: '#fafaf9',
   /** TODO: optional. Your X handle without "@", used for twitter:site / twitter:creator. */
   twitterHandle: '',
-  /** TODO: optional. Set to a URL (e.g. "/cv.pdf" placed in /public) to show "Download CV" on /about/. */
+  /** TODO: optional. Set to a URL (e.g. "/cv.pdf" placed in /public). */
   cvUrl: '',
   /** First year shown in the footer copyright (current year is computed at build time). */
   copyrightStartYear: 2025,
@@ -87,41 +87,7 @@ export const BLOG = {
 export const NAV = [
   { label: 'Home', href: '/' },
   { label: 'Diary', href: '/blog/' },
-  { label: 'Projects', href: '/projects/' },
-  { label: 'Skills', href: '/skills/' },
-  { label: 'More', href: '/about/' },
 ] as const;
-
-export const ABOUT = {
-  /** TODO: tune to what you really write about. */
-  writesAbout: [
-    {
-      title: 'Programming',
-      text: 'JavaScript and TypeScript in depth, algorithms without the anxiety, and patterns that survive contact with production.',
-    },
-    {
-      title: 'Linux',
-      text: 'The terminal, permissions, services, and the everyday tools every developer should be comfortable with.',
-    },
-    {
-      title: 'Software engineering',
-      text: 'Code review, commit hygiene, debugging habits, and the human side of shipping software.',
-    },
-  ],
-  /** TODO: replace with your real stack. */
-  skills: [
-    'TypeScript',
-    'JavaScript',
-    'Node.js',
-    'Astro',
-    'Linux',
-    'Bash',
-    'PostgreSQL',
-    'Git',
-    'Docker',
-    'Testing',
-  ],
-} as const;
 
 export interface ExperienceRole {
   /** Job title for this step, e.g. "Senior Frontend Engineer". */
@@ -286,48 +252,6 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
     description: 'Scholarship competition · Telkom University',
     date: '2022',
     url: '',
-  },
-] as const;
-
-export interface SkillGroup {
-  readonly title: string;
-  /** Key of the icon in `src/components/Icon.astro`. */
-  readonly icon: 'layout' | 'server' | 'terminal' | 'cloud';
-  readonly description: string;
-  readonly skills: readonly string[];
-  /** Project ids (filenames under `src/content/projects`, without `.md`) built with this skill set. */
-  readonly projectIds: readonly string[];
-}
-
-/** TODO: replace with your real skill groups. Shown on the home page, after Projects. */
-export const SKILLS: readonly SkillGroup[] = [
-  {
-    title: 'Website',
-    icon: 'layout',
-    description: 'Interfaces that stay fast and readable, from the component up to the pixel.',
-    skills: ['TypeScript', 'NextJS', 'Laravel', 'Filament', 'Astro', 'Tailwind CSS', 'Accessibility', 'Figma'],
-    projectIds: ['boat-safe-system', 'tukar-senyum', 'pokidulu', 'sapadesa'],
-  },
-  {
-    title: 'Backend & Data',
-    icon: 'server',
-    description: 'APIs and data models that still hold up once real traffic and real data arrive.',
-    skills: ['Node.js', 'PostgreSQL', 'REST APIs', 'Data modeling'],
-    projectIds: ['hyskysfc', 'sapadesa'],
-  },
-  {
-    title: 'Tooling & DX',
-    icon: 'terminal',
-    description: 'CLIs and scripts that make the next hour of work a little faster than this one.',
-    skills: ['CLI design', 'Git', 'Bash', 'Markdown'],
-    projectIds: ['pomodoro-cli', 'portfolio-engine'],
-  },
-  {
-    title: 'Delivery & Performance',
-    icon: 'cloud',
-    description: 'Shipping with CI, performance budgets, and deploys nobody has to babysit.',
-    skills: ['Vercel', 'CI/CD', 'Lighthouse audits', 'SEO'],
-    projectIds: ['portfolio-engine'],
   },
 ] as const;
 

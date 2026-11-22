@@ -7,8 +7,6 @@ const pathname = Astro.url.pathname;
 /** Sections whose sub-pages keep the parent nav item highlighted (visual only). */
 const sectionPrefixes: Record<string, string[]> = {
   '/blog/': ['/blog/', '/categories/', '/tags/', '/archive/'],
-  '/projects/': ['/projects/'],
-  '/about/': ['/about/'],
   '/contact/': ['/contact/'],
 };
 
@@ -140,8 +138,6 @@ const navLinkClass =
   // state and the mobile menu must be refreshed on every page load.
   const sections: Record<string, string[]> = {
     '/blog/': ['/blog/', '/categories/', '/tags/', '/archive/'],
-    '/projects/': ['/projects/'],
-    '/about/': ['/about/'],
     '/contact/': ['/contact/'],
   };
 

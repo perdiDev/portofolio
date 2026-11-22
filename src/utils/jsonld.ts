@@ -103,7 +103,7 @@ export function blogPostingJsonLd(input: BlogPostingInput): JsonLd {
     image: [input.image],
     datePublished: input.datePublished.toISOString(),
     dateModified: input.dateModified.toISOString(),
-    author: { ...personRef(input.site), url: absoluteUrl('/about/', input.site) },
+    author: { ...personRef(input.site), url: absoluteUrl('/', input.site) },
     publisher: personRef(input.site),
     mainEntityOfPage: { '@type': 'WebPage', '@id': input.url },
     isPartOf: { '@id': websiteId(input.site) },

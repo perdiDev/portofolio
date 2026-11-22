@@ -38,7 +38,6 @@ const url = absoluteUrl(projectUrl(project), site);
 const ogImage = absoluteUrl(ogImagePath('projects', project.id), site);
 const crumbs: BreadcrumbItem[] = [
   { name: 'Home', href: '/' },
-  { name: 'Projects', href: '/projects/' },
   { name: d.title, href: projectUrl(project) },
 ];
 const jsonLd = [

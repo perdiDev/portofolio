@@ -109,7 +109,7 @@ const socialTitle = fullTitle ?? title;
       property="article:modified_time"
       content={(article.modifiedTime ?? article.publishedTime).toISOString()}
     />
-    <meta property="article:author" content={absoluteUrl('/about/', site)} />
+    <meta property="article:author" content={absoluteUrl('/', site)} />
     {article.section && <meta property="article:section" content={article.section} />}
     {article.tags?.map((tag) => (
       <meta property="article:tag" content={tag} />
