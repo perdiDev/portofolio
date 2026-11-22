@@ -11,6 +11,20 @@ const sync = () => {
   btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
 };
 
+// No saved choice: keep following the system setting while the page is open.
+const hasChoice = () => {
+  try {
+    return localStorage.getItem('theme') !== null;
+  } catch {
+    return false;
+  }
+};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (hasChoice()) return;
+  root.dataset.theme = e.matches ? 'dark' : 'light';
+  sync();
+});
+
 if (btn) {
   sync();
   btn.addEventListener('click', () => {
