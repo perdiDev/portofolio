@@ -27,9 +27,6 @@ export async function getProjects(): Promise<Project[]> {
 export const postUrl = (post: Pick<Post, 'id'>) => `/blog/${post.id}/`;
 export const projectUrl = (project: Pick<Project, 'id'>) => `/projects/${project.id}/`;
 
-/** Date used for sorting, sitemap lastmod, and "Updated" labels. */
-export const lastModified = (post: Post): Date => post.data.updatedDate ?? post.data.pubDate;
-
 export function readingTimeOf(post: Post): ReadingTime {
   return getReadingTime(post.body);
 }

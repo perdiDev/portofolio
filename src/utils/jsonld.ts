@@ -56,19 +56,6 @@ export function websiteJsonLd(site: Site): JsonLd {
   });
 }
 
-export function profilePageJsonLd(site: Site, path: string, dateModified?: Date): JsonLd {
-  const { '@context': _context, ...person } = personJsonLd(site);
-  return node('ProfilePage', {
-    '@id': absoluteUrl(`${path}#profile`, site),
-    url: absoluteUrl(path, site),
-    name: `About ${AUTHOR.name}`,
-    inLanguage: SITE.language,
-    isPartOf: { '@id': websiteId(site) },
-    ...(dateModified ? { dateModified: dateModified.toISOString() } : {}),
-    mainEntity: person,
-  });
-}
-
 export function breadcrumbJsonLd(site: Site, items: BreadcrumbItem[]): JsonLd {
   return node('BreadcrumbList', {
     itemListElement: items.map((item, index) => ({

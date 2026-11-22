@@ -28,13 +28,6 @@ export const AUTHOR = {
   bio: 'Informatics Engineering graduate specializing in Software Engineering, with hands-on experience for almost 4+ years.',
 } as const;
 
-/** Local time shown in the site rail. */
-export const LOCAL_TIME = {
-  city: 'Makassar',
-  timeZone: 'Asia/Makassar',
-  label: 'WITA',
-} as const;
-
 /** Shown in the Foundations section on the home page. The last word of `degree` is emphasised. */
 export const EDUCATION = {
   level: 'Bachelor’s degree',
@@ -83,11 +76,6 @@ export const BLOG = {
   /** Minimum number of h2/h3 headings before a table of contents is shown. */
   tocMinHeadings: 3,
 } as const;
-
-export const NAV = [
-  { label: 'Home', href: '/' },
-  { label: 'Diary', href: '/blog/' },
-] as const;
 
 export interface ExperienceRole {
   /** Job title for this step, e.g. "Senior Frontend Engineer". */

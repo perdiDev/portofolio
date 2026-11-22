@@ -22,11 +22,6 @@
   --muted: #6f6b63;
   --line: #d9d4c8;
   --accent: #8a4a30;
-  --band-bg: #1d1b18;
-  --band-ink: #f4f1ea;
-  --band-muted: #a8a397;
-  --band-line: #38342d;
-  --band-2: #26231f;
   --band-accent: #e3ad8d;
   color-scheme: light;
 }
@@ -38,11 +33,6 @@
   --muted: #9a958a;
   --line: #2d2a25;
   --accent: #dba685;
-  --band-bg: #ece7dd;
-  --band-ink: #1d1b18;
-  --band-muted: #5f5b53;
-  --band-line: #cdc7b8;
-  --band-2: #e0dacb;
   --band-accent: #8a4a30;
   color-scheme: dark;
 }
