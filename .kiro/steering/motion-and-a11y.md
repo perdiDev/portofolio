@@ -13,3 +13,5 @@ fileMatchPattern: ['src/**/*.css', 'src/**/*.astro', 'src/scripts/**/*.ts']
 - Touch targets at least 44px (2.75rem). Check at 390px.
 - Check both themes. Text on `--bg` must meet 4.5:1.
 - After a change: `node scripts/design-lint.mjs <files>`.
+- Page transitions are native cross-document view transitions in `styles/foundation/transitions.css`, only under `prefers-reduced-motion: no-preference`. A shared element gets a `view-transition-name` (the project plate uses `plate-{id}`, managed by `scripts/foundation/transition.ts`).
+- Scroll-driven rows use `data-fisheye` on the container and `data-fi` on items (`scripts/foundation/fisheye.ts` writes `--fe`; CSS decides the effect).

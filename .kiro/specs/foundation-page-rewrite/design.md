@@ -1,66 +1,52 @@
-# Design: rewrite on the foundation
+# Design: pages on the foundation
 
 ## Architecture
 
 ```
-FoundationLayout (shell, SEO props)
-  └─ Page (src/pages/**)       composes sections only
-       └─ Section (foundation) hairline + number + h2 + reveal
-            └─ Section components (components/X.astro) with styles/x.css and scripts/x.ts
+FoundationLayout (shell, `seo` prop)
+  ├─ ListingLayout   diary, tags, categories  -> views/Diary
+  ├─ PostLayout      diary entry              -> views/Post
+  └─ Page (src/pages/**)  composes sections or a view only
+       └─ Section (foundation)  hairline + number + h2 + reveal
+            └─ Section components (components/sections/X.astro) with styles/x.css and scripts/x.ts
 ```
 
-Section files sit directly in `components/`, `styles/`, `scripts/` (no per-page folders); generic shell parts in `foundation/`.
+Generic shell parts sit in `components/foundation/` (Section, SEO, Analytics, Icon). Home sections are in `components/sections/`. Full-page bodies are in `components/views/`. CSS in `styles/`, behavior in `scripts/`, same stem. No per-page folders.
 
-## Layout changes needed
+## Layout
 
-`FoundationLayout` today covers head, theme bootstrap, rail, footer. Add, in this order and each as its own verified step:
+`FoundationLayout` covers head and SEO, theme bootstrap (saved in local storage), rail (identity, section or outline nav, clock, theme toggle), main and footer. Props: `title`, `description`, `heading`, `ownHeading`, `nav`, `noindex`, `seo`. The rail nav is anchors to sections on the page; on entries it lists the entry's headings.
 
-1. `seo` prop: pass-through to `src/components/foundation/SEO.astro` (title, description, canonical, image, type, dates, JSON-LD).
-2. `rail` variants: the rail nav is section anchors on the home page. On other pages it shows site links (Home, Work, Writing, About) with `aria-current="page"`. Implement as `nav` items with `href` instead of `#id`, plus a `mode` of `anchors` or `pages`.
-3. `Analytics`, `Cursor` removal check, `ViewCounter` slot for posts.
-   Home keeps pixel parity at each step (regression script).
+## Route map
 
-## New shared components (create when first needed, then reuse)
+| Route                           | Body                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `/`                             | Work, Experience, Education, Recognition, Contact                        |
+| `/diary/`, `/diary/page/[page]` | `Diary` view through `ListingLayout`                                     |
+| `/diary/[slug]`                 | `Post` view through `PostLayout`                                         |
+| `/projects/[slug]`              | `ProjectDetail` view, plate hero, sections from `utils/project-sections` |
+| `/archive`                      | `Archive` view, grouped by year                                          |
+| `/tags`, `/tags/[tag]`          | `Tags` view and `Diary` list, thin terms are `noindex`                   |
+| `/categories/[category]`        | `Diary` list                                                             |
+| `/404`                          | `NotFound` view, `noindex`                                               |
+| `rss.xml`, `robots.txt`, `og/*` | endpoints                                                                |
+| `api/views/[slug]`              | view counter endpoint                                                    |
 
-| Component                         | Used by                                 | Notes                                                                                                                                           |
-| --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Listing.astro` + `ListRow.astro` | blog, archive, tags, categories, skills | ruled rows: date (mono), title (serif), summary (muted), tags; hover shifts title 8px, like Recognition                                         |
-| `PageHead.astro`                  | all non-home pages                      | number, `h1`-adjacent title block, optional intro; the layout `h1` stays visually hidden unless the page passes `heading`                       |
-| `Prose.astro`                     | post, project, about                    | typography for rendered markdown: measure, headings with autolinks, figure, blockquote, lists, tables, code (Expressive Code theme from tokens) |
-| `Pager.astro`                     | blog, tags, categories                  | prev/next with ruled edges                                                                                                                      |
-| `TagList.astro`                   | rows, posts                             | mono uppercase labels                                                                                                                           |
-| `Toc.astro`                       | post                                    | sticky, uses the rail's active-link logic                                                                                                       |
+## Motion between pages
 
-Each gets CSS in `src/styles/` and uses tokens only. Existing small components (`Breadcrumbs`, `ShareButtons`, `RelatedPosts`, `PostNav`, `TOC`, `Tag`, `Pagination`, `SocialLinks`) are restyled or replaced, not duplicated.
-
-## Page map
-
-| Route                            | Sections                                                                                 |
-| -------------------------------- | ---------------------------------------------------------------------------------------- |
-| `/`                              | done: Work, Experience, Education, Recognition, Contact                                  |
-| `/about`                         | intro with portrait, Experience, Education, Recognition, Contact (reuse home components) |
-| `/projects`                      | Listing of projects with plates (reuse `Work`), filters by status                        |
-| `/projects/[slug]`               | PageHead, plate hero, facts (stack, role, status, links), Prose, gallery, next project   |
-| `/blog`, pages, tags, categories | PageHead + Listing + Pager                                                               |
-| `/blog/[slug]`                   | PageHead, Prose, TOC, share, related, post nav, view counter                             |
-| `/archive`                       | Listing grouped by year                                                                  |
-| `/skills`                        | grouped ruled rows with mono levels                                                      |
-| `/search`                        | PageHead + Pagefind UI themed with tokens                                                |
-| `/404`                           | oversized serif line with a line drawing, link home                                      |
+Native cross-document view transitions (`styles/foundation/transitions.css`, `scripts/foundation/transition.ts`). Off under reduced motion. Rows on tag and archive pages use the fisheye effect (`scripts/foundation/fisheye.ts`).
 
 ## Data and errors
 
-Data stays in content collections and `config.ts`. Pages never hardcode it. A content reference error (for example a post pointing to a missing project) must fail `pnpm check` review: treat any `[ERROR] [content]` line as blocking.
+Data stays in content collections (`blog`, `projects`) and `src/config/`. Pages never hardcode it. A content reference error (for example a post pointing to a missing project) is blocking: treat any `[ERROR] [content]` line as a failure.
 
-## Testing and verification
+## Verification
 
-- `pnpm verify` per task.
-- `.tools/pw/nh4-regress.mjs` for pixel baselines (set `BASE` to a static server for `dist/client`; the dev server may be stale).
-- `.tools/pw/nh4-behavior.mjs` pattern for interactions; one script per new behavior.
-- Lighthouse scripts in `.tools/pw/lh*.mjs` at the end of each area.
+- `pnpm verify` per task, then `pnpm audit:build`.
+- `.tools/pw/` scripts for screenshots (`nh4-regress.mjs`, set `BASE` to a static server for `dist/client`), behavior smoke tests and Lighthouse (`lh*.mjs`). `.tools/` is gitignored and local.
 
 ## Decisions
 
-- Plain CSS files per area instead of Tailwind in new code: one cascade, tokens visible, no class soup. Tailwind stays only for legacy pages until they are removed. (Alternative: Tailwind with a token theme. Rejected for now to keep the foundation identical to the proven nh4 CSS.)
-- Behavior in small TS modules, not islands: keeps JS per page under a few KB.
-- Section number and `h1` are separate: the hidden layout `h1` guarantees a heading; visible titles are `h2` or a `PageHead`.
+- Plain CSS files per area instead of Tailwind: one cascade, tokens visible. Tailwind was removed with the old pages.
+- Behavior in small TS modules, not islands: keeps JS per page small.
+- The hidden layout `h1` guarantees a heading; visible section titles are `h2`. A page with its own visible title sets `ownHeading`.

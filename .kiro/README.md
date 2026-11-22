@@ -7,14 +7,14 @@ Everything here supports one goal: build every page on the design foundation (re
 | Steering (always)      | `steering/product.md`, `tech.md`, `structure.md`, `design-system.md`                   | Project facts, folder rules and the design rules, in every session       |
 | Steering (fileMatch)   | `steering/motion-and-a11y.md`                                                          | Loads when styles, markup or scripts are read                            |
 | Steering (auto)        | `steering/content-voice.md`                                                            | Loads when copy is written                                               |
-| Steering (manual)      | `steering/page-playbook.md`                                                            | `#page-playbook` for the page rewrite routine                            |
+| Steering (manual)      | `steering/page-playbook.md`                                                            | `#page-playbook` for the page build routine                              |
 | File references        | `structure.md` embeds `DESIGN.md`                                                      | One source for design facts                                              |
 | Skills (project)       | `skills/foundation-page`, `design-review`, `abstract-illustration`, `playwright`       | Build, review, illustrate, capture                                       |
 | Skills (external, MIT) | `skills/astro-best-practices`, `create-component`, `content-collection`, `docs-lookup` | From incluud/astro-agent-skills                                          |
 | Skills (global)        | `~/.kiro/skills`: `impeccable`, `design-taste-frontend`, `emil-design-eng`             | Design judgement and interaction polish                                  |
 | Hooks                  | `hooks/*.json` + `../scripts/hooks/`                                                   | See below                                                                |
 | Custom agents          | `agents/design-engineer.json`, `design-reviewer.json`                                  | Builder with scoped permissions; read-only reviewer                      |
-| Specs                  | `specs/foundation-page-rewrite/`                                                       | Requirements, design and tasks for the full rewrite                      |
+| Specs                  | `specs/foundation-page-rewrite/`                                                       | Requirements, design and tasks for the foundation pages                  |
 | MCP                    | `settings/mcp.json`                                                                    | `astro-docs` (current Astro docs), `playwright` (browser)                |
 | Powers                 | `image-utils` (installed globally)                                                     | Resize and optimize screenshots and photos                               |
 | Knowledge base         | `/knowledge add --name design --path DESIGN.md`                                        | Searchable design reference                                              |

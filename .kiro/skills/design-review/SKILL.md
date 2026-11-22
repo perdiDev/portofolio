@@ -10,7 +10,7 @@ Output a short report: **Blocking**, **Should fix**, **Nice to have**. Each item
 ## Checks
 
 1. **Lint.** `node scripts/design-lint.mjs [files]`. Every finding is blocking.
-2. **Types and build.** `pnpm check`. Content errors in the output count even if the build passes.
+2. **Types and build.** `pnpm check`, then `pnpm build` and `pnpm audit:build` (titles, descriptions, headings, canonicals, JSON-LD, images, internal links). Content errors in the output count even if the build passes.
 3. **Tokens and type.** No colour literals outside `tokens.css`; fonts follow serif/sans/mono roles; sizes in rem.
 4. **Motion contract.** Base state under `.js`; `.in` driven by `reveal.ts`; pointer effects gated by `canFollowPointer()` or the hover media query; a `prefers-reduced-motion` block exists in each animating file; only transform/opacity/clip-path/translate animate.
 5. **Accessibility.** One `h1` per page (the foundation sections use `h2`, so the page needs its own `h1`, visible or `.sr`), heading order, landmarks, names on icon-only controls, `aria-expanded` on disclosures, external-link labels, focus ring, contrast 4.5:1 for text in both themes, touch targets 44px.
