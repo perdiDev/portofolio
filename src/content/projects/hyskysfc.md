@@ -1,6 +1,6 @@
 ---
 title: HySkySFC - PLTD Selayar App
-summary: Android app for PLN Indonesia Power UPPLTD Selayar that plans diesel engine (PLTD) load around the solar (PLTS) supply.
+summary: Android app for PLN Indonesia Power UPPLTD Selayar that plans diesel power plant load around the available solar supply.
 date: 2025-12-08
 order: 1
 featured: false

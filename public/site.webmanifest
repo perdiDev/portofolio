@@ -1,7 +1,7 @@
 {
-  "name": "Perdi Dev— Software engineer writing about code and Linux",
-  "short_name": "Perdi Dev",
-  "description": "A developer blog by Perdi: practical articles on programming, Linux, and software engineering.",
+  "name": "Perdi @perdidev — Software Engineer",
+  "short_name": "Perdi",
+  "description": "Practical articles on programming, Linux and software engineering by Perdi @perdidev.",
   "start_url": "/",
   "scope": "/",
   "display": "browser",
