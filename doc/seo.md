@@ -4,6 +4,33 @@ Generated automatically: `<title>`, description, canonical, Open Graph and Twitt
 
 Everything derives from `SITE_URL`. Set it first: see [Deployment](deployment.md).
 
+## Share images (Open Graph)
+
+The image shown when a link is shared (WhatsApp, Telegram, X, LinkedIn, Google Discover) is generated at build time. Nothing to design by hand and nothing to upload.
+
+| URL                       | Made for                   | Label above the title |
+| ------------------------- | -------------------------- | --------------------- |
+| `/og/default.png`         | home page and other routes | "Portfolio and diary" |
+| `/og/blog/<slug>.png`     | each diary entry           | the entry's category  |
+| `/og/projects/<slug>.png` | each project               | "Project · <status>"  |
+
+### How it works
+
+1. `src/pages/og/[...slug].png.ts` lists every post and project with `getStaticPaths` and passes `title` and `eyebrow` (the label) to the renderer. A new post or project is picked up on the next build, with no extra step.
+2. `src/utils/og.ts` draws the image with `satori` (layout to SVG) and `@resvg/resvg-js` (SVG to PNG). The result is 1200x630, the size in `OG` in `src/config/site.ts`.
+3. The background is a set of thin concentric lines built as an SVG in `backdrop()`, then used as an image behind the text. The title shrinks in steps for long titles (`titleSize`).
+4. `SEO.astro` writes the `og:image` and `twitter:image` tags. `ogImagePath()` in `src/utils/seo.ts` builds the path.
+
+The colours in `COLORS` match the light palette in `src/styles/foundation/tokens.css`. satori cannot read colour variables or WOFF2, so the values are copied by hand and the fonts are the static `.woff` files from `@fontsource`. If you change the site palette, update `COLORS` in `og.ts` too.
+
+### Change the look
+
+Edit `src/utils/og.ts`: `COLORS` for colour, `backdrop()` for the lines, `layout()` for the text and the author mark. Run `pnpm build` and open `dist/client/og/default.png` to check it.
+
+### Refresh a shared link
+
+Chat apps and social sites cache the old image. After a deploy, use the Facebook Sharing Debugger or LinkedIn Post Inspector, or share the link with `?v=2` appended.
+
 ## Verify Google Search Console
 
 1. Add a property at [search.google.com/search-console](https://search.google.com/search-console). Choose **URL prefix** and enter your site URL.

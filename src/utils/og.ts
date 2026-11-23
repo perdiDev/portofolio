@@ -44,14 +44,26 @@ const h = (type: string, style: Record<string, string | number>, ...children: Ch
   props: { style, children: children.filter(Boolean) as Child[] },
 });
 
-// OG images always use the light palette, regardless of the site's active theme.
+// OG images always use the light palette of the site (see tokens.css).
 const COLORS = {
-  bg: '#fafaf9',
-  border: '#e4e4e7',
-  heading: '#18181b',
-  muted: '#52525b',
-  accent: '#047857',
+  bg: '#f4f1ea',
+  border: '#d9d4c8',
+  heading: '#1d1b18',
+  muted: '#6f6b63',
+  accent: '#8a4a30',
 };
+
+/** Abstract backdrop: off-centre concentric contours drawn as hairlines, like the project plates. */
+function backdrop(): string {
+  const rings = Array.from({ length: 10 }, (_, i) => {
+    const r = 60 + i * 40;
+    const stroke = i % 4 === 2 ? COLORS.accent : COLORS.border;
+    const opacity = i % 4 === 2 ? 0.55 : 1;
+    return `<ellipse cx="${OG.width - 80}" cy="${OG.height + 70}" rx="${r * 1.25}" ry="${r}" fill="none" stroke="${stroke}" stroke-opacity="${opacity}" stroke-width="2"/>`;
+  }).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG.width}" height="${OG.height}" viewBox="0 0 ${OG.width} ${OG.height}">${rings}</svg>`;
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+}
 
 export type OgOptions = {
   title: string;
@@ -71,13 +83,19 @@ function layout({ title, eyebrow }: OgOptions): VNode {
     'div',
     {
       display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
+      position: 'relative',
       width: OG.width,
       height: OG.height,
-      boxSizing: 'border-box',
       backgroundColor: COLORS.bg,
-      padding: 40,
+    },
+    {
+      type: 'img',
+      props: {
+        src: backdrop(),
+        width: OG.width,
+        height: OG.height,
+        style: { position: 'absolute', top: 0, left: 0 },
+      },
     },
     h(
       'div',
@@ -88,23 +106,21 @@ function layout({ title, eyebrow }: OgOptions): VNode {
         boxSizing: 'border-box',
         width: '100%',
         height: '100%',
-        border: `2px solid ${COLORS.border}`,
-        borderRadius: 24,
-        padding: '56px 64px',
+        padding: '72px 80px',
       },
       h(
         'div',
-        { display: 'flex', flexDirection: 'column' },
-        h('div', { width: 72, height: 5, backgroundColor: COLORS.accent, borderRadius: 3 }),
+        { display: 'flex', flexDirection: 'column', maxWidth: 900 },
+        h('div', { width: 64, height: 3, backgroundColor: COLORS.accent }),
         eyebrow &&
           h(
             'div',
             {
-              marginTop: 28,
+              marginTop: 32,
               fontFamily: 'Inter',
               fontWeight: 600,
-              fontSize: 26,
-              letterSpacing: 3,
+              fontSize: 24,
+              letterSpacing: 4,
               textTransform: 'uppercase',
               color: COLORS.accent,
             },
@@ -126,43 +142,34 @@ function layout({ title, eyebrow }: OgOptions): VNode {
       ),
       h(
         'div',
-        { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' },
+        { display: 'flex', alignItems: 'center' },
         h(
           'div',
-          { display: 'flex', alignItems: 'center' },
-          h(
-            'div',
-            {
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 56,
-              height: 56,
-              borderRadius: 28,
-              border: `2px solid ${COLORS.border}`,
-              fontFamily: 'Lora',
-              fontWeight: 700,
-              fontSize: 30,
-              color: COLORS.accent,
-            },
-            AUTHOR.name.charAt(0),
-          ),
-          h(
-            'div',
-            {
-              marginLeft: 18,
-              fontFamily: 'Inter',
-              fontWeight: 600,
-              fontSize: 28,
-              color: COLORS.heading,
-            },
-            AUTHOR.name,
-          ),
+          {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 52,
+            height: 52,
+            borderRadius: 26,
+            border: `2px solid ${COLORS.accent}`,
+            fontFamily: 'Lora',
+            fontWeight: 700,
+            fontSize: 28,
+            color: COLORS.accent,
+          },
+          AUTHOR.name.charAt(0),
         ),
         h(
           'div',
-          { fontFamily: 'Inter', fontWeight: 500, fontSize: 26, color: COLORS.muted },
-          `Developer blog · ${AUTHOR.jobTitle}`,
+          {
+            marginLeft: 18,
+            fontFamily: 'Inter',
+            fontWeight: 600,
+            fontSize: 28,
+            color: COLORS.heading,
+          },
+          AUTHOR.name,
         ),
       ),
     ),
