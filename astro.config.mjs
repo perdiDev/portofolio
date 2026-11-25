@@ -72,6 +72,11 @@ export default defineConfig({
   build: { format: 'directory', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   devToolbar: { enabled: false },
+  vite: {
+    // resvg ships a native .node binary that the dev dependency optimizer cannot bundle.
+    // The Cloudflare adapter forwards this exclude list to its server environments.
+    optimizeDeps: { exclude: ['@resvg/resvg-js'] },
+  },
   env: {
     schema: {
       PUBLIC_UMAMI_WEBSITE_ID: envField.string({
