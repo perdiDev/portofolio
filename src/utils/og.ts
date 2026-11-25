@@ -65,6 +65,23 @@ function backdrop(): string {
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
 }
 
+let monogramPromise: Promise<string>;
+
+/**
+ * The outlined italic "P" from the favicon, as an image for the author badge.
+ * The glyph path is read from public/favicon.svg so both logos stay identical.
+ */
+function monogram(): Promise<string> {
+  monogramPromise ??= readFile(join(process.cwd(), 'public', 'favicon.svg'), 'utf8').then((src) => {
+    const d = src.match(/<path transform="[^"]*" d="([^"]+)"/)?.[1];
+    if (!d) throw new Error('og: glyph path not found in public/favicon.svg');
+    // Glyph units (y up): x 35 to 634, y 0 to 703. Flip and pad for the stroke.
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -750 700 800"><path transform="scale(1 -1)" d="${d}" fill="none" stroke="${COLORS.accent}" stroke-width="34" stroke-linejoin="round"/></svg>`;
+    return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+  });
+  return monogramPromise;
+}
+
 export type OgOptions = {
   title: string;
   /** Small uppercase label above the title: the category, "Project", … */
@@ -78,7 +95,7 @@ function titleSize(title: string): number {
   return 82;
 }
 
-function layout({ title, eyebrow }: OgOptions): VNode {
+function layout({ title, eyebrow }: OgOptions, mark: string): VNode {
   return h(
     'div',
     {
@@ -153,12 +170,11 @@ function layout({ title, eyebrow }: OgOptions): VNode {
             height: 52,
             borderRadius: 26,
             border: `2px solid ${COLORS.accent}`,
-            fontFamily: 'Lora',
-            fontWeight: 700,
-            fontSize: 28,
-            color: COLORS.accent,
           },
-          AUTHOR.name.charAt(0),
+          {
+            type: 'img',
+            props: { src: mark, width: 28, height: 32 },
+          },
         ),
         h(
           'div',
@@ -177,8 +193,8 @@ function layout({ title, eyebrow }: OgOptions): VNode {
 }
 
 export async function renderOgImage(options: OgOptions): Promise<Uint8Array> {
-  const fonts = await loadFonts();
-  const svg = await satori(layout(options) as unknown as Parameters<typeof satori>[0], {
+  const [fonts, mark] = await Promise.all([loadFonts(), monogram()]);
+  const svg = await satori(layout(options, mark) as unknown as Parameters<typeof satori>[0], {
     width: OG.width,
     height: OG.height,
     fonts,
